@@ -1,68 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Satellite globe icon for ShambaGuard splash screen -->
+<!-- Shamba Guard globe icon — white outline style to match splash design -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="64dp"
-    android:height="64dp"
-    android:viewportWidth="64"
-    android:viewportHeight="64">
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
 
-    <!-- Globe circle -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M32,8 C18.745,8 8,18.745 8,32 C8,45.255 18.745,56 32,56 C45.255,56 56,45.255 56,32 C56,18.745 45.255,8 32,8 Z" />
-
-    <!-- Globe latitude lines (green to show detail) -->
-    <path
-        android:fillColor="#1B6B2E"
-        android:pathData="M32,8 C26,8 21,18.745 21,32 C21,45.255 26,56 32,56 C38,56 43,45.255 43,32 C43,18.745 38,8 32,8 Z" />
-
-    <!-- Horizontal latitude lines -->
-    <path
-        android:strokeColor="#1B6B2E"
-        android:strokeWidth="1.5"
-        android:strokeLineCap="round"
-        android:pathData="M10,24 Q32,20 54,24" />
-    <path
-        android:strokeColor="#1B6B2E"
-        android:strokeWidth="1.5"
-        android:strokeLineCap="round"
-        android:pathData="M8.5,32 Q32,28 55.5,32" />
-    <path
-        android:strokeColor="#1B6B2E"
-        android:strokeWidth="1.5"
-        android:strokeLineCap="round"
-        android:pathData="M10,40 Q32,44 54,40" />
-
-    <!-- Vertical meridian line -->
-    <path
-        android:strokeColor="#1B6B2E"
-        android:strokeWidth="1.5"
-        android:pathData="M32,8 L32,56" />
-
-    <!-- Globe outer ring (outline) -->
+    <!-- Globe outer circle outline -->
     <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="0"
+        android:strokeWidth="1.8"
         android:fillColor="#00000000"
-        android:pathData="M32,8 C18.745,8 8,18.745 8,32 C8,45.255 18.745,56 32,56 C45.255,56 56,45.255 56,32 C56,18.745 45.255,8 32,8 Z" />
+        android:pathData="M20,4 C11.163,4 4,11.163 4,20 C4,28.837 11.163,36 20,36 C28.837,36 36,28.837 36,20 C36,11.163 28.837,4 20,4 Z" />
 
-    <!-- Satellite dish / signal arc (top right) -->
+    <!-- Vertical centre meridian -->
     <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.5"
+        android:strokeWidth="1.8"
         android:strokeLineCap="round"
         android:fillColor="#00000000"
-        android:pathData="M44,14 Q52,14 52,22" />
+        android:pathData="M20,4 C20,4 20,36 20,36" />
+
+    <!-- Horizontal equator -->
     <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.5"
+        android:strokeWidth="1.8"
         android:strokeLineCap="round"
         android:fillColor="#00000000"
-        android:pathData="M44,18 Q48,18 48,22" />
+        android:pathData="M4,20 Q20,17 36,20" />
 
-    <!-- Satellite dot -->
+    <!-- Upper latitude line -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M44,22 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M7,13 Q20,10.5 33,13" />
+
+    <!-- Lower latitude line -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M7,27 Q20,29.5 33,27" />
+
+    <!-- Left vertical meridian arc -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M20,4 C14,8 11,13 11,20 C11,27 14,32 20,36" />
+
+    <!-- Right vertical meridian arc -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M20,4 C26,8 29,13 29,20 C29,27 26,32 20,36" />
 
 </vector>
