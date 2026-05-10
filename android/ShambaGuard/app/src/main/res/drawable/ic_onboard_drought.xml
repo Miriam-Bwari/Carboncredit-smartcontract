@@ -1,0 +1,100 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Satellite dish base -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M100,140 L85,170 L115,170 Z"
+        android:fillAlpha="0.9"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M95,165 L105,165 L108,180 L92,180 Z"
+        android:fillAlpha="0.9"/>
+
+    <!-- Satellite dish bowl -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,100 Q100,55 140,100 Q100,110 60,100 Z"
+        android:fillAlpha="0.95"/>
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:fillColor="#00000000"
+        android:pathData="M60,100 Q100,55 140,100"
+        android:strokeAlpha="0.7"/>
+
+    <!-- Dish arm -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:fillColor="#00000000"
+        android:pathData="M100,100 L100,80"
+        android:strokeAlpha="0.9"/>
+
+    <!-- Satellite in orbit -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,48 L52,36 L64,48 L52,60 Z"
+        android:fillAlpha="0.85"/>
+    <!-- Satellite panels -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,42 L40,48 L40,54 L28,48 Z"
+        android:fillAlpha="0.6"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M64,48 L76,42 L76,48 L64,54 Z"
+        android:fillAlpha="0.6"/>
+
+    <!-- Signal waves from satellite -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M68,56 Q84,68 86,82"
+        android:strokeAlpha="0.5"/>
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M74,50 Q94,64 96,82"
+        android:strokeAlpha="0.35"/>
+
+    <!-- Ground (horizon line) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,175 Q100,165 170,175 L170,190 L30,190 Z"
+        android:fillAlpha="0.25"/>
+
+    <!-- Rain drops (drought indicator) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M148,70 Q148,66 150,66 Q152,66 152,70 Q152,74 150,76 Q148,74 148,70 Z"
+        android:fillAlpha="0.5"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M158,82 Q158,78 160,78 Q162,78 162,82 Q162,86 160,88 Q158,86 158,82 Z"
+        android:fillAlpha="0.5"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M138,82 Q138,78 140,78 Q142,78 142,82 Q142,86 140,88 Q138,86 138,82 Z"
+        android:fillAlpha="0.5"/>
+
+    <!-- X mark over rain (drought warning) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M144,64 L166,86 M166,64 L144,86"
+        android:strokeAlpha="0.9"/>
+
+    <!-- 14 days label area -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M68,120 L132,120 L132,135 Q100,140 68,135 Z"
+        android:fillAlpha="0.15"/>
+</vector>

@@ -73,4 +73,7 @@ dependencies {
     
     // Logging
     implementation(libs.timber)
+
+    // DataStore — first-launch onboarding flag
+    implementation(libs.amdatastore.preferences)
 }

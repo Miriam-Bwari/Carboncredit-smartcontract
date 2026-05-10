@@ -17,6 +17,7 @@ hilt = "2.59.2"
 hiltNavigationCompose = "1.3.0"
 timber = "5.0.1"
 ksp = "2.3.6"
+datastore = "1.1.7"
 material3AdaptiveNav3 = "1.3.0-beta01"
 
 
@@ -49,6 +50,7 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+amdatastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

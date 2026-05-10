@@ -7,13 +7,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
+import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
 
 enum class UserRole {
@@ -28,9 +34,9 @@ fun ShambaGuardNavGraph(
     // 1. Determine starting key based on role
     val initialKey = remember(role) {
         when (role) {
-            UserRole.Admin -> AdminHomeKey
-            UserRole.Agent -> AgentHomeKey
-            UserRole.Farmer -> FarmerHomeKey
+            UserRole.Admin          -> AdminHomeKey
+            UserRole.Agent          -> AgentHomeKey
+            UserRole.Farmer         -> FarmerHomeKey
             UserRole.Unauthenticated -> LoginKey
         }
     }
@@ -38,19 +44,19 @@ fun ShambaGuardNavGraph(
     // 2. Determine tabs based on role
     val tabs = remember(role) {
         when (role) {
-            UserRole.Admin -> BottomTab.adminTabs
-            UserRole.Agent -> BottomTab.agentTabs
-            UserRole.Farmer -> BottomTab.farmerTabs
+            UserRole.Admin          -> BottomTab.adminTabs
+            UserRole.Agent          -> BottomTab.agentTabs
+            UserRole.Farmer         -> BottomTab.farmerTabs
             UserRole.Unauthenticated -> emptyList()
         }
     }
 
-    // ── Back stack – always starts on the splash screen ───
+    // Back stack — always starts on the splash screen
     val backStack = remember(role) { mutableStateListOf<Any>(SplashKey) }
     val currentKey = backStack.lastOrNull()
 
     // Show the bottom bar only when one of the root tabs is on top
-    val rootKeys = tabs.map { it.key }.toSet()
+    val rootKeys    = tabs.map { it.key }.toSet()
     val showBottomBar = currentKey in rootKeys && tabs.isNotEmpty()
 
     // Handle system back: pop unless we're at the root
@@ -59,12 +65,12 @@ fun ShambaGuardNavGraph(
     }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier  = modifier.fillMaxSize(),
         bottomBar = {
             if (showBottomBar) {
                 BottomNavBar(
-                    tabs = tabs,
-                    currentKey = currentKey,
+                    tabs        = tabs,
+                    currentKey  = currentKey,
                     onTabSelected = { key ->
                         // Switch root tab: keep only that tab on the stack
                         backStack.clear()
@@ -77,40 +83,76 @@ fun ShambaGuardNavGraph(
 
         NavDisplay(
             backStack = backStack,
-            modifier = Modifier
+            modifier  = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            onBack = { backStack.removeLastOrNull() },
+            onBack    = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
 
                 // Splash screen
-                entry<SplashKey> { 
+                entry<SplashKey> {
+                    val onboardingVm: OnboardingViewModel = hiltViewModel()
+                    val onboardingDone by onboardingVm.onboardingCompleted
+                        .collectAsStateWithLifecycle()
+
                     SplashScreen(
                         onSplashComplete = {
-                            // Clear splash from back stack and navigate to home based on role
+                            backStack.clear()
+                            when (onboardingDone) {
+                                // Still loading from disk — wait for the LaunchedEffect below
+                                null  -> Unit
+                                // First launch — show onboarding
+                                false -> backStack.add(OnboardingKey)
+                                // Returning user — go straight to home
+                                true  -> backStack.add(initialKey)
+                            }
+                        }
+                    )
+
+                    // Safety: if the DataStore value resolves after the splash timer fires,
+                    // navigate immediately from Splash.
+                    LaunchedEffect(onboardingDone) {
+                        if (onboardingDone != null && backStack.lastOrNull() == SplashKey) {
+                            backStack.clear()
+                            if (onboardingDone == false) {
+                                backStack.add(OnboardingKey)
+                            } else {
+                                backStack.add(initialKey)
+                            }
+                        }
+                    }
+                }
+
+                // Onboarding
+                entry<OnboardingKey> {
+                    val onboardingVm: OnboardingViewModel = hiltViewModel()
+
+                    OnboardingScreen(
+                        onFinish = {
+                            onboardingVm.markOnboardingDone()
                             backStack.clear()
                             backStack.add(initialKey)
                         }
-                    ) 
+                    )
                 }
 
                 // Auth screens
                 entry<LoginKey> { PlaceholderScreen("Login") }
 
                 // Admin screens
-                entry<AdminHomeKey> { PlaceholderScreen("Admin Dashboard") }
-                entry<AdminMapKey> { PlaceholderScreen("Admin Farm Map") }
+                entry<AdminHomeKey>   { PlaceholderScreen("Admin Dashboard") }
+                entry<AdminMapKey>    { PlaceholderScreen("Admin Farm Map") }
                 entry<AdminAgentsKey> { PlaceholderScreen("Admin Agents Management") }
 
                 // Agent screens
-                entry<AgentHomeKey> { PlaceholderScreen("Agent Dashboard") }
+                entry<AgentHomeKey>    { PlaceholderScreen("Agent Dashboard") }
                 entry<AgentFarmersKey> { PlaceholderScreen("Agent Farmers Management") }
-                entry<AgentSyncKey> { PlaceholderScreen("Agent Sync Status") }
+                entry<AgentSyncKey>    { PlaceholderScreen("Agent Sync Status") }
 
                 // Farmer screens
-                entry<FarmerHomeKey> { PlaceholderScreen("Farmer Dashboard") }
+                entry<FarmerHomeKey>   { PlaceholderScreen("Farmer Dashboard") }
                 entry<FarmerPolicyKey> { PlaceholderScreen("Farmer Policy Details") }
-                entry<FarmerPayoutsKey> { PlaceholderScreen("Farmer Payout History") }
+                entry<FarmerPayoutsKey>{ PlaceholderScreen("Farmer Payout History") }
             }
         )
     }

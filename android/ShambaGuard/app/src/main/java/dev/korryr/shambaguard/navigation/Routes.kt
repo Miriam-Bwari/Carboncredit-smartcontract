@@ -18,8 +18,9 @@ import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 
-// Auth
+// Auth / Onboarding
 @Serializable data object SplashKey
+@Serializable data object OnboardingKey
 @Serializable data object LoginKey
 
 // Admin Keys 
