@@ -26,11 +26,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,6 +48,8 @@ import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
 import dev.korryr.shambaguard.ui.theme.ShambaRed
 import dev.korryr.shambaguard.ui.theme.Teal40
+import dev.korryr.shambaguard.sharedComposables.ShambaButton
+import dev.korryr.shambaguard.sharedComposables.ShambaButtonType
 import kotlinx.coroutines.launch
 
 // Onboarding Screen
@@ -74,22 +73,20 @@ fun OnboardingScreen(
     ) {
 
         // Skip button
-        TextButton(
+        ShambaButton(
+            text = "Skip",
             onClick = onFinish,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .statusBarsPadding()
                 .padding(end = 8.dp),
-        ) {
-            Text(
-                text  = "Skip",
-                color = ShambaRed,
-                style = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize   = 15.sp,
-                )
+            type = ShambaButtonType.Text,
+            textColor = MaterialTheme.colorScheme.error,
+            textStyle = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize   = 15.sp,
             )
-        }
+        )
 
         // Page content
         Column(
@@ -129,7 +126,8 @@ fun OnboardingScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // CTA button
-            Button(
+            ShambaButton(
+                text = if (isLastPage) "Get Started" else "Next",
                 onClick = {
                     if (isLastPage) {
                         onFinish()
@@ -141,26 +139,12 @@ fun OnboardingScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 28.dp)
-                    .height(56.dp),
-                shape  = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Green40,
-                    contentColor   = Color.White,
-                ),
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 4.dp,
+                    .padding(horizontal = 28.dp),
+                textStyle = MaterialTheme.typography.labelLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize   = 16.sp,
                 )
-            ) {
-                Text(
-                    text  = if (isLastPage) "Get Started" else "Next",
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize   = 16.sp,
-                    )
-                )
-            }
+            )
 
             Spacer(modifier = Modifier.height(28.dp))
         }
