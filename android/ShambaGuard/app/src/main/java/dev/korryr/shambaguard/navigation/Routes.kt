@@ -21,6 +21,7 @@ import kotlinx.serialization.Serializable
 // Auth / Onboarding
 @Serializable data object SplashKey
 @Serializable data object OnboardingKey
+@Serializable data object RoleSelectionKey
 @Serializable data object LoginKey
 
 // Admin Keys 

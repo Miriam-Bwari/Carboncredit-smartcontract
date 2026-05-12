@@ -20,6 +20,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
+import dev.korryr.shambaguard.ui.features.auth.view.RoleSelectionScreen
+import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
 
 enum class UserRole {
@@ -131,8 +133,24 @@ fun ShambaGuardNavGraph(
                         onFinish = {
                             onboardingVm.markOnboardingDone()
                             backStack.clear()
-                            backStack.add(initialKey)
+                            backStack.add(RoleSelectionKey)
                         }
+                    )
+                }
+
+                // Role Selection
+                entry<RoleSelectionKey> {
+                    val vm: RoleSelectionViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    RoleSelectionScreen(
+                        uiState       = state,
+                        onRoleSelected = vm::onRoleSelected,
+                        onContinue    = {
+                            // TODO: pass role into auth flow; for now navigate to the matching home
+                            backStack.clear()
+                            backStack.add(initialKey)
+                        },
                     )
                 }
 
