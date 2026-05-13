@@ -22,7 +22,9 @@ import kotlinx.serialization.Serializable
 @Serializable data object SplashKey
 @Serializable data object OnboardingKey
 @Serializable data object RoleSelectionKey
-@Serializable data object RegistrationKey  // Multi-step farmer / agent registration
+@Serializable data object RegistrationKey   // Step 1: Personal Details
+@Serializable data object FarmBoundaryKey   // Step 2: Draw farm polygon
+@Serializable data object FarmPracticesKey  // Step 3: Farm practices
 @Serializable data object LoginKey
 
 // Admin Keys 

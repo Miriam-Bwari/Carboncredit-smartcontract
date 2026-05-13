@@ -32,4 +32,45 @@
     <string name="reg_error_national_id_invalid">Enter a valid 8-digit National ID</string>
     <string name="reg_error_phone_invalid">Enter a valid M-Pesa number (e.g. +254 712 345 678)</string>
 
+    <!-- Registration Screen - Step 2: Farm Boundary -->
+    <string name="farm_step2_instruction_title">Gusa mipaka ya shamba lako</string>
+    <string name="farm_step2_instruction_subtitle">Tap your farm boundary</string>
+    <string name="farm_step2_confirm_heading">Confirm Boundary</string>
+    <string name="farm_step2_estimated_label">ESTIMATED SIZE</string>
+    <string name="farm_step2_save_cta">Save &amp; Continue →</string>
+    <string name="farm_step2_area_acres_format">%.1f ac</string>
+    <string name="farm_step2_undo">Undo</string>
+    <string name="farm_step2_layer_toggle">Toggle map layer</string>
+    <string name="farm_step2_min_points_hint">Tap at least 3 points to draw a boundary</string>
+
+    <!-- Registration Screen - Step 3: Farm Practices -->
+    <string name="practices_heading">Farm Practices</string>
+    <string name="practices_subtitle">Help us understand your farming methods to optimize your support and carbon credit potential.</string>
+    <string name="practices_carbon_tip">Good practices earn you more carbon credits</string>
+    <string name="practices_crop_section">Primary Crop Type</string>
+    <string name="practices_method_section">Farming Method</string>
+    <string name="practices_water_section">Water Source</string>
+    <string name="practices_trees_section">Mature Trees on Farm</string>
+    <string name="practices_trees_count_label">Estimated Count</string>
+    <string name="practices_complete_cta">Complete Registration</string>
+    <!-- Crop chips -->
+    <string name="crop_maize">Maize</string>
+    <string name="crop_beans">Beans</string>
+    <string name="crop_cowpeas">Cowpeas</string>
+    <string name="crop_sorghum">Sorghum</string>
+    <string name="crop_millet">Millet</string>
+    <string name="crop_cassava">Cassava</string>
+    <!-- Farming method chips -->
+    <string name="method_agroforestry">Agroforestry</string>
+    <string name="method_no_till">No-Till</string>
+    <string name="method_cover_cropping">Cover Cropping</string>
+    <string name="method_conventional">Conventional</string>
+    <!-- Water source chips -->
+    <string name="water_rain_fed">Rain-fed</string>
+    <string name="water_irrigation">Irrigation</string>
+    <string name="water_borehole">Borehole</string>
+    <!-- Accessibility -->
+    <string name="practices_decrement_trees">Decrease tree count</string>
+    <string name="practices_increment_trees">Increase tree count</string>
+
 </resources>

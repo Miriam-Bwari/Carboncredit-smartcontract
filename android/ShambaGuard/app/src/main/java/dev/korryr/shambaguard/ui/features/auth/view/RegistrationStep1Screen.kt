@@ -56,11 +56,7 @@ import dev.korryr.shambaguard.sharedComposables.ShambaButton
 import dev.korryr.shambaguard.sharedComposables.ShambaTextField
 import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationStep1UiState
 
-// ---------------------------------------------------------------------------
-// RegistrationStep1Screen.kt
-// "Personal Details" — Step 1 of 3 in the registration flow.
-// Pure UI composable: renders state, forwards events to ViewModel via lambdas.
-// ---------------------------------------------------------------------------
+// Step 1 of 3 — Personal Details screen. Pure UI, no logic.
 
 private const val TOTAL_STEPS = 3
 private const val CURRENT_STEP = 1
@@ -97,7 +93,7 @@ fun RegistrationStep1Screen(
                 .navigationBarsPadding(),
         ) {
 
-            // ── Top bar ──────────────────────────────────────────────────────
+            // Top bar
             RegistrationTopBar(
                 currentStep = CURRENT_STEP,
                 totalSteps  = TOTAL_STEPS,
@@ -105,7 +101,7 @@ fun RegistrationStep1Screen(
                 onBack      = onBack,
             )
 
-            // ── Scrollable body ──────────────────────────────────────────────
+            // Scrollable form body
             AnimatedVisibility(
                 visible = contentVisible,
                 enter   = fadeIn(tween(400)) + slideInVertically(
@@ -144,7 +140,7 @@ fun RegistrationStep1Screen(
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    // ── Full Name ─────────────────────────────────────────────
+                    // Full name
                     ShambaTextField(
                         value         = uiState.fullName,
                         onValueChange = onFullNameChanged,
@@ -160,7 +156,7 @@ fun RegistrationStep1Screen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // ── National ID ───────────────────────────────────────────
+                    // National ID
                     ShambaTextField(
                         value         = uiState.nationalId,
                         onValueChange = onNationalIdChanged,
@@ -176,7 +172,7 @@ fun RegistrationStep1Screen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // ── M-Pesa Phone ──────────────────────────────────────────
+                    // M-Pesa phone
                     ShambaTextField(
                         value         = uiState.mpesaPhone,
                         onValueChange = onMpesaPhoneChanged,
@@ -215,7 +211,7 @@ fun RegistrationStep1Screen(
                 }
             }
 
-            // ── Bottom CTA ───────────────────────────────────────────────────
+            // Bottom CTA
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -237,10 +233,7 @@ fun RegistrationStep1Screen(
     }
 }
 
-// ---------------------------------------------------------------------------
-// RegistrationTopBar
-// Back arrow | Centered title + step indicator | Progress bar
-// ---------------------------------------------------------------------------
+// Top bar: back arrow, centred title + step label, progress bar
 @Composable
 private fun RegistrationTopBar(
     currentStep: Int,
@@ -286,7 +279,7 @@ private fun RegistrationTopBar(
                 )
             }
 
-            // Invisible placeholder to keep the title truly centred
+            // Spacer balances layout so the title stays centred
             Spacer(modifier = Modifier.size(48.dp))
         }
 
@@ -303,9 +296,7 @@ private fun RegistrationTopBar(
     }
 }
 
-// ---------------------------------------------------------------------------
-// MpesaBadge — trailing chip displayed inside the phone number field
-// ---------------------------------------------------------------------------
+// Branded green pill shown as trailing icon inside the M-Pesa field
 @Composable
 private fun MpesaBadge() {
     Box(
@@ -326,9 +317,7 @@ private fun MpesaBadge() {
     }
 }
 
-// ---------------------------------------------------------------------------
-// shambaFieldColors — centralized branded colours for OutlinedTextField
-// ---------------------------------------------------------------------------
+// Shared branded colours for all outlined text fields on this screen
 @Composable
 private fun shambaFieldColors() = OutlinedTextFieldDefaults.colors(
     focusedBorderColor   = MaterialTheme.colorScheme.primary,

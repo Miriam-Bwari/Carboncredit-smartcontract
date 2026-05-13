@@ -22,8 +22,12 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
+import dev.korryr.shambaguard.ui.features.auth.view.FarmBoundaryScreen
+import dev.korryr.shambaguard.ui.features.auth.view.FarmPracticesScreen
 import dev.korryr.shambaguard.ui.features.auth.view.RegistrationStep1Screen
 import dev.korryr.shambaguard.ui.features.auth.view.RoleSelectionScreen
+import dev.korryr.shambaguard.ui.features.auth.presentation.FarmBoundaryViewModel
+import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
@@ -157,13 +161,13 @@ fun ShambaGuardNavGraph(
                     )
                 }
 
-                // Registration flow — Step 1: Personal Details
+                // Step 1: Personal Details
                 entry<RegistrationKey> {
                     val vm: RegistrationViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
-                    val errorNameEmpty  = stringResource(R.string.reg_error_full_name_empty)
-                    val errorIdInvalid  = stringResource(R.string.reg_error_national_id_invalid)
+                    val errorNameEmpty    = stringResource(R.string.reg_error_full_name_empty)
+                    val errorIdInvalid    = stringResource(R.string.reg_error_national_id_invalid)
                     val errorPhoneInvalid = stringResource(R.string.reg_error_phone_invalid)
 
                     RegistrationStep1Screen(
@@ -173,10 +177,48 @@ fun ShambaGuardNavGraph(
                         onMpesaPhoneChanged = vm::onMpesaPhoneChanged,
                         onNextStep          = {
                             if (vm.validateStep1(errorNameEmpty, errorIdInvalid, errorPhoneInvalid)) {
-                                // TODO: push Step 2 key when it is built
+                                backStack.add(FarmBoundaryKey)
                             }
                         },
                         onBack = { backStack.removeLastOrNull() },
+                    )
+                }
+
+                // Step 2: Draw farm polygon
+                entry<FarmBoundaryKey> {
+                    val vm: FarmBoundaryViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    FarmBoundaryScreen(
+                        uiState       = state,
+                        canSave       = vm.canSave(),
+                        onMapTapped   = vm::onMapTapped,
+                        onUndo        = vm::onUndoLastPoint,
+                        onToggleLayer = vm::onToggleMapType,
+                        onSave        = { backStack.add(FarmPracticesKey) },
+                        onBack        = { backStack.removeLastOrNull() },
+                    )
+                }
+
+                // Step 3: Farm practices
+                entry<FarmPracticesKey> {
+                    val vm: FarmPracticesViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    FarmPracticesScreen(
+                        uiState           = state,
+                        canComplete       = vm.canComplete(),
+                        onCropToggled     = vm::onCropToggled,
+                        onMethodSelected  = vm::onMethodSelected,
+                        onWaterSelected   = vm::onWaterSelected,
+                        onIncrementTrees  = vm::onIncrementTrees,
+                        onDecrementTrees  = vm::onDecrementTrees,
+                        onComplete        = {
+                            // TODO: submit data and navigate to role-appropriate home
+                            backStack.clear()
+                            backStack.add(initialKey)
+                        },
+                        onBack            = { backStack.removeLastOrNull() },
                     )
                 }
 

@@ -76,4 +76,7 @@ dependencies {
 
     // DataStore — first-launch onboarding flag
     implementation(libs.amdatastore.preferences)
+
+    // Google Maps Compose — farm polygon drawing (Step 2)
+    implementation(libs.maps.compose)
 }
