@@ -11,4 +11,25 @@
     <string name="role_farmer_description">Register your farm and protect it.</string>
     <string name="role_agent_description">Register farmers in your area.</string>
     <string name="role_card_selected_content_description">Selected</string>
+
+    <!-- Registration Screen - Step 1: Personal Details -->
+    <string name="reg_screen_title">Jiandikishe / Register</string>
+    <string name="reg_step_indicator">Step %1$d of %2$d</string>
+    <string name="reg_step1_heading">Personal Details</string>
+    <string name="reg_step1_subtitle">We need your basic information to set up your Shamba Guard profile.</string>
+    <string name="reg_full_name_label">Full Name (Kama Inavyoonekana kwa kitambulisho)</string>
+    <string name="reg_full_name_hint">e.g., John Doe</string>
+    <string name="reg_national_id_label">National ID Number</string>
+    <string name="reg_national_id_hint">12345678</string>
+    <string name="reg_mpesa_phone_label">M-Pesa Phone Number</string>
+    <string name="reg_mpesa_phone_hint">+254 7XX XXX XXX</string>
+    <string name="reg_mpesa_helper">This is where payouts will go</string>
+    <string name="reg_mpesa_badge">M-Pesa</string>
+    <string name="reg_next_step_cta">Next Step →</string>
+    <string name="reg_back_content_description">Navigate back</string>
+    <!-- Validation -->
+    <string name="reg_error_full_name_empty">Full name is required</string>
+    <string name="reg_error_national_id_invalid">Enter a valid 8-digit National ID</string>
+    <string name="reg_error_phone_invalid">Enter a valid M-Pesa number (e.g. +254 712 345 678)</string>
+
 </resources>

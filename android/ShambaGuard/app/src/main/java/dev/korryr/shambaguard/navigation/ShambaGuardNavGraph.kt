@@ -13,14 +13,18 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import dev.korryr.shambaguard.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
+import dev.korryr.shambaguard.ui.features.auth.view.RegistrationStep1Screen
 import dev.korryr.shambaguard.ui.features.auth.view.RoleSelectionScreen
+import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
 
@@ -144,13 +148,35 @@ fun ShambaGuardNavGraph(
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     RoleSelectionScreen(
-                        uiState       = state,
+                        uiState        = state,
                         onRoleSelected = vm::onRoleSelected,
-                        onContinue    = {
-                            // TODO: pass role into auth flow; for now navigate to the matching home
-                            backStack.clear()
-                            backStack.add(initialKey)
+                        onContinue     = {
+                            // Navigate to registration once a role is chosen
+                            backStack.add(RegistrationKey)
                         },
+                    )
+                }
+
+                // Registration flow — Step 1: Personal Details
+                entry<RegistrationKey> {
+                    val vm: RegistrationViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    val errorNameEmpty  = stringResource(R.string.reg_error_full_name_empty)
+                    val errorIdInvalid  = stringResource(R.string.reg_error_national_id_invalid)
+                    val errorPhoneInvalid = stringResource(R.string.reg_error_phone_invalid)
+
+                    RegistrationStep1Screen(
+                        uiState             = state,
+                        onFullNameChanged   = vm::onFullNameChanged,
+                        onNationalIdChanged = vm::onNationalIdChanged,
+                        onMpesaPhoneChanged = vm::onMpesaPhoneChanged,
+                        onNextStep          = {
+                            if (vm.validateStep1(errorNameEmpty, errorIdInvalid, errorPhoneInvalid)) {
+                                // TODO: push Step 2 key when it is built
+                            }
+                        },
+                        onBack = { backStack.removeLastOrNull() },
                     )
                 }
 
