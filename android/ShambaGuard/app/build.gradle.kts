@@ -1,9 +1,20 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+}
+
+// Read local secrets — file is gitignored, never committed
+fun keysProperty(key: String, default: String = ""): String {
+    val props = Properties()
+    val file = File(rootProject.projectDir, "keys.properties")
+    if (file.exists()) FileInputStream(file).use { props.load(it) }
+    return props.getProperty(key, default)
 }
 
 android {
@@ -22,6 +33,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Inject Maps API key into the manifest
+        manifestPlaceholders["MAPS_API_KEY"] = keysProperty("MAPS_API_KEY")
     }
 
     buildTypes {
