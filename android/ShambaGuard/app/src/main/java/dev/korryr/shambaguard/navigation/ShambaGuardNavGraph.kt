@@ -30,7 +30,9 @@ import dev.korryr.shambaguard.ui.features.auth.presentation.FarmBoundaryViewMode
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerDashboardViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
+import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
 
@@ -238,7 +240,22 @@ fun ShambaGuardNavGraph(
                 entry<AgentSyncKey>    { PlaceholderScreen("Agent Sync Status") }
 
                 // Farmer screens
-                entry<FarmerHomeKey>   { PlaceholderScreen("Farmer Dashboard") }
+                entry<FarmerHomeKey> {
+                    val vm: FarmerDashboardViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    FarmerDashboardScreen(
+                        uiState       = state,
+                        onSeeInsights = { backStack.add(FarmerDroughtKey) },
+                        onViewPolicy  = { backStack.add(FarmerPolicyKey) },
+                        onViewCarbon  = { backStack.add(FarmerCarbonKey) },
+                    )
+                }
+                entry<FarmerDroughtKey>  { PlaceholderScreen("Early Warning & Drought Forecast") }
+                entry<FarmerMyFarmKey>   { PlaceholderScreen("My Farm — Practices & Map") }
+                entry<FarmerCarbonKey>   { PlaceholderScreen("Carbon Credits") }
+                entry<FarmerProfileKey>  { PlaceholderScreen("Farmer Profile") }
+                // Non-tab screens — navigated from dashboard
                 entry<FarmerPolicyKey> {
                     val vm: PolicyViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
@@ -247,14 +264,10 @@ fun ShambaGuardNavGraph(
                         uiState        = state,
                         onTierSelected = vm::onTierSelected,
                         onPayWithMpesa = vm::onPayWithMpesa,
-                        onPaymentDone  = {
-                            // Payment confirmed — clear registration back-stack and land on dashboard
-                            backStack.clear()
-                            backStack.add(initialKey)
-                        },
+                        onPaymentDone  = { backStack.removeLastOrNull() },
                     )
                 }
-                entry<FarmerPayoutsKey>{ PlaceholderScreen("Farmer Payout History") }
+                entry<FarmerPayoutsKey> { PlaceholderScreen("Farmer Payout History") }
             }
         )
     }

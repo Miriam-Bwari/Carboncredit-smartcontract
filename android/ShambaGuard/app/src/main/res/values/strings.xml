@@ -87,4 +87,30 @@
     <string name="policy_payment_processing">Processing…</string>
     <string name="policy_payment_success">Policy Activated!</string>
 
+    <!-- Farmer Dashboard Screen -->
+    <string name="dashboard_section_home">Home</string>
+    <!-- Top bar -->
+    <string name="dashboard_satellite_desc">Satellite farm thumbnail</string>
+    <!-- Alert card -->
+    <string name="dashboard_risk_critical">CRITICAL RISK</string>
+    <string name="dashboard_risk_high">HIGH RISK</string>
+    <string name="dashboard_risk_moderate">MODERATE RISK</string>
+    <string name="dashboard_risk_low">LOW RISK</string>
+    <string name="dashboard_drought_alert">Drought Alert</string>
+    <string name="dashboard_drought_watch">Drought Watch</string>
+    <string name="dashboard_conditions_normal">Conditions Normal</string>
+    <string name="dashboard_ndvi_label">NDVI Score</string>
+    <string name="dashboard_rainfall_label">Rainfall (21 Days)</string>
+    <string name="dashboard_insights_cta">See Insights &amp; Actions →</string>
+    <!-- At a Glance -->
+    <string name="dashboard_at_a_glance">At a Glance</string>
+    <string name="dashboard_policy_status">Policy Status</string>
+    <string name="dashboard_policy_active">● Active</string>
+    <string name="dashboard_policy_inactive">● Inactive</string>
+    <string name="dashboard_policy_expiry">Coverage until %1$s</string>
+    <string name="dashboard_carbon">Carbon</string>
+    <string name="dashboard_carbon_claim">Claim Value</string>
+    <!-- Recent Activity -->
+    <string name="dashboard_recent_activity">Recent Activity</string>
+
 </resources>
