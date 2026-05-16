@@ -73,4 +73,18 @@
     <string name="practices_decrement_trees">Decrease tree count</string>
     <string name="practices_increment_trees">Increase tree count</string>
 
+    <!-- Policy Screen — Chagua Bima / Choose Your Coverage -->
+    <string name="policy_screen_title">Chagua Bima</string>
+    <string name="policy_screen_subtitle">Choose Your Coverage</string>
+    <!-- Tier card actions -->
+    <string name="policy_tier_select">Select Plan</string>
+    <string name="policy_tier_selected">Selected</string>
+    <string name="policy_recommended_badge">RECOMMENDED</string>
+    <!-- M-Pesa payment footer -->
+    <string name="policy_mpesa_label">M-PESA</string>
+    <string name="policy_mpesa_cta">Lipa na M-Pesa</string>
+    <string name="policy_secure_payment_hint">Malipo salama / Secure payment</string>
+    <string name="policy_payment_processing">Processing…</string>
+    <string name="policy_payment_success">Policy Activated!</string>
+
 </resources>

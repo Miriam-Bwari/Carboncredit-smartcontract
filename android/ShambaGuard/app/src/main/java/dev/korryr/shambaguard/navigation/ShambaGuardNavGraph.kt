@@ -30,6 +30,8 @@ import dev.korryr.shambaguard.ui.features.auth.presentation.FarmBoundaryViewMode
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
+import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
 
 enum class UserRole {
@@ -214,9 +216,9 @@ fun ShambaGuardNavGraph(
                         onIncrementTrees  = vm::onIncrementTrees,
                         onDecrementTrees  = vm::onDecrementTrees,
                         onComplete        = {
-                            // TODO: submit data and navigate to role-appropriate home
-                            backStack.clear()
-                            backStack.add(initialKey)
+                            // Step 3 complete — go directly to PolicyScreen (Option A)
+                            // so the farmer selects a coverage tier before reaching the dashboard
+                            backStack.add(FarmerPolicyKey)
                         },
                         onBack            = { backStack.removeLastOrNull() },
                     )
@@ -237,7 +239,21 @@ fun ShambaGuardNavGraph(
 
                 // Farmer screens
                 entry<FarmerHomeKey>   { PlaceholderScreen("Farmer Dashboard") }
-                entry<FarmerPolicyKey> { PlaceholderScreen("Farmer Policy Details") }
+                entry<FarmerPolicyKey> {
+                    val vm: PolicyViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    PolicyScreen(
+                        uiState        = state,
+                        onTierSelected = vm::onTierSelected,
+                        onPayWithMpesa = vm::onPayWithMpesa,
+                        onPaymentDone  = {
+                            // Payment confirmed — clear registration back-stack and land on dashboard
+                            backStack.clear()
+                            backStack.add(initialKey)
+                        },
+                    )
+                }
                 entry<FarmerPayoutsKey>{ PlaceholderScreen("Farmer Payout History") }
             }
         )
