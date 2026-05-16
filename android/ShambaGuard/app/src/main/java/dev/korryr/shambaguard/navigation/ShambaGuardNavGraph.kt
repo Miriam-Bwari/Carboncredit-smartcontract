@@ -30,8 +30,11 @@ import dev.korryr.shambaguard.ui.features.auth.presentation.FarmBoundaryViewMode
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerDashboardViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
+import dev.korryr.shambaguard.ui.features.farmer.view.DroughtInsightsScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.EarlyWarningScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
@@ -251,11 +254,30 @@ fun ShambaGuardNavGraph(
                         onViewCarbon  = { backStack.add(FarmerCarbonKey) },
                     )
                 }
-                entry<FarmerDroughtKey>  { PlaceholderScreen("Early Warning & Drought Forecast") }
+                entry<FarmerDroughtKey> {
+                    // Scope ViewModel to the NavGraph if we want it shared, or to this entry.
+                    // Since it's a tab, we'll scope it normally here.
+                    val vm: DroughtViewModel = hiltViewModel()
+                    val state by vm.warningState.collectAsStateWithLifecycle()
+
+                    EarlyWarningScreen(
+                        uiState = state,
+                        onFullAnalysis = { backStack.add(FarmerDroughtInsightsKey) }
+                    )
+                }
                 entry<FarmerMyFarmKey>   { PlaceholderScreen("My Farm — Practices & Map") }
                 entry<FarmerCarbonKey>   { PlaceholderScreen("Carbon Credits") }
                 entry<FarmerProfileKey>  { PlaceholderScreen("Farmer Profile") }
-                // Non-tab screens — navigated from dashboard
+                // Non-tab screens — navigated from dashboard or tabs
+                entry<FarmerDroughtInsightsKey> {
+                    val vm: DroughtViewModel = hiltViewModel()
+                    val state by vm.insightsState.collectAsStateWithLifecycle()
+
+                    DroughtInsightsScreen(
+                        uiState = state,
+                        onBack = { backStack.removeLastOrNull() }
+                    )
+                }
                 entry<FarmerPolicyKey> {
                     val vm: PolicyViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()

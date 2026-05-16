@@ -113,4 +113,25 @@
     <!-- Recent Activity -->
     <string name="dashboard_recent_activity">Recent Activity</string>
 
+    <!-- Early Warning Screen -->
+    <string name="drought_screen_title">Early Warning</string>
+    <string name="drought_alert_subtitle">Based on NDVI &amp; Rainfall</string>
+    <string name="drought_forecast_title">14-Day Forecast</string>
+    <string name="drought_forecast_subtitle">Drought probability index</string>
+    <string name="drought_legend_risk">Risk Score</string>
+    <string name="drought_crop_rec_label">Recommended Action</string>
+    <string name="drought_full_analysis_cta">Full Analysis →</string>
+
+    <!-- Drought Insights Screen -->
+    <string name="insights_screen_title">Drought Insights</string>
+    <string name="insights_ndvi_trend">NDVI Trend</string>
+    <string name="insights_rainfall_trend">Rainfall Trend</string>
+    <string name="insights_payout_status">Payout Status</string>
+    <string name="insights_trigger_met">Trigger Met</string>
+    <string name="insights_trigger_not_met">Not Met</string>
+    <string name="insights_trigger_desc">Requires NDVI &lt; %1$.2f and Rain &lt; %2$d mm</string>
+    <string name="insights_satellite_data">Satellite Data</string>
+    <string name="insights_source">Source: %1$s</string>
+    <string name="insights_last_updated">Updated: %1$s</string>
+
 </resources>

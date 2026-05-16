@@ -49,6 +49,7 @@ import kotlinx.serialization.Serializable
 // Still accessible (navigated from dashboard / policy card) but not a bottom tab:
 @Serializable data object FarmerPolicyKey    // Coverage selection / payment
 @Serializable data object FarmerPayoutsKey   // Payout history
+@Serializable data object FarmerDroughtInsightsKey // Drought Insights deep dive
 
 // Bottom-nav tab metadata
 sealed class BottomTab(
