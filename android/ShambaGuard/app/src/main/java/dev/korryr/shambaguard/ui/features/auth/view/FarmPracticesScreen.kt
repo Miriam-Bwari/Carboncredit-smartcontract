@@ -52,30 +52,30 @@ import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesUiState
 // Step 3 of 3 — Farm Practices screen. Pure UI, no logic.
 
 private const val STEP3_CURRENT = 3
-private const val STEP3_TOTAL   = 3
+private const val STEP3_TOTAL = 3
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FarmPracticesScreen(
-    uiState:          FarmPracticesUiState,
-    canComplete:      Boolean,
-    onCropToggled:    (String) -> Unit,
+    uiState: FarmPracticesUiState,
+    canComplete: Boolean,
+    onCropToggled: (String) -> Unit,
     onMethodSelected: (String) -> Unit,
-    onWaterSelected:  (String) -> Unit,
+    onWaterSelected: (String) -> Unit,
     onIncrementTrees: () -> Unit,
     onDecrementTrees: () -> Unit,
-    onComplete:       () -> Unit,
-    onBack:           () -> Unit,
-    modifier:         Modifier = Modifier,
+    onComplete: () -> Unit,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val progress by animateFloatAsState(
-        targetValue   = STEP3_CURRENT.toFloat() / STEP3_TOTAL.toFloat(),
+        targetValue = STEP3_CURRENT.toFloat() / STEP3_TOTAL.toFloat(),
         animationSpec = tween(600),
-        label         = "Step3Progress",
+        label = "Step3Progress",
     )
 
     // Chip option lists — keys must match string resource names used below
-    val crops   = listOf(
+    val crops = listOf(
         stringResource(R.string.crop_maize),
         stringResource(R.string.crop_beans),
         stringResource(R.string.crop_cowpeas),
@@ -97,7 +97,7 @@ fun FarmPracticesScreen(
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color    = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
             modifier = Modifier
@@ -108,9 +108,9 @@ fun FarmPracticesScreen(
             // Top bar
             PracticesTopBar(
                 currentStep = STEP3_CURRENT,
-                totalSteps  = STEP3_TOTAL,
-                progress    = progress,
-                onBack      = onBack,
+                totalSteps = STEP3_TOTAL,
+                progress = progress,
+                onBack = onBack,
             )
 
             // Scrollable form
@@ -123,19 +123,19 @@ fun FarmPracticesScreen(
                 Spacer(modifier = Modifier.height(28.dp))
 
                 Text(
-                    text  = stringResource(R.string.practices_heading),
+                    text = stringResource(R.string.practices_heading),
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color      = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.onBackground,
                     ),
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text  = stringResource(R.string.practices_subtitle),
+                    text = stringResource(R.string.practices_subtitle),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 22.sp,
                     ),
                 )
@@ -153,9 +153,9 @@ fun FarmPracticesScreen(
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     crops.forEach { crop ->
                         SelectionChip(
-                            label      = crop,
+                            label = crop,
                             isSelected = crop in uiState.selectedCrops,
-                            onClick    = { onCropToggled(crop) },
+                            onClick = { onCropToggled(crop) },
                         )
                     }
                 }
@@ -168,9 +168,9 @@ fun FarmPracticesScreen(
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     methods.forEach { method ->
                         SelectionChip(
-                            label      = method,
+                            label = method,
                             isSelected = uiState.selectedMethod == method,
-                            onClick    = { onMethodSelected(method) },
+                            onClick = { onMethodSelected(method) },
                         )
                     }
                 }
@@ -183,9 +183,9 @@ fun FarmPracticesScreen(
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     waterSources.forEach { source ->
                         SelectionChip(
-                            label      = source,
+                            label = source,
                             isSelected = uiState.selectedWater == source,
-                            onClick    = { onWaterSelected(source) },
+                            onClick = { onWaterSelected(source) },
                         )
                     }
                 }
@@ -196,7 +196,7 @@ fun FarmPracticesScreen(
                 SectionLabel(stringResource(R.string.practices_trees_section))
                 Spacer(modifier = Modifier.height(10.dp))
                 TreeCountStepper(
-                    count       = uiState.treeCount,
+                    count = uiState.treeCount,
                     onIncrement = onIncrementTrees,
                     onDecrement = onDecrementTrees,
                 )
@@ -212,13 +212,13 @@ fun FarmPracticesScreen(
                     .padding(horizontal = 24.dp, vertical = 16.dp),
             ) {
                 ShambaButton(
-                    text      = stringResource(R.string.practices_complete_cta),
-                    onClick   = onComplete,
-                    enabled   = canComplete && !uiState.isSubmitting,
-                    modifier  = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.practices_complete_cta),
+                    onClick = onComplete,
+                    enabled = canComplete && !uiState.isSubmitting,
+                    modifier = Modifier.fillMaxWidth(),
                     textStyle = MaterialTheme.typography.labelLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize   = 16.sp,
+                        fontSize = 16.sp,
                     ),
                 )
             }
@@ -238,16 +238,16 @@ private fun CarbonTipCard() {
         verticalAlignment = Alignment.Top,
     ) {
         Icon(
-            imageVector        = Icons.Filled.Eco,
+            imageVector = Icons.Filled.Eco,
             contentDescription = null,
-            tint               = MaterialTheme.colorScheme.primary,
-            modifier           = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(20.dp),
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
-            text  = stringResource(R.string.practices_carbon_tip),
+            text = stringResource(R.string.practices_carbon_tip),
             style = MaterialTheme.typography.bodySmall.copy(
-                color      = MaterialTheme.colorScheme.onPrimaryContainer,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.Medium,
                 lineHeight = 20.sp,
             ),
@@ -259,10 +259,10 @@ private fun CarbonTipCard() {
 @Composable
 private fun SectionLabel(text: String) {
     Text(
-        text  = text,
+        text = text,
         style = MaterialTheme.typography.titleSmall.copy(
             fontWeight = FontWeight.Bold,
-            color      = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.onBackground,
         ),
     )
 }
@@ -270,17 +270,17 @@ private fun SectionLabel(text: String) {
 // Single chip — filled when selected, outlined when not
 @Composable
 private fun SelectionChip(
-    label:      String,
+    label: String,
     isSelected: Boolean,
-    onClick:    () -> Unit,
-    modifier:   Modifier = Modifier,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val bgColor     = if (isSelected) MaterialTheme.colorScheme.primary
-                      else MaterialTheme.colorScheme.surface
+    val bgColor = if (isSelected) MaterialTheme.colorScheme.primary
+    else MaterialTheme.colorScheme.surface
     val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary
-                       else MaterialTheme.colorScheme.onSurface
-    val borderColor  = if (isSelected) MaterialTheme.colorScheme.primary
-                       else MaterialTheme.colorScheme.outline
+    else MaterialTheme.colorScheme.onSurface
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary
+    else MaterialTheme.colorScheme.outline
 
     Box(
         modifier = modifier
@@ -292,9 +292,9 @@ private fun SelectionChip(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text  = label,
+            text = label,
             style = MaterialTheme.typography.labelMedium.copy(
-                color      = contentColor,
+                color = contentColor,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
             ),
         )
@@ -304,13 +304,13 @@ private fun SelectionChip(
 // +/- stepper for tree count
 @Composable
 private fun TreeCountStepper(
-    count:       Int,
+    count: Int,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
-    modifier:    Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier          = modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
@@ -319,8 +319,8 @@ private fun TreeCountStepper(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text     = stringResource(R.string.practices_trees_count_label),
-            style    = MaterialTheme.typography.bodyMedium.copy(
+            text = stringResource(R.string.practices_trees_count_label),
+            style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
             modifier = Modifier.weight(1f),
@@ -328,26 +328,26 @@ private fun TreeCountStepper(
 
         // Decrement button
         IconButton(
-            onClick  = onDecrement,
+            onClick = onDecrement,
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceVariant),
         ) {
             Icon(
-                imageVector        = Icons.Filled.Remove,
+                imageVector = Icons.Filled.Remove,
                 contentDescription = stringResource(R.string.practices_decrement_trees),
-                tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier           = Modifier.size(18.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp),
             )
         }
 
         // Count display
         Text(
-            text  = count.toString(),
+            text = count.toString(),
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.primary,
             ),
             modifier = Modifier
                 .padding(horizontal = 20.dp)
@@ -356,17 +356,17 @@ private fun TreeCountStepper(
 
         // Increment button
         IconButton(
-            onClick  = onIncrement,
+            onClick = onIncrement,
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceVariant),
         ) {
             Icon(
-                imageVector        = Icons.Filled.Add,
+                imageVector = Icons.Filled.Add,
                 contentDescription = stringResource(R.string.practices_increment_trees),
-                tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier           = Modifier.size(18.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp),
             )
         }
     }
@@ -376,36 +376,36 @@ private fun TreeCountStepper(
 @Composable
 private fun PracticesTopBar(
     currentStep: Int,
-    totalSteps:  Int,
-    progress:    Float,
-    onBack:      () -> Unit,
-    modifier:    Modifier = Modifier,
+    totalSteps: Int,
+    progress: Float,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
-            modifier          = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onBack) {
                 Icon(
-                    imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.reg_back_content_description),
-                    tint               = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
 
             // Centred step label
             Column(
-                modifier            = Modifier.weight(1f),
+                modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text  = stringResource(R.string.reg_step_indicator, currentStep, totalSteps),
+                    text = stringResource(R.string.reg_step_indicator, currentStep, totalSteps),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color      = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.onBackground,
                     ),
                 )
             }
@@ -415,13 +415,13 @@ private fun PracticesTopBar(
         }
 
         LinearProgressIndicator(
-            progress   = { progress },
-            modifier   = Modifier
+            progress = { progress },
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(4.dp),
-            color      = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.primary,
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
-            strokeCap  = StrokeCap.Round,
+            strokeCap = StrokeCap.Round,
         )
     }
 }

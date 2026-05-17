@@ -69,7 +69,7 @@ import dev.korryr.shambaguard.ui.features.auth.presentation.estimatedAreaAcres
 // Step 2 of 3 — farm polygon drawing screen. Pure UI, no logic.
 
 private const val STEP2_CURRENT = 2
-private const val STEP2_TOTAL   = 3
+private const val STEP2_TOTAL = 3
 
 // Default map center: Nyeri, Kenya
 private val DEFAULT_CENTER = LatLng(-0.4167, 36.9500)
@@ -77,7 +77,7 @@ private const val DEFAULT_ZOOM = 15f
 
 // Brand green used on the polygon overlay
 private val PolygonGreen = Color(0xFF2E9647)
-private val PolygonFill  = Color(0x332E9647)
+private val PolygonFill = Color(0x332E9647)
 
 @Composable
 fun FarmBoundaryScreen(
@@ -91,9 +91,9 @@ fun FarmBoundaryScreen(
     modifier: Modifier = Modifier,
 ) {
     val progress by animateFloatAsState(
-        targetValue    = STEP2_CURRENT.toFloat() / STEP2_TOTAL.toFloat(),
-        animationSpec  = tween(600),
-        label          = "Step2Progress",
+        targetValue = STEP2_CURRENT.toFloat() / STEP2_TOTAL.toFloat(),
+        animationSpec = tween(600),
+        label = "Step2Progress",
     )
 
     val cameraState = rememberCameraPositionState {
@@ -103,19 +103,19 @@ fun FarmBoundaryScreen(
     val mapProperties = remember(uiState.mapType) {
         MapProperties(
             mapType = when (uiState.mapType) {
-                com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL    -> com.google.maps.android.compose.MapType.NORMAL
-                com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN   -> com.google.maps.android.compose.MapType.TERRAIN
-                com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID    -> com.google.maps.android.compose.MapType.HYBRID
-                else                                                      -> com.google.maps.android.compose.MapType.SATELLITE
+                com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL -> com.google.maps.android.compose.MapType.NORMAL
+                com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN -> com.google.maps.android.compose.MapType.TERRAIN
+                com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID -> com.google.maps.android.compose.MapType.HYBRID
+                else -> com.google.maps.android.compose.MapType.SATELLITE
             }
         )
     }
 
     val mapUiSettings = remember {
         MapUiSettings(
-            zoomControlsEnabled  = false,
+            zoomControlsEnabled = false,
             myLocationButtonEnabled = false,
-            mapToolbarEnabled    = false,
+            mapToolbarEnabled = false,
         )
     }
 
@@ -123,7 +123,7 @@ fun FarmBoundaryScreen(
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color    = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
             modifier = Modifier
@@ -133,40 +133,40 @@ fun FarmBoundaryScreen(
         ) {
             // Top bar with progress
             FarmBoundaryTopBar(
-                currentStep    = STEP2_CURRENT,
-                totalSteps     = STEP2_TOTAL,
-                progress       = progress,
-                onBack         = onBack,
-                onToggleLayer  = onToggleLayer,
+                currentStep = STEP2_CURRENT,
+                totalSteps = STEP2_TOTAL,
+                progress = progress,
+                onBack = onBack,
+                onToggleLayer = onToggleLayer,
             )
 
             // Map fills remaining space
             Box(modifier = Modifier.weight(1f)) {
                 GoogleMap(
-                    modifier             = Modifier.fillMaxSize(),
-                    cameraPositionState  = cameraState,
-                    properties           = mapProperties,
-                    uiSettings           = mapUiSettings,
-                    onMapClick           = onMapTapped,
+                    modifier = Modifier.fillMaxSize(),
+                    cameraPositionState = cameraState,
+                    properties = mapProperties,
+                    uiSettings = mapUiSettings,
+                    onMapClick = onMapTapped,
                 ) {
                     // Draw dashed outline as we go
                     if (uiState.points.size >= 2) {
                         Polyline(
-                            points    = uiState.points,
-                            color     = PolygonGreen,
-                            width     = 6f,
-                            pattern   = listOf(Dash(20f), Gap(10f)),
+                            points = uiState.points,
+                            color = PolygonGreen,
+                            width = 6f,
+                            pattern = listOf(Dash(20f), Gap(10f)),
                         )
                     }
 
                     // Filled polygon once closed (>= 3 points)
                     if (uiState.points.size >= 3) {
                         Polygon(
-                            points      = uiState.points,
+                            points = uiState.points,
                             strokeColor = PolygonGreen,
                             strokeWidth = 6f,
-                            fillColor   = PolygonFill,
-                            geodesic    = true,
+                            fillColor = PolygonFill,
+                            geodesic = true,
                         )
                     }
 
@@ -188,7 +188,7 @@ fun FarmBoundaryScreen(
                 // Area label in the polygon centre
                 if (estimatedAcres != null) {
                     AreaLabel(
-                        acres    = estimatedAcres,
+                        acres = estimatedAcres,
                         modifier = Modifier.align(Alignment.Center),
                     )
                 }
@@ -196,7 +196,7 @@ fun FarmBoundaryScreen(
                 // Undo button
                 if (uiState.points.isNotEmpty()) {
                     IconButton(
-                        onClick  = onUndo,
+                        onClick = onUndo,
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .padding(bottom = 140.dp, end = 16.dp)
@@ -205,9 +205,9 @@ fun FarmBoundaryScreen(
                             .background(MaterialTheme.colorScheme.surface),
                     ) {
                         Icon(
-                            imageVector        = Icons.AutoMirrored.Filled.Undo,
+                            imageVector = Icons.AutoMirrored.Filled.Undo,
                             contentDescription = stringResource(R.string.farm_step2_undo),
-                            tint               = MaterialTheme.colorScheme.primary,
+                            tint = MaterialTheme.colorScheme.primary,
                         )
                     }
                 }
@@ -215,7 +215,7 @@ fun FarmBoundaryScreen(
                 // Hint shown until 3 points are placed
                 if (uiState.points.size < 3) {
                     Text(
-                        text  = stringResource(R.string.farm_step2_min_points_hint),
+                        text = stringResource(R.string.farm_step2_min_points_hint),
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Color.White,
                         ),
@@ -234,8 +234,8 @@ fun FarmBoundaryScreen(
             // Bottom confirm sheet
             ConfirmBoundarySheet(
                 estimatedAcres = estimatedAcres,
-                canSave        = canSave,
-                onSave         = onSave,
+                canSave = canSave,
+                onSave = onSave,
             )
         }
     }
@@ -245,11 +245,11 @@ fun FarmBoundaryScreen(
 @Composable
 private fun InstructionCard(modifier: Modifier = Modifier) {
     Card(
-        modifier  = modifier
+        modifier = modifier
             .fillMaxWidth()
             .shadow(4.dp, RoundedCornerShape(12.dp)),
-        shape     = RoundedCornerShape(12.dp),
-        colors    = CardDefaults.cardColors(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
         ),
     ) {
@@ -265,10 +265,10 @@ private fun InstructionCard(modifier: Modifier = Modifier) {
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.LocationOn,
+                    imageVector = Icons.Filled.LocationOn,
                     contentDescription = null,
-                    tint               = MaterialTheme.colorScheme.primary,
-                    modifier           = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(20.dp),
                 )
             }
 
@@ -276,14 +276,14 @@ private fun InstructionCard(modifier: Modifier = Modifier) {
 
             Column {
                 Text(
-                    text  = stringResource(R.string.farm_step2_instruction_title),
+                    text = stringResource(R.string.farm_step2_instruction_title),
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color      = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurface,
                     ),
                 )
                 Text(
-                    text  = stringResource(R.string.farm_step2_instruction_subtitle),
+                    text = stringResource(R.string.farm_step2_instruction_subtitle),
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -305,9 +305,9 @@ private fun AreaLabel(acres: Double, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text  = "▲ $formatted",
+            text = "▲ $formatted",
             style = MaterialTheme.typography.labelMedium.copy(
-                color      = Color.White,
+                color = Color.White,
                 fontWeight = FontWeight.Bold,
             ),
         )
@@ -323,10 +323,10 @@ private fun ConfirmBoundarySheet(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier  = modifier.fillMaxWidth(),
-        color     = MaterialTheme.colorScheme.surface,
+        modifier = modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surface,
         shadowElevation = 16.dp,
-        shape     = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
     ) {
         Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)) {
 
@@ -343,30 +343,30 @@ private fun ConfirmBoundarySheet(
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                modifier                = Modifier.fillMaxWidth(),
-                horizontalArrangement   = Arrangement.SpaceBetween,
-                verticalAlignment       = Alignment.Bottom,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom,
             ) {
                 // Left: heading + district
                 Column {
                     Text(
-                        text  = stringResource(R.string.farm_step2_confirm_heading),
+                        text = stringResource(R.string.farm_step2_confirm_heading),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.ExtraBold,
-                            color      = MaterialTheme.colorScheme.onSurface,
+                            color = MaterialTheme.colorScheme.onSurface,
                         ),
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector        = Icons.Filled.LocationOn,
+                            imageVector = Icons.Filled.LocationOn,
                             contentDescription = null,
-                            tint               = MaterialTheme.colorScheme.primary,
-                            modifier           = Modifier.size(14.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(14.dp),
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text  = "Nyeri South District",
+                            text = "Nyeri South District",
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             ),
@@ -377,19 +377,19 @@ private fun ConfirmBoundarySheet(
                 // Right: estimated size
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text  = stringResource(R.string.farm_step2_estimated_label),
+                        text = stringResource(R.string.farm_step2_estimated_label),
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color        = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             letterSpacing = 0.5.sp,
                         ),
                     )
                     Text(
-                        text  = if (estimatedAcres != null)
+                        text = if (estimatedAcres != null)
                             stringResource(R.string.farm_step2_area_acres_format, estimatedAcres)
                         else "— ac",
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontWeight = FontWeight.ExtraBold,
-                            color      = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.primary,
                         ),
                     )
                 }
@@ -398,13 +398,13 @@ private fun ConfirmBoundarySheet(
             Spacer(modifier = Modifier.height(20.dp))
 
             ShambaButton(
-                text     = stringResource(R.string.farm_step2_save_cta),
-                onClick  = onSave,
-                enabled  = canSave,
+                text = stringResource(R.string.farm_step2_save_cta),
+                onClick = onSave,
+                enabled = canSave,
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize   = 16.sp,
+                    fontSize = 16.sp,
                 ),
             )
         }
@@ -414,16 +414,16 @@ private fun ConfirmBoundarySheet(
 // Top bar reused from Step 1 pattern — back, step label, progress bar, layer toggle
 @Composable
 private fun FarmBoundaryTopBar(
-    currentStep:   Int,
-    totalSteps:    Int,
-    progress:      Float,
-    onBack:        () -> Unit,
+    currentStep: Int,
+    totalSteps: Int,
+    progress: Float,
+    onBack: () -> Unit,
     onToggleLayer: () -> Unit,
-    modifier:      Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
-            modifier          = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -431,22 +431,22 @@ private fun FarmBoundaryTopBar(
             // Back arrow
             IconButton(onClick = onBack) {
                 Icon(
-                    imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.reg_back_content_description),
-                    tint               = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
 
             // Centred step label
             Column(
-                modifier            = Modifier.weight(1f),
+                modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text  = stringResource(R.string.reg_step_indicator, currentStep, totalSteps),
+                    text = stringResource(R.string.reg_step_indicator, currentStep, totalSteps),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color      = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.onBackground,
                     ),
                 )
             }
@@ -454,21 +454,21 @@ private fun FarmBoundaryTopBar(
             // Layer toggle button
             IconButton(onClick = onToggleLayer) {
                 Icon(
-                    imageVector        = Icons.Filled.Layers,
+                    imageVector = Icons.Filled.Layers,
                     contentDescription = stringResource(R.string.farm_step2_layer_toggle),
-                    tint               = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
         }
 
         LinearProgressIndicator(
-            progress     = { progress },
-            modifier     = Modifier
+            progress = { progress },
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(4.dp),
-            color        = MaterialTheme.colorScheme.primary,
-            trackColor   = MaterialTheme.colorScheme.surfaceVariant,
-            strokeCap    = StrokeCap.Round,
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            strokeCap = StrokeCap.Round,
         )
     }
 }

@@ -243,7 +243,7 @@ private fun RoleCard(
                         .fillMaxSize()
                         .padding(2.dp),
 
-                )
+                    )
 
                 // Selected checkmark badge
                 if (isSelected) {

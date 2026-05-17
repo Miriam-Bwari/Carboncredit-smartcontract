@@ -59,15 +59,15 @@ import dev.korryr.shambaguard.ui.theme.White
 // "Full Analysis" drills into DroughtInsightsScreen.
 @Composable
 fun EarlyWarningScreen(
-    uiState:          EarlyWarningUiState,
-    onFullAnalysis:   () -> Unit,
-    modifier:         Modifier = Modifier,
+    uiState: EarlyWarningUiState,
+    onFullAnalysis: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val (riskColor, riskBg) = riskColors(uiState.currentRisk)
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color    = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
             modifier = Modifier
@@ -78,11 +78,11 @@ fun EarlyWarningScreen(
         ) {
             // Header
             EarlyWarningHeader(
-                farmName   = uiState.farmName,
+                farmName = uiState.farmName,
                 farmRegion = uiState.farmRegion,
-                risk       = uiState.currentRisk,
-                riskColor  = riskColor,
-                riskBg     = riskBg,
+                risk = uiState.currentRisk,
+                riskColor = riskColor,
+                riskBg = riskBg,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -90,23 +90,23 @@ fun EarlyWarningScreen(
             // 14-day forecast bar chart
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text(
-                    text  = stringResource(R.string.drought_forecast_title),
+                    text = stringResource(R.string.drought_forecast_title),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color      = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.onBackground,
                     ),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text  = stringResource(R.string.drought_forecast_subtitle),
+                    text = stringResource(R.string.drought_forecast_subtitle),
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 ForecastBarChart(
-                    forecast   = uiState.forecast,
-                    riskColor  = riskColor,
+                    forecast = uiState.forecast,
+                    riskColor = riskColor,
                 )
             }
 
@@ -114,10 +114,10 @@ fun EarlyWarningScreen(
 
             // Crop recommendation card
             CropRecommendationCard(
-                crop        = uiState.recommendedCrop,
-                reason      = uiState.recommendedCropReason,
-                swahili     = uiState.recommendedCropSwahili,
-                modifier    = Modifier.padding(horizontal = 16.dp),
+                crop = uiState.recommendedCrop,
+                reason = uiState.recommendedCropReason,
+                swahili = uiState.recommendedCropSwahili,
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -135,18 +135,18 @@ fun EarlyWarningScreen(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector        = Icons.Filled.WbSunny,
+                        imageVector = Icons.Filled.WbSunny,
                         contentDescription = null,
-                        tint               = White,
-                        modifier           = Modifier.size(18.dp),
+                        tint = White,
+                        modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text  = stringResource(R.string.drought_full_analysis_cta),
+                        text = stringResource(R.string.drought_full_analysis_cta),
                         style = MaterialTheme.typography.labelLarge.copy(
-                            color      = White,
+                            color = White,
                             fontWeight = FontWeight.Bold,
-                            fontSize   = 15.sp,
+                            fontSize = 15.sp,
                         ),
                     )
                 }
@@ -160,18 +160,18 @@ fun EarlyWarningScreen(
 // Header: farm name, region, big risk pill
 @Composable
 private fun EarlyWarningHeader(
-    farmName:  String,
+    farmName: String,
     farmRegion: String,
-    risk:      DroughtRisk,
+    risk: DroughtRisk,
     riskColor: Color,
-    riskBg:    Color,
-    modifier:  Modifier = Modifier,
+    riskBg: Color,
+    modifier: Modifier = Modifier,
 ) {
     val riskLabel = when (risk) {
         DroughtRisk.CRITICAL -> "CRITICAL RISK"
-        DroughtRisk.HIGH     -> "HIGH RISK"
+        DroughtRisk.HIGH -> "HIGH RISK"
         DroughtRisk.MODERATE -> "MODERATE RISK"
-        DroughtRisk.LOW      -> "LOW RISK"
+        DroughtRisk.LOW -> "LOW RISK"
     }
 
     Column(
@@ -181,10 +181,10 @@ private fun EarlyWarningHeader(
             .padding(horizontal = 20.dp, vertical = 20.dp),
     ) {
         Text(
-            text  = stringResource(R.string.drought_screen_title),
+            text = stringResource(R.string.drought_screen_title),
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground,
             ),
         )
 
@@ -192,14 +192,14 @@ private fun EarlyWarningHeader(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                imageVector        = Icons.Filled.LocationOn,
+                imageVector = Icons.Filled.LocationOn,
                 contentDescription = null,
-                tint               = MaterialTheme.colorScheme.primary,
-                modifier           = Modifier.size(14.dp),
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(14.dp),
             )
             Spacer(modifier = Modifier.width(2.dp))
             Text(
-                text  = "$farmName — $farmRegion",
+                text = "$farmName — $farmRegion",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
@@ -210,7 +210,7 @@ private fun EarlyWarningHeader(
 
         // Big status pill
         Row(
-            modifier          = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(riskColor.copy(alpha = 0.1f))
@@ -226,23 +226,23 @@ private fun EarlyWarningHeader(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.Warning,
+                    imageVector = Icons.Filled.Warning,
                     contentDescription = null,
-                    tint               = riskColor,
-                    modifier           = Modifier.size(22.dp),
+                    tint = riskColor,
+                    modifier = Modifier.size(22.dp),
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
-                    text  = riskLabel,
+                    text = riskLabel,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color      = riskColor,
+                        color = riskColor,
                     ),
                 )
                 Text(
-                    text  = stringResource(R.string.drought_alert_subtitle),
+                    text = stringResource(R.string.drought_alert_subtitle),
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -255,9 +255,9 @@ private fun EarlyWarningHeader(
 // 14-day forecast bar chart — each bar is a day's drought risk score
 @Composable
 private fun ForecastBarChart(
-    forecast:  List<ForecastDay>,
+    forecast: List<ForecastDay>,
     riskColor: Color,
-    modifier:  Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     val maxBarHeight = 80.dp
 
@@ -271,22 +271,22 @@ private fun ForecastBarChart(
     ) {
         Column {
             Row(
-                modifier              = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment     = Alignment.Bottom,
+                verticalAlignment = Alignment.Bottom,
             ) {
                 forecast.forEach { day ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier            = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f),
                     ) {
                         // Risk % label above bar
                         Text(
-                            text  = "${(day.riskScore * 100).toInt()}%",
+                            text = "${(day.riskScore * 100).toInt()}%",
                             style = MaterialTheme.typography.labelSmall.copy(
-                                color      = riskColor,
+                                color = riskColor,
                                 fontWeight = FontWeight.Bold,
-                                fontSize   = 9.sp,
+                                fontSize = 9.sp,
                             ),
                             textAlign = TextAlign.Center,
                         )
@@ -304,10 +304,10 @@ private fun ForecastBarChart(
                         Spacer(modifier = Modifier.height(4.dp))
                         // Day label
                         Text(
-                            text  = day.dayLabel.replace("Day ", "D"),
+                            text = day.dayLabel.replace("Day ", "D"),
                             style = MaterialTheme.typography.labelSmall.copy(
-                                color     = MaterialTheme.colorScheme.onSurfaceVariant,
-                                fontSize  = 9.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 9.sp,
                             ),
                             textAlign = TextAlign.Center,
                         )
@@ -319,9 +319,9 @@ private fun ForecastBarChart(
 
             // Legend row
             Row(
-                modifier              = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment     = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
                     modifier = Modifier
@@ -331,7 +331,7 @@ private fun ForecastBarChart(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text  = stringResource(R.string.drought_legend_risk),
+                    text = stringResource(R.string.drought_legend_risk),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -344,9 +344,9 @@ private fun ForecastBarChart(
 // Crop recommendation card
 @Composable
 private fun CropRecommendationCard(
-    crop:     String,
-    reason:   String,
-    swahili:  String,
+    crop: String,
+    reason: String,
+    swahili: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -366,26 +366,26 @@ private fun CropRecommendationCard(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.Eco,
+                    imageVector = Icons.Filled.Eco,
                     contentDescription = null,
-                    tint               = Green40,
-                    modifier           = Modifier.size(22.dp),
+                    tint = Green40,
+                    modifier = Modifier.size(22.dp),
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
-                    text  = stringResource(R.string.drought_crop_rec_label),
+                    text = stringResource(R.string.drought_crop_rec_label),
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color      = Green40,
+                        color = Green40,
                         fontWeight = FontWeight.Bold,
                     ),
                 )
                 Text(
-                    text  = crop,
+                    text = crop,
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color      = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurface,
                     ),
                 )
             }
@@ -394,9 +394,9 @@ private fun CropRecommendationCard(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text  = reason,
+            text = reason,
             style = MaterialTheme.typography.bodySmall.copy(
-                color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 20.sp,
             ),
         )
@@ -413,16 +413,16 @@ private fun CropRecommendationCard(
             verticalAlignment = Alignment.Top,
         ) {
             Icon(
-                imageVector        = Icons.Filled.TipsAndUpdates,
+                imageVector = Icons.Filled.TipsAndUpdates,
                 contentDescription = null,
-                tint               = ShambaAmber,
-                modifier           = Modifier.size(16.dp),
+                tint = ShambaAmber,
+                modifier = Modifier.size(16.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text  = "\"$swahili\"",
+                text = "\"$swahili\"",
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color      = Green40,
+                    color = Green40,
                     fontWeight = FontWeight.Medium,
                     lineHeight = 18.sp,
                 ),
@@ -435,6 +435,6 @@ private fun CropRecommendationCard(
 @Composable
 private fun riskColors(risk: DroughtRisk): Pair<Color, Color> = when (risk) {
     DroughtRisk.CRITICAL, DroughtRisk.HIGH -> Pair(Color(0xFFB00020), Color(0xFFFFF0F0))
-    DroughtRisk.MODERATE                   -> Pair(ShambaAmber,       Color(0xFFFFFBF0))
-    DroughtRisk.LOW                        -> Pair(Green40,            Green99)
+    DroughtRisk.MODERATE -> Pair(ShambaAmber, Color(0xFFFFFBF0))
+    DroughtRisk.LOW -> Pair(Green40, Green99)
 }

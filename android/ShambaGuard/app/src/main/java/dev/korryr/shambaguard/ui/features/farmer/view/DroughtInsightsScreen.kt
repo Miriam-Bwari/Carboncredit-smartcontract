@@ -127,7 +127,7 @@ fun DroughtInsightsScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 PayoutStatusCard(
                     isMet = uiState.payoutThresholdMet,
                     triggerNdvi = uiState.payoutTriggerNdvi,
@@ -145,7 +145,7 @@ fun DroughtInsightsScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 SatelliteInfoCard(
                     source = uiState.satelliteSource,
                     lastUpdated = uiState.lastUpdated
@@ -189,9 +189,9 @@ private fun InsightCard(
                 modifier = Modifier.size(24.dp)
             )
         }
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column {
             Text(
                 text = title,
@@ -230,8 +230,9 @@ private fun PayoutStatusCard(
     val borderColor = if (isMet) Green90 else Color(0xFFFFDADB)
     val icon = if (isMet) Icons.Filled.CheckCircle else Icons.Filled.Warning
     val iconTint = if (isMet) Green40 else Color(0xFFB00020)
-    val statusText = if (isMet) stringResource(R.string.insights_trigger_met) else stringResource(R.string.insights_trigger_not_met)
-    
+    val statusText =
+        if (isMet) stringResource(R.string.insights_trigger_met) else stringResource(R.string.insights_trigger_not_met)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -256,9 +257,9 @@ private fun PayoutStatusCard(
                 )
             )
         }
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         Text(
             text = stringResource(R.string.insights_trigger_desc, triggerNdvi, triggerRain),
             style = MaterialTheme.typography.bodyMedium.copy(
@@ -296,9 +297,9 @@ private fun SatelliteInfoCard(
                 modifier = Modifier.size(20.dp)
             )
         }
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column {
             Text(
                 text = stringResource(R.string.insights_source, source),

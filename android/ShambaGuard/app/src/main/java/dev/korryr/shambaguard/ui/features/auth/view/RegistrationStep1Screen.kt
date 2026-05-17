@@ -96,16 +96,16 @@ fun RegistrationStep1Screen(
             // Top bar
             RegistrationTopBar(
                 currentStep = CURRENT_STEP,
-                totalSteps  = TOTAL_STEPS,
-                progress    = progress,
-                onBack      = onBack,
+                totalSteps = TOTAL_STEPS,
+                progress = progress,
+                onBack = onBack,
             )
 
             // Scrollable form body
             AnimatedVisibility(
                 visible = contentVisible,
-                enter   = fadeIn(tween(400)) + slideInVertically(
-                    animationSpec  = tween(400),
+                enter = fadeIn(tween(400)) + slideInVertically(
+                    animationSpec = tween(400),
                     initialOffsetY = { it / 8 },
                 ),
                 modifier = Modifier.weight(1f),
@@ -120,10 +120,10 @@ fun RegistrationStep1Screen(
 
                     // Section heading
                     Text(
-                        text  = stringResource(R.string.reg_step1_heading),
+                        text = stringResource(R.string.reg_step1_heading),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.ExtraBold,
-                            color      = MaterialTheme.colorScheme.onBackground,
+                            color = MaterialTheme.colorScheme.onBackground,
                         ),
                     )
 
@@ -131,9 +131,9 @@ fun RegistrationStep1Screen(
 
                     // Subtitle / instruction
                     Text(
-                        text  = stringResource(R.string.reg_step1_subtitle),
+                        text = stringResource(R.string.reg_step1_subtitle),
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             lineHeight = 22.sp,
                         ),
                     )
@@ -142,14 +142,14 @@ fun RegistrationStep1Screen(
 
                     // Full name
                     ShambaTextField(
-                        value         = uiState.fullName,
+                        value = uiState.fullName,
                         onValueChange = onFullNameChanged,
-                        label         = stringResource(R.string.reg_full_name_label),
-                        isError       = uiState.fullNameError != null,
-                        errorMessage  = uiState.fullNameError,
+                        label = stringResource(R.string.reg_full_name_label),
+                        isError = uiState.fullNameError != null,
+                        errorMessage = uiState.fullNameError,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Words,
-                            imeAction      = ImeAction.Next,
+                            imeAction = ImeAction.Next,
                         ),
                         colors = shambaFieldColors(),
                     )
@@ -158,14 +158,14 @@ fun RegistrationStep1Screen(
 
                     // National ID
                     ShambaTextField(
-                        value         = uiState.nationalId,
+                        value = uiState.nationalId,
                         onValueChange = onNationalIdChanged,
-                        label         = stringResource(R.string.reg_national_id_label),
-                        isError       = uiState.nationalIdError != null,
-                        errorMessage  = uiState.nationalIdError,
+                        label = stringResource(R.string.reg_national_id_label),
+                        isError = uiState.nationalIdError != null,
+                        errorMessage = uiState.nationalIdError,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
-                            imeAction    = ImeAction.Next,
+                            imeAction = ImeAction.Next,
                         ),
                         colors = shambaFieldColors(),
                     )
@@ -174,17 +174,17 @@ fun RegistrationStep1Screen(
 
                     // M-Pesa phone
                     ShambaTextField(
-                        value         = uiState.mpesaPhone,
+                        value = uiState.mpesaPhone,
                         onValueChange = onMpesaPhoneChanged,
-                        label         = stringResource(R.string.reg_mpesa_phone_label),
-                        isError       = uiState.mpesaPhoneError != null,
-                        errorMessage  = uiState.mpesaPhoneError,
+                        label = stringResource(R.string.reg_mpesa_phone_label),
+                        isError = uiState.mpesaPhoneError != null,
+                        errorMessage = uiState.mpesaPhoneError,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Phone,
-                            imeAction    = ImeAction.Done,
+                            imeAction = ImeAction.Done,
                         ),
-                        trailingIcon  = { MpesaBadge() },
-                        colors        = shambaFieldColors(),
+                        trailingIcon = { MpesaBadge() },
+                        colors = shambaFieldColors(),
                     )
 
                     // M-Pesa helper hint
@@ -195,12 +195,12 @@ fun RegistrationStep1Screen(
                         Icon(
                             imageVector = Icons.Filled.Circle,
                             contentDescription = null,
-                            tint   = MaterialTheme.colorScheme.primary,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(8.dp),
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text  = stringResource(R.string.reg_mpesa_helper),
+                            text = stringResource(R.string.reg_mpesa_helper),
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = MaterialTheme.colorScheme.primary,
                             ),
@@ -219,13 +219,13 @@ fun RegistrationStep1Screen(
                     .padding(horizontal = 24.dp, vertical = 16.dp),
             ) {
                 ShambaButton(
-                    text      = stringResource(R.string.reg_next_step_cta),
-                    onClick   = onNextStep,
-                    enabled   = !uiState.isLoading,
-                    modifier  = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.reg_next_step_cta),
+                    onClick = onNextStep,
+                    enabled = !uiState.isLoading,
+                    modifier = Modifier.fillMaxWidth(),
                     textStyle = MaterialTheme.typography.labelLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize   = 16.sp,
+                        fontSize = 16.sp,
                     ),
                 )
             }
@@ -237,15 +237,15 @@ fun RegistrationStep1Screen(
 @Composable
 private fun RegistrationTopBar(
     currentStep: Int,
-    totalSteps:  Int,
-    progress:    Float,
-    onBack:      () -> Unit,
-    modifier:    Modifier = Modifier,
+    totalSteps: Int,
+    progress: Float,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
 
         Row(
-            modifier          = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -253,26 +253,26 @@ private fun RegistrationTopBar(
             // Back arrow
             IconButton(onClick = onBack) {
                 Icon(
-                    imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.reg_back_content_description),
-                    tint               = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
 
             // Title + step indicator centred in remaining space
             Column(
-                modifier            = Modifier.weight(1f),
+                modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text  = stringResource(R.string.reg_screen_title),
+                    text = stringResource(R.string.reg_screen_title),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color      = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.primary,
                     ),
                 )
                 Text(
-                    text  = stringResource(R.string.reg_step_indicator, currentStep, totalSteps),
+                    text = stringResource(R.string.reg_step_indicator, currentStep, totalSteps),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -285,13 +285,13 @@ private fun RegistrationTopBar(
 
         // Progress bar
         LinearProgressIndicator(
-            progress      = { progress },
-            modifier      = Modifier
+            progress = { progress },
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(4.dp),
-            color         = MaterialTheme.colorScheme.primary,
-            trackColor    = MaterialTheme.colorScheme.surfaceVariant,
-            strokeCap     = StrokeCap.Round,
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            strokeCap = StrokeCap.Round,
         )
     }
 }
@@ -307,11 +307,11 @@ private fun MpesaBadge() {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text  = stringResource(R.string.reg_mpesa_badge),
+            text = stringResource(R.string.reg_mpesa_badge),
             style = MaterialTheme.typography.labelSmall.copy(
-                color      = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontWeight = FontWeight.Bold,
-                fontSize   = 10.sp,
+                fontSize = 10.sp,
             ),
         )
     }
@@ -320,8 +320,8 @@ private fun MpesaBadge() {
 // Shared branded colours for all outlined text fields on this screen
 @Composable
 private fun shambaFieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor   = MaterialTheme.colorScheme.primary,
+    focusedBorderColor = MaterialTheme.colorScheme.primary,
     unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-    focusedLabelColor    = MaterialTheme.colorScheme.primary,
-    cursorColor          = MaterialTheme.colorScheme.primary,
+    focusedLabelColor = MaterialTheme.colorScheme.primary,
+    cursorColor = MaterialTheme.colorScheme.primary,
 )

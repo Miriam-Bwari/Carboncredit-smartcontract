@@ -84,7 +84,7 @@ fun OnboardingScreen(
             textColor = MaterialTheme.colorScheme.error,
             textStyle = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.Bold,
-                fontSize   = 15.sp,
+                fontSize = 15.sp,
             )
         )
 
@@ -100,14 +100,14 @@ fun OnboardingScreen(
 
             // Swipeable pages
             HorizontalPager(
-                state    = pagerState,
+                state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
             ) { pageIndex ->
                 OnboardingPageContent(
-                    page           = pages[pageIndex],
-                    isCurrentPage  = pagerState.currentPage == pageIndex,
+                    page = pages[pageIndex],
+                    isCurrentPage = pagerState.currentPage == pageIndex,
                 )
             }
 
@@ -116,7 +116,7 @@ fun OnboardingScreen(
             // Dot indicators
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment     = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 repeat(pages.size) { index ->
                     PageDot(isSelected = pagerState.currentPage == index)
@@ -142,7 +142,7 @@ fun OnboardingScreen(
                     .padding(horizontal = 28.dp),
                 textStyle = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize   = 16.sp,
+                    fontSize = 16.sp,
                 )
             )
 
@@ -159,9 +159,9 @@ private fun OnboardingPageContent(
     modifier: Modifier = Modifier,
 ) {
     val scale by animateFloatAsState(
-        targetValue  = if (isCurrentPage) 1f else 0.92f,
+        targetValue = if (isCurrentPage) 1f else 0.92f,
         animationSpec = tween(400, easing = EaseOutBack),
-        label        = "Page Scale",
+        label = "Page Scale",
     )
 
     Column(
@@ -190,10 +190,10 @@ private fun OnboardingPageContent(
         ) {
             // Illustration
             Image(
-                painter           = painterResource(page.illustrationRes),
+                painter = painterResource(page.illustrationRes),
                 contentDescription = page.title,
-                modifier          = Modifier.size(180.dp),
-                contentScale      = ContentScale.Fit,
+                modifier = Modifier.size(180.dp),
+                contentScale = ContentScale.Fit,
             )
 
             // Card label at the bottom
@@ -205,10 +205,10 @@ private fun OnboardingPageContent(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text  = page.cardLabel,
+                    text = page.cardLabel,
                     color = Color.White.copy(alpha = 0.85f),
                     style = MaterialTheme.typography.labelMedium.copy(
-                        fontWeight    = FontWeight.Bold,
+                        fontWeight = FontWeight.Bold,
                         letterSpacing = 2.5.sp,
                     )
                 )
@@ -219,10 +219,10 @@ private fun OnboardingPageContent(
 
         // Headline
         Text(
-            text      = page.title,
-            style     = MaterialTheme.typography.headlineMedium.copy(
+            text = page.title,
+            style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = Color(0xFF0D3B1A),
+                color = Color(0xFF0D3B1A),
                 lineHeight = 38.sp,
             ),
             textAlign = TextAlign.Center,
@@ -232,9 +232,9 @@ private fun OnboardingPageContent(
 
         // Description
         Text(
-            text      = page.description,
-            style     = MaterialTheme.typography.bodyMedium.copy(
-                color      = Color(0xFF44483D),
+            text = page.description,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = Color(0xFF44483D),
                 lineHeight = 22.sp,
             ),
             textAlign = TextAlign.Center,
@@ -249,14 +249,14 @@ private fun PageDot(
     modifier: Modifier = Modifier,
 ) {
     val width by animateDpAsState(
-        targetValue  = if (isSelected) 28.dp else 8.dp,
+        targetValue = if (isSelected) 28.dp else 8.dp,
         animationSpec = tween(300, easing = EaseInOutCubic),
-        label        = "Dot Width",
+        label = "Dot Width",
     )
     val color by animateColorAsState(
-        targetValue  = if (isSelected) Green40 else Green90,
+        targetValue = if (isSelected) Green40 else Green90,
         animationSpec = tween(300),
-        label        = "Dot Color",
+        label = "Dot Color",
     )
 
     Box(

@@ -68,7 +68,7 @@ class RegistrationViewModel @Inject constructor() : ViewModel() {
 
         _uiState.update {
             it.copy(
-                fullNameError   = nameError,
+                fullNameError = nameError,
                 nationalIdError = idError,
                 mpesaPhoneError = phoneError,
             )

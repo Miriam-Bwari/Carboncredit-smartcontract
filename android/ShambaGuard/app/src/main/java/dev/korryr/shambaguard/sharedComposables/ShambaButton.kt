@@ -52,7 +52,7 @@ fun ShambaButton(
                 disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                 disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
             )
-            
+
             val defaultElevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 0.dp,
                 pressedElevation = 4.dp
@@ -75,10 +75,13 @@ fun ShambaButton(
                 )
             }
         }
+
         ShambaButtonType.Text -> {
             val defaultTextColors = ButtonDefaults.textButtonColors(
                 contentColor = if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary,
-                disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(alpha = 0.5f)
+                disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(
+                    alpha = 0.5f
+                )
             )
 
             TextButton(
@@ -96,10 +99,13 @@ fun ShambaButton(
                 )
             }
         }
+
         ShambaButtonType.Outlined -> {
             val defaultOutlinedColors = ButtonDefaults.outlinedButtonColors(
                 contentColor = if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary,
-                disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(alpha = 0.5f)
+                disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(
+                    alpha = 0.5f
+                )
             )
 
             OutlinedButton(
@@ -119,12 +125,15 @@ fun ShambaButton(
                 )
             }
         }
+
         ShambaButtonType.Elevated -> {
             val defaultElevatedColors = ButtonDefaults.elevatedButtonColors(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary,
                 disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
-                disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(alpha = 0.5f)
+                disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(
+                    alpha = 0.5f
+                )
             )
 
             val defaultElevatedElevation = ButtonDefaults.elevatedButtonElevation(

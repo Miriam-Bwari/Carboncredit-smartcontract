@@ -40,11 +40,11 @@ fun ShambaTextField(
         label = { Text(text = label) },
         isError = isError,
         supportingText = if (isError && errorMessage != null) {
-            { 
+            {
                 Text(
                     text = errorMessage,
                     color = MaterialTheme.colorScheme.error
-                ) 
+                )
             }
         } else null,
         modifier = modifier.fillMaxWidth(),

@@ -15,21 +15,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import dev.korryr.shambaguard.R
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
-import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
-import dev.korryr.shambaguard.ui.features.auth.view.FarmBoundaryScreen
-import dev.korryr.shambaguard.ui.features.auth.view.FarmPracticesScreen
-import dev.korryr.shambaguard.ui.features.auth.view.RegistrationStep1Screen
-import dev.korryr.shambaguard.ui.features.auth.view.RoleSelectionScreen
+import dev.korryr.shambaguard.R
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmBoundaryViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
+import dev.korryr.shambaguard.ui.features.auth.view.FarmBoundaryScreen
+import dev.korryr.shambaguard.ui.features.auth.view.FarmPracticesScreen
+import dev.korryr.shambaguard.ui.features.auth.view.RegistrationStep1Screen
+import dev.korryr.shambaguard.ui.features.auth.view.RoleSelectionScreen
 import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerDashboardViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
@@ -37,6 +35,8 @@ import dev.korryr.shambaguard.ui.features.farmer.view.DroughtInsightsScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.EarlyWarningScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
+import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
+import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
 
 enum class UserRole {
@@ -51,9 +51,9 @@ fun ShambaGuardNavGraph(
     // 1. Determine starting key based on role
     val initialKey = remember(role) {
         when (role) {
-            UserRole.Admin          -> AdminHomeKey
-            UserRole.Agent          -> AgentHomeKey
-            UserRole.Farmer         -> FarmerHomeKey
+            UserRole.Admin -> AdminHomeKey
+            UserRole.Agent -> AgentHomeKey
+            UserRole.Farmer -> FarmerHomeKey
             UserRole.Unauthenticated -> LoginKey
         }
     }
@@ -61,9 +61,9 @@ fun ShambaGuardNavGraph(
     // 2. Determine tabs based on role
     val tabs = remember(role) {
         when (role) {
-            UserRole.Admin          -> BottomTab.adminTabs
-            UserRole.Agent          -> BottomTab.agentTabs
-            UserRole.Farmer         -> BottomTab.farmerTabs
+            UserRole.Admin -> BottomTab.adminTabs
+            UserRole.Agent -> BottomTab.agentTabs
+            UserRole.Farmer -> BottomTab.farmerTabs
             UserRole.Unauthenticated -> emptyList()
         }
     }
@@ -73,7 +73,7 @@ fun ShambaGuardNavGraph(
     val currentKey = backStack.lastOrNull()
 
     // Show the bottom bar only when one of the root tabs is on top
-    val rootKeys    = tabs.map { it.key }.toSet()
+    val rootKeys = tabs.map { it.key }.toSet()
     val showBottomBar = currentKey in rootKeys && tabs.isNotEmpty()
 
     // Handle system back: pop unless we're at the root
@@ -82,12 +82,12 @@ fun ShambaGuardNavGraph(
     }
 
     Scaffold(
-        modifier  = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         bottomBar = {
             if (showBottomBar) {
                 BottomNavBar(
-                    tabs        = tabs,
-                    currentKey  = currentKey,
+                    tabs = tabs,
+                    currentKey = currentKey,
                     onTabSelected = { key ->
                         // Switch root tab: keep only that tab on the stack
                         backStack.clear()
@@ -100,10 +100,10 @@ fun ShambaGuardNavGraph(
 
         NavDisplay(
             backStack = backStack,
-            modifier  = Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            onBack    = { backStack.removeLastOrNull() },
+            onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
 
                 // Splash screen
@@ -117,11 +117,11 @@ fun ShambaGuardNavGraph(
                             backStack.clear()
                             when (onboardingDone) {
                                 // Still loading from disk — wait for the LaunchedEffect below
-                                null  -> Unit
+                                null -> Unit
                                 // First launch — show onboarding
                                 false -> backStack.add(OnboardingKey)
                                 // Returning user — go straight to home
-                                true  -> backStack.add(initialKey)
+                                true -> backStack.add(initialKey)
                             }
                         }
                     )
@@ -159,9 +159,9 @@ fun ShambaGuardNavGraph(
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     RoleSelectionScreen(
-                        uiState        = state,
+                        uiState = state,
                         onRoleSelected = vm::onRoleSelected,
-                        onContinue     = {
+                        onContinue = {
                             // Navigate to registration once a role is chosen
                             backStack.add(RegistrationKey)
                         },
@@ -173,17 +173,22 @@ fun ShambaGuardNavGraph(
                     val vm: RegistrationViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
-                    val errorNameEmpty    = stringResource(R.string.reg_error_full_name_empty)
-                    val errorIdInvalid    = stringResource(R.string.reg_error_national_id_invalid)
+                    val errorNameEmpty = stringResource(R.string.reg_error_full_name_empty)
+                    val errorIdInvalid = stringResource(R.string.reg_error_national_id_invalid)
                     val errorPhoneInvalid = stringResource(R.string.reg_error_phone_invalid)
 
                     RegistrationStep1Screen(
-                        uiState             = state,
-                        onFullNameChanged   = vm::onFullNameChanged,
+                        uiState = state,
+                        onFullNameChanged = vm::onFullNameChanged,
                         onNationalIdChanged = vm::onNationalIdChanged,
                         onMpesaPhoneChanged = vm::onMpesaPhoneChanged,
-                        onNextStep          = {
-                            if (vm.validateStep1(errorNameEmpty, errorIdInvalid, errorPhoneInvalid)) {
+                        onNextStep = {
+                            if (vm.validateStep1(
+                                    errorNameEmpty,
+                                    errorIdInvalid,
+                                    errorPhoneInvalid
+                                )
+                            ) {
                                 backStack.add(FarmBoundaryKey)
                             }
                         },
@@ -197,13 +202,13 @@ fun ShambaGuardNavGraph(
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     FarmBoundaryScreen(
-                        uiState       = state,
-                        canSave       = vm.canSave(),
-                        onMapTapped   = vm::onMapTapped,
-                        onUndo        = vm::onUndoLastPoint,
+                        uiState = state,
+                        canSave = vm.canSave(),
+                        onMapTapped = vm::onMapTapped,
+                        onUndo = vm::onUndoLastPoint,
                         onToggleLayer = vm::onToggleMapType,
-                        onSave        = { backStack.add(FarmPracticesKey) },
-                        onBack        = { backStack.removeLastOrNull() },
+                        onSave = { backStack.add(FarmPracticesKey) },
+                        onBack = { backStack.removeLastOrNull() },
                     )
                 }
 
@@ -213,19 +218,19 @@ fun ShambaGuardNavGraph(
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     FarmPracticesScreen(
-                        uiState           = state,
-                        canComplete       = vm.canComplete(),
-                        onCropToggled     = vm::onCropToggled,
-                        onMethodSelected  = vm::onMethodSelected,
-                        onWaterSelected   = vm::onWaterSelected,
-                        onIncrementTrees  = vm::onIncrementTrees,
-                        onDecrementTrees  = vm::onDecrementTrees,
-                        onComplete        = {
+                        uiState = state,
+                        canComplete = vm.canComplete(),
+                        onCropToggled = vm::onCropToggled,
+                        onMethodSelected = vm::onMethodSelected,
+                        onWaterSelected = vm::onWaterSelected,
+                        onIncrementTrees = vm::onIncrementTrees,
+                        onDecrementTrees = vm::onDecrementTrees,
+                        onComplete = {
                             // Step 3 complete — go directly to PolicyScreen (Option A)
                             // so the farmer selects a coverage tier before reaching the dashboard
                             backStack.add(FarmerPolicyKey)
                         },
-                        onBack            = { backStack.removeLastOrNull() },
+                        onBack = { backStack.removeLastOrNull() },
                     )
                 }
 
@@ -233,14 +238,14 @@ fun ShambaGuardNavGraph(
                 entry<LoginKey> { PlaceholderScreen("Login") }
 
                 // Admin screens
-                entry<AdminHomeKey>   { PlaceholderScreen("Admin Dashboard") }
-                entry<AdminMapKey>    { PlaceholderScreen("Admin Farm Map") }
+                entry<AdminHomeKey> { PlaceholderScreen("Admin Dashboard") }
+                entry<AdminMapKey> { PlaceholderScreen("Admin Farm Map") }
                 entry<AdminAgentsKey> { PlaceholderScreen("Admin Agents Management") }
 
                 // Agent screens
-                entry<AgentHomeKey>    { PlaceholderScreen("Agent Dashboard") }
+                entry<AgentHomeKey> { PlaceholderScreen("Agent Dashboard") }
                 entry<AgentFarmersKey> { PlaceholderScreen("Agent Farmers Management") }
-                entry<AgentSyncKey>    { PlaceholderScreen("Agent Sync Status") }
+                entry<AgentSyncKey> { PlaceholderScreen("Agent Sync Status") }
 
                 // Farmer screens
                 entry<FarmerHomeKey> {
@@ -248,10 +253,10 @@ fun ShambaGuardNavGraph(
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     FarmerDashboardScreen(
-                        uiState       = state,
+                        uiState = state,
                         onSeeInsights = { backStack.add(FarmerDroughtKey) },
-                        onViewPolicy  = { backStack.add(FarmerPolicyKey) },
-                        onViewCarbon  = { backStack.add(FarmerCarbonKey) },
+                        onViewPolicy = { backStack.add(FarmerPolicyKey) },
+                        onViewCarbon = { backStack.add(FarmerCarbonKey) },
                     )
                 }
                 entry<FarmerDroughtKey> {
@@ -265,9 +270,9 @@ fun ShambaGuardNavGraph(
                         onFullAnalysis = { backStack.add(FarmerDroughtInsightsKey) }
                     )
                 }
-                entry<FarmerMyFarmKey>   { PlaceholderScreen("My Farm — Practices & Map") }
-                entry<FarmerCarbonKey>   { PlaceholderScreen("Carbon Credits") }
-                entry<FarmerProfileKey>  { PlaceholderScreen("Farmer Profile") }
+                entry<FarmerMyFarmKey> { PlaceholderScreen("My Farm — Practices & Map") }
+                entry<FarmerCarbonKey> { PlaceholderScreen("Carbon Credits") }
+                entry<FarmerProfileKey> { PlaceholderScreen("Farmer Profile") }
                 // Non-tab screens — navigated from dashboard or tabs
                 entry<FarmerDroughtInsightsKey> {
                     val vm: DroughtViewModel = hiltViewModel()
@@ -283,10 +288,10 @@ fun ShambaGuardNavGraph(
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     PolicyScreen(
-                        uiState        = state,
+                        uiState = state,
                         onTierSelected = vm::onTierSelected,
                         onPayWithMpesa = vm::onPayWithMpesa,
-                        onPaymentDone  = { backStack.removeLastOrNull() },
+                        onPaymentDone = { backStack.removeLastOrNull() },
                     )
                 }
                 entry<FarmerPayoutsKey> { PlaceholderScreen("Farmer Payout History") }

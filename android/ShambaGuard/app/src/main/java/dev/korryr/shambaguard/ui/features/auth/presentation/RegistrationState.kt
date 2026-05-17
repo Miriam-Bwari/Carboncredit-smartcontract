@@ -24,5 +24,5 @@ data class RegistrationStep1UiState(
 /** Returns true only when all three fields pass inline validation rules. */
 fun RegistrationStep1UiState.isStep1Valid(): Boolean =
     fullName.isNotBlank() &&
-    nationalId.matches(Regex("\\d{8}")) &&
-    mpesaPhone.matches(Regex("^\\+2547\\d{8}$"))
+            nationalId.matches(Regex("\\d{8}")) &&
+            mpesaPhone.matches(Regex("^\\+2547\\d{8}$"))

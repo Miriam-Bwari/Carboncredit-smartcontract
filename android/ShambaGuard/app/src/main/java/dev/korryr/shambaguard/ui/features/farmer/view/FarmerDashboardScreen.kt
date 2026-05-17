@@ -70,18 +70,18 @@ import dev.korryr.shambaguard.ui.theme.White
 // Farmer Dashboard — Home screen. Pure UI, no logic.
 @Composable
 fun FarmerDashboardScreen(
-    uiState:          FarmerDashboardUiState,
-    onSeeInsights:    () -> Unit,
-    onViewPolicy:     () -> Unit,
-    onViewCarbon:     () -> Unit,
-    modifier:         Modifier = Modifier,
+    uiState: FarmerDashboardUiState,
+    onSeeInsights: () -> Unit,
+    onViewPolicy: () -> Unit,
+    onViewCarbon: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { visible = true }
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color    = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
             modifier = Modifier
@@ -92,59 +92,62 @@ fun FarmerDashboardScreen(
             // 1. App bar greeting
             DashboardTopBar(
                 farmerName = uiState.farmerName,
-                farmName   = uiState.farmName,
+                farmName = uiState.farmName,
                 farmRegion = uiState.farmRegion,
             )
 
             // 2. Drought alert card (main risk indicator)
             Spacer(modifier = Modifier.height(4.dp))
             DroughtAlertCard(
-                risk           = uiState.droughtRisk,
-                ndviScore      = uiState.ndviScore,
-                rainfallMm     = uiState.rainfallMm,
-                rainfallDelta  = uiState.rainfallDelta,
-                onSeeInsights  = onSeeInsights,
-                modifier       = Modifier.padding(horizontal = 16.dp),
+                risk = uiState.droughtRisk,
+                ndviScore = uiState.ndviScore,
+                rainfallMm = uiState.rainfallMm,
+                rainfallDelta = uiState.rainfallDelta,
+                onSeeInsights = onSeeInsights,
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // 3. At a Glance — two side-by-side cards
             SectionHeading(
-                text     = stringResource(R.string.dashboard_at_a_glance),
+                text = stringResource(R.string.dashboard_at_a_glance),
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
-                modifier            = Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 GlanceCard(
-                    icon        = Icons.Filled.CheckCircle,
-                    iconTint    = Green40,
+                    icon = Icons.Filled.CheckCircle,
+                    iconTint = Green40,
                     iconBgColor = Green95,
-                    title       = stringResource(R.string.dashboard_policy_status),
-                    valueLine1  = if (uiState.policyActive)
-                                      stringResource(R.string.dashboard_policy_active)
-                                  else stringResource(R.string.dashboard_policy_inactive),
+                    title = stringResource(R.string.dashboard_policy_status),
+                    valueLine1 = if (uiState.policyActive)
+                        stringResource(R.string.dashboard_policy_active)
+                    else stringResource(R.string.dashboard_policy_inactive),
                     valueLine1Color = if (uiState.policyActive) Green40
-                                     else MaterialTheme.colorScheme.error,
-                    valueLine2  = stringResource(R.string.dashboard_policy_expiry, uiState.policyExpiry),
-                    onClick     = onViewPolicy,
-                    modifier    = Modifier.weight(1f),
+                    else MaterialTheme.colorScheme.error,
+                    valueLine2 = stringResource(
+                        R.string.dashboard_policy_expiry,
+                        uiState.policyExpiry
+                    ),
+                    onClick = onViewPolicy,
+                    modifier = Modifier.weight(1f),
                 )
                 GlanceCard(
-                    icon        = Icons.Filled.Eco,
-                    iconTint    = Green40,
+                    icon = Icons.Filled.Eco,
+                    iconTint = Green40,
                     iconBgColor = Green95,
-                    title       = stringResource(R.string.dashboard_carbon),
-                    valueLine1  = "${uiState.carbonTonnes} tonnes",
+                    title = stringResource(R.string.dashboard_carbon),
+                    valueLine1 = "${uiState.carbonTonnes} tonnes",
                     valueLine1Color = Green40,
-                    valueLine2  = stringResource(R.string.dashboard_carbon_claim),
-                    onClick     = onViewCarbon,
-                    modifier    = Modifier.weight(1f),
+                    valueLine2 = stringResource(R.string.dashboard_carbon_claim),
+                    onClick = onViewCarbon,
+                    modifier = Modifier.weight(1f),
                 )
             }
 
@@ -152,7 +155,7 @@ fun FarmerDashboardScreen(
 
             // 4. Recent Activity
             SectionHeading(
-                text     = stringResource(R.string.dashboard_recent_activity),
+                text = stringResource(R.string.dashboard_recent_activity),
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -162,8 +165,8 @@ fun FarmerDashboardScreen(
             ) {
                 uiState.recentActivity.forEachIndexed { index, item ->
                     ActivityRow(
-                        item      = item,
-                        isLast    = index == uiState.recentActivity.lastIndex,
+                        item = item,
+                        isLast = index == uiState.recentActivity.lastIndex,
                     )
                 }
             }
@@ -178,12 +181,12 @@ fun FarmerDashboardScreen(
 @Composable
 private fun DashboardTopBar(
     farmerName: String,
-    farmName:   String,
+    farmName: String,
     farmRegion: String,
-    modifier:   Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier          = modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -197,20 +200,20 @@ private fun DashboardTopBar(
                 },
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = MaterialTheme.colorScheme.onBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                 ),
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector        = Icons.Filled.LocationOn,
+                    imageVector = Icons.Filled.LocationOn,
                     contentDescription = null,
-                    tint               = MaterialTheme.colorScheme.primary,
-                    modifier           = Modifier.size(14.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(14.dp),
                 )
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text  = "$farmName — $farmRegion",
+                    text = "$farmName — $farmRegion",
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -239,7 +242,7 @@ private fun SatelliteThumbnail(modifier: Modifier = Modifier) {
     ) {
         // Inner grid lines suggest aerial field divisions
         Column(
-            modifier            = Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(6.dp),
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -254,53 +257,53 @@ private fun SatelliteThumbnail(modifier: Modifier = Modifier) {
             }
         }
         Icon(
-            imageVector        = Icons.Filled.Terrain,
+            imageVector = Icons.Filled.Terrain,
             contentDescription = stringResource(R.string.dashboard_satellite_desc),
-            tint               = White.copy(alpha = 0.85f),
-            modifier           = Modifier.size(22.dp),
+            tint = White.copy(alpha = 0.85f),
+            modifier = Modifier.size(22.dp),
         )
     }
 }
 
 // ─── Drought Alert Card ───────────────────────────────────────────────────────
 
-private val RiskRed   = Color(0xFFB00020)
+private val RiskRed = Color(0xFFB00020)
 private val RiskRedBg = Color(0xFFFFF0F0)
 private val RiskRedContainer = Color(0xFFFFDADB)
 
 @Composable
 private fun DroughtAlertCard(
-    risk:          DroughtRisk,
-    ndviScore:     Float,
-    rainfallMm:    Int,
+    risk: DroughtRisk,
+    ndviScore: Float,
+    rainfallMm: Int,
     rainfallDelta: Int,
     onSeeInsights: () -> Unit,
-    modifier:      Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     // Animate NDVI progress bar from 0 → actual on composition
     var progressVisible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { progressVisible = true }
     val progress by animateFloatAsState(
-        targetValue   = if (progressVisible) ndviScore else 0f,
+        targetValue = if (progressVisible) ndviScore else 0f,
         animationSpec = tween(durationMillis = 900, delayMillis = 200),
-        label         = "NdviProgress",
+        label = "NdviProgress",
     )
 
     val (cardBg, alertBadgeBg, progressColor) = when (risk) {
         DroughtRisk.CRITICAL, DroughtRisk.HIGH -> Triple(RiskRedBg, RiskRedContainer, RiskRed)
-        DroughtRisk.MODERATE                   -> Triple(Color(0xFFFFF8E1), Color(0xFFFFECB3), ShambaAmber)
-        DroughtRisk.LOW                        -> Triple(Green99, Green90, Green40)
+        DroughtRisk.MODERATE -> Triple(Color(0xFFFFF8E1), Color(0xFFFFECB3), ShambaAmber)
+        DroughtRisk.LOW -> Triple(Green99, Green90, Green40)
     }
     val riskLabel = when (risk) {
         DroughtRisk.CRITICAL -> stringResource(R.string.dashboard_risk_critical)
-        DroughtRisk.HIGH     -> stringResource(R.string.dashboard_risk_high)
+        DroughtRisk.HIGH -> stringResource(R.string.dashboard_risk_high)
         DroughtRisk.MODERATE -> stringResource(R.string.dashboard_risk_moderate)
-        DroughtRisk.LOW      -> stringResource(R.string.dashboard_risk_low)
+        DroughtRisk.LOW -> stringResource(R.string.dashboard_risk_low)
     }
     val alertLabel = when (risk) {
         DroughtRisk.CRITICAL, DroughtRisk.HIGH -> stringResource(R.string.dashboard_drought_alert)
-        DroughtRisk.MODERATE                   -> stringResource(R.string.dashboard_drought_watch)
-        DroughtRisk.LOW                        -> stringResource(R.string.dashboard_conditions_normal)
+        DroughtRisk.MODERATE -> stringResource(R.string.dashboard_drought_watch)
+        DroughtRisk.LOW -> stringResource(R.string.dashboard_conditions_normal)
     }
 
     Column(
@@ -313,32 +316,32 @@ private fun DroughtAlertCard(
     ) {
         // Top row: risk badge + alert chip
         Row(
-            modifier          = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Warning icon circle
             Box(
-                modifier         = Modifier
+                modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
                     .background(progressColor.copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.Warning,
+                    imageVector = Icons.Filled.Warning,
                     contentDescription = null,
-                    tint               = progressColor,
-                    modifier           = Modifier.size(22.dp),
+                    tint = progressColor,
+                    modifier = Modifier.size(22.dp),
                 )
             }
 
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
-                text  = riskLabel,
+                text = riskLabel,
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = progressColor,
+                    color = progressColor,
                 ),
                 modifier = Modifier.weight(1f),
             )
@@ -353,9 +356,9 @@ private fun DroughtAlertCard(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text  = alertLabel,
+                    text = alertLabel,
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color      = progressColor,
+                        color = progressColor,
                         fontWeight = FontWeight.Bold,
                     ),
                 )
@@ -366,13 +369,13 @@ private fun DroughtAlertCard(
 
         // Metrics row: NDVI + Rainfall
         Row(
-            modifier              = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // NDVI score
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text  = stringResource(R.string.dashboard_ndvi_label),
+                    text = stringResource(R.string.dashboard_ndvi_label),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -382,28 +385,28 @@ private fun DroughtAlertCard(
                     text = buildAnnotatedString {
                         withStyle(
                             SpanStyle(
-                                fontSize   = 32.sp,
+                                fontSize = 32.sp,
                                 fontWeight = FontWeight.ExtraBold,
-                                color      = progressColor,
+                                color = progressColor,
                             )
                         ) { append(String.format("%.2f", ndviScore)) }
                         withStyle(
                             SpanStyle(
                                 fontSize = 14.sp,
-                                color    = MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         ) { append(" / 1.0") }
                     },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 LinearProgressIndicator(
-                    progress   = { progress },
-                    modifier   = Modifier
+                    progress = { progress },
+                    modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp),
-                    color      = progressColor,
+                    color = progressColor,
                     trackColor = progressColor.copy(alpha = 0.15f),
-                    strokeCap  = StrokeCap.Round,
+                    strokeCap = StrokeCap.Round,
                 )
             }
 
@@ -418,7 +421,7 @@ private fun DroughtAlertCard(
             // Rainfall
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text  = stringResource(R.string.dashboard_rainfall_label),
+                    text = stringResource(R.string.dashboard_rainfall_label),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -428,22 +431,22 @@ private fun DroughtAlertCard(
                     text = buildAnnotatedString {
                         withStyle(
                             SpanStyle(
-                                fontSize   = 32.sp,
+                                fontSize = 32.sp,
                                 fontWeight = FontWeight.ExtraBold,
-                                color      = MaterialTheme.colorScheme.onSurface,
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                         ) { append("$rainfallMm") }
                         withStyle(
                             SpanStyle(
                                 fontSize = 14.sp,
-                                color    = MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         ) { append(" mm") }
                     },
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text  = "$rainfallDelta% from average",
+                    text = "$rainfallDelta% from average",
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = progressColor,
                     ),
@@ -464,11 +467,11 @@ private fun DroughtAlertCard(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text  = stringResource(R.string.dashboard_insights_cta),
+                text = stringResource(R.string.dashboard_insights_cta),
                 style = MaterialTheme.typography.labelLarge.copy(
-                    color      = White,
+                    color = White,
                     fontWeight = FontWeight.Bold,
-                    fontSize   = 15.sp,
+                    fontSize = 15.sp,
                 ),
             )
         }
@@ -479,15 +482,15 @@ private fun DroughtAlertCard(
 
 @Composable
 private fun GlanceCard(
-    icon:           ImageVector,
-    iconTint:       Color,
-    iconBgColor:    Color,
-    title:          String,
-    valueLine1:     String,
+    icon: ImageVector,
+    iconTint: Color,
+    iconBgColor: Color,
+    title: String,
+    valueLine1: String,
     valueLine1Color: Color,
-    valueLine2:     String,
-    onClick:        () -> Unit,
-    modifier:       Modifier = Modifier,
+    valueLine2: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -506,19 +509,19 @@ private fun GlanceCard(
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector        = icon,
+                imageVector = icon,
                 contentDescription = null,
-                tint               = iconTint,
-                modifier           = Modifier.size(20.dp),
+                tint = iconTint,
+                modifier = Modifier.size(20.dp),
             )
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text  = title,
+            text = title,
             style = MaterialTheme.typography.labelMedium.copy(
-                color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Medium,
             ),
         )
@@ -527,10 +530,10 @@ private fun GlanceCard(
 
         // Value
         Text(
-            text  = valueLine1,
+            text = valueLine1,
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
-                color      = valueLine1Color,
+                color = valueLine1Color,
             ),
         )
 
@@ -538,9 +541,9 @@ private fun GlanceCard(
 
         // Sub-value / link
         Text(
-            text  = valueLine2,
+            text = valueLine2,
             style = MaterialTheme.typography.labelSmall.copy(
-                color      = Green40,
+                color = Green40,
                 fontWeight = FontWeight.SemiBold,
             ),
         )
@@ -551,18 +554,23 @@ private fun GlanceCard(
 
 @Composable
 private fun ActivityRow(
-    item:     ActivityItem,
-    isLast:   Boolean,
+    item: ActivityItem,
+    isLast: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val (iconVector, iconTint, iconBg) = when (item.type) {
-        ActivityType.DROUGHT_ALERT -> Triple(Icons.Filled.Warning,     Color(0xFFB00020), Color(0xFFFFDADB))
-        ActivityType.PAYOUT        -> Triple(Icons.Filled.CheckCircle, Green40,           Green95)
-        ActivityType.CARBON        -> Triple(Icons.Filled.Eco,         Color(0xFF5D6B29), Color(0xFFE8F0C8))
+        ActivityType.DROUGHT_ALERT -> Triple(
+            Icons.Filled.Warning,
+            Color(0xFFB00020),
+            Color(0xFFFFDADB)
+        )
+
+        ActivityType.PAYOUT -> Triple(Icons.Filled.CheckCircle, Green40, Green95)
+        ActivityType.CARBON -> Triple(Icons.Filled.Eco, Color(0xFF5D6B29), Color(0xFFE8F0C8))
     }
 
     Row(
-        modifier          = modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.Top,
@@ -576,10 +584,10 @@ private fun ActivityRow(
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector        = iconVector,
+                imageVector = iconVector,
                 contentDescription = null,
-                tint               = iconTint,
-                modifier           = Modifier.size(18.dp),
+                tint = iconTint,
+                modifier = Modifier.size(18.dp),
             )
         }
 
@@ -588,23 +596,23 @@ private fun ActivityRow(
         // Text content
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text  = item.title,
+                text = item.title,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
-                    color      = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                 ),
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text  = item.description,
+                text = item.description,
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 18.sp,
                 ),
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text  = item.timeAgo,
+                text = item.timeAgo,
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 ),
@@ -628,14 +636,14 @@ private fun ActivityRow(
 
 @Composable
 private fun SectionHeading(
-    text:     String,
+    text: String,
     modifier: Modifier = Modifier,
 ) {
     Text(
-        text     = text,
-        style    = MaterialTheme.typography.titleMedium.copy(
+        text = text,
+        style = MaterialTheme.typography.titleMedium.copy(
             fontWeight = FontWeight.ExtraBold,
-            color      = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.onBackground,
         ),
         modifier = modifier,
     )
