@@ -23,52 +23,68 @@ import kotlinx.serialization.Serializable
 // Auth / Onboarding routes
 @Serializable
 data object SplashKey
+
 @Serializable
 data object OnboardingKey
+
 @Serializable
 data object RoleSelectionKey
+
 @Serializable
 data object RegistrationKey   // Step 1: Personal details
+
 @Serializable
 data object FarmBoundaryKey   // Step 2: Draw farm polygon
+
 @Serializable
 data object FarmPracticesKey  // Step 3: Farm practices
+
 @Serializable
 data object LoginKey
 
 // Admin routes
 @Serializable
 data object AdminHomeKey
+
 @Serializable
 data object AdminMapKey
+
 @Serializable
 data object AdminAgentsKey
 
 // Agent routes
 @Serializable
 data object AgentHomeKey
+
 @Serializable
 data object AgentFarmersKey
+
 @Serializable
 data object AgentSyncKey
 
 // Farmer routes
 @Serializable
 data object FarmerHomeKey      // Dashboard — HOME tab
+
 @Serializable
 data object FarmerDroughtKey   // Early warning — DROUGHT tab
+
 @Serializable
 data object FarmerMyFarmKey    // Farm management — MY FARM tab
+
 @Serializable
 data object FarmerCarbonKey    // Carbon credits — CARBON tab
+
 @Serializable
 data object FarmerProfileKey   // Profile — PROFILE tab
 
 // Still accessible (navigated from dashboard / policy card) but not a bottom tab:
 @Serializable
 data object FarmerPolicyKey    // Coverage selection / payment
+
 @Serializable
 data object FarmerPayoutsKey   // Payout history
+
 @Serializable
 data object FarmerDroughtInsightsKey // Drought Insights deep dive
 

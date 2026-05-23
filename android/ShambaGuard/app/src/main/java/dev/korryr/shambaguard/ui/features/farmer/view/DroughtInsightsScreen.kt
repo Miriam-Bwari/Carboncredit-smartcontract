@@ -2,7 +2,6 @@ package dev.korryr.shambaguard.ui.features.farmer.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,15 +37,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import dev.korryr.shambaguard.R
 import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtInsightsUiState
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
-import dev.korryr.shambaguard.ui.theme.Green95
 import dev.korryr.shambaguard.ui.theme.Green99
 import dev.korryr.shambaguard.ui.theme.ShambaAmber
-import dev.korryr.shambaguard.ui.theme.White
 
 @Composable
 fun DroughtInsightsScreen(

@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Terrain
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -60,7 +59,6 @@ import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtRisk
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerDashboardUiState
 import dev.korryr.shambaguard.ui.theme.Green10
 import dev.korryr.shambaguard.ui.theme.Green40
-import dev.korryr.shambaguard.ui.theme.Green80
 import dev.korryr.shambaguard.ui.theme.Green90
 import dev.korryr.shambaguard.ui.theme.Green95
 import dev.korryr.shambaguard.ui.theme.Green99
