@@ -1,30 +1,42 @@
 package dev.korryr.shambaguard.ui.features.farmer.presentation
 
-// A single day in the 14-day forecast timeline
-data class ForecastDay(
-    val dayLabel: String,  // e.g. "Day 1", "Day 7"
-    val riskScore: Float,   // 0.0 to 1.0 drought probability
-    val rainfallMm: Float,
+// A single day in the 7-day rainfall forecast strip
+data class RainfallDay(
+    val day:        String,   // "Mon", "Tue", etc.
+    val hasRain:    Boolean,  // false = sun icon, true = cloud icon
+    val rainfallMm: Int,
 )
 
 data class EarlyWarningUiState(
-    val farmName: String = "Shamba la Mary",
-    val farmRegion: String = "Ukambani, Machakos",
-    val currentRisk: DroughtRisk = DroughtRisk.HIGH,
-    // Overall 14-day forecast drought probability
-    val forecastRisk: Float = 0.72f,
-    // 14-day forecast breakdown
-    val forecast: List<ForecastDay> = listOf(
-        ForecastDay("Day 1", 0.70f, 1.2f),
-        ForecastDay("Day 3", 0.74f, 0.8f),
-        ForecastDay("Day 5", 0.78f, 0.0f),
-        ForecastDay("Day 7", 0.80f, 0.0f),
-        ForecastDay("Day 10", 0.82f, 2.0f),
-        ForecastDay("Day 14", 0.75f, 3.5f),
+    // Alert banner
+    val alertTitleSwahili: String = "Ukame unakuja /",
+    val alertTitleEnglish: String = "Drought Coming",
+    val alertBody:         String = "Severe lack of rain expected in the next 14 days.",
+    val aiConfidence:      Int    = 89,
+
+    // Farm stress map
+    val mapLastUpdated: String  = "Today",
+
+    // 7-day rainfall forecast
+    val rainfallForecast: List<RainfallDay> = listOf(
+        RainfallDay("Mon", false, 0),
+        RainfallDay("Tue", false, 0),
+        RainfallDay("Wed", true,  1),
+        RainfallDay("Thu", false, 0),
+        RainfallDay("Fri", false, 0),
+        RainfallDay("Sat", false, 0),
+        RainfallDay("Sun", false, 0),
     ),
-    // Crop recommendation based on the forecast
-    val recommendedCrop: String = "Cowpeas (Kunde)",
-    val recommendedCropReason: String = "Drought-resistant. Plant within 3 days before soil dries out.",
-    val recommendedCropSwahili: String = "Panda kunde — mvua kidogo inatosha.",
-    val isLoading: Boolean = false,
+
+    // AI crop recommendation
+    val aiCropTitle:  String = "Panda Cowpeas, si Mahindi",
+    val aiCropBody:   String = "Due to the projected severe lack of rainfall over the next crucial growing weeks, maize (mahindi) will likely fail. Cowpeas are highly drought-resistant and have a 75% higher chance of yield in current conditions.",
+
+    // Policy coverage card
+    val coverageActive:    Boolean = true,
+    val payoutKes:         Int     = 8_000,
+    val payoutCondition:   String  = "If drought is confirmed by end of month.",
+
+    val currentRisk: DroughtRisk = DroughtRisk.HIGH,
+    val isLoading:   Boolean     = false,
 )

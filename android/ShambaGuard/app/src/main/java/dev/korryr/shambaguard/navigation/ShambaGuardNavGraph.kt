@@ -30,10 +30,12 @@ import dev.korryr.shambaguard.ui.features.auth.view.RegistrationStep1Screen
 import dev.korryr.shambaguard.ui.features.auth.view.RoleSelectionScreen
 import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerDashboardViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerProfileViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
-import dev.korryr.shambaguard.ui.features.farmer.view.DroughtInsightsScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.CoverageStatusScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.EarlyWarningScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.FarmerProfileScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
@@ -260,27 +262,41 @@ fun ShambaGuardNavGraph(
                     )
                 }
                 entry<FarmerDroughtKey> {
-                    // Scope ViewModel to the NavGraph if we want it shared, or to this entry.
-                    // Since it's a tab, we'll scope it normally here.
                     val vm: DroughtViewModel = hiltViewModel()
                     val state by vm.warningState.collectAsStateWithLifecycle()
 
                     EarlyWarningScreen(
-                        uiState = state,
-                        onFullAnalysis = { backStack.add(FarmerDroughtInsightsKey) }
+                        uiState        = state,
+                        onBack         = { backStack.removeLastOrNull() },
+                        onFullAnalysis = { backStack.add(FarmerDroughtInsightsKey) },
                     )
                 }
                 entry<FarmerMyFarmKey> { PlaceholderScreen("My Farm — Practices & Map") }
                 entry<FarmerCarbonKey> { PlaceholderScreen("Carbon Credits") }
-                entry<FarmerProfileKey> { PlaceholderScreen("Farmer Profile") }
+                entry<FarmerProfileKey> {
+                    val vm: FarmerProfileViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    FarmerProfileScreen(
+                        uiState                = state,
+                        onLanguageSelected     = vm::onLanguageSelected,
+                        onPushNotifications    = vm::onPushNotificationsToggled,
+                        onDroughtAlerts        = vm::onDroughtAlertsToggled,
+                        onBiometricToggled     = vm::onBiometricToggled,
+                        onChangePinClicked     = {},
+                        onPolicyDocsClicked    = {},
+                        onPrivacyPolicyClicked = {},
+                        onSignOut              = { backStack.clear(); backStack.add(initialKey) },
+                    )
+                }
                 // Non-tab screens — navigated from dashboard or tabs
                 entry<FarmerDroughtInsightsKey> {
                     val vm: DroughtViewModel = hiltViewModel()
-                    val state by vm.insightsState.collectAsStateWithLifecycle()
+                    val state by vm.coverageState.collectAsStateWithLifecycle()
 
-                    DroughtInsightsScreen(
+                    CoverageStatusScreen(
                         uiState = state,
-                        onBack = { backStack.removeLastOrNull() }
+                        onBack  = { backStack.removeLastOrNull() },
                     )
                 }
                 entry<FarmerPolicyKey> {
