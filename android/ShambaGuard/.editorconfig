@@ -1,0 +1,40 @@
+# EditorConfig — ktlint reads this file for rule configuration.
+# https://editorconfig.org | https://pinterest.github.io/ktlint/
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+trim_trailing_whitespace = true
+
+[*.kt]
+# Android / Kotlin code style
+ktlint_code_style = android_studio
+
+# Allow wildcard imports for Compose (Icons.Filled.*, Modifier, etc.)
+ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
+
+# Compose multiline function args — allow trailing commas
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+
+# ktlint specific rule overrides
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_import-ordering = disabled
+
+# Max line length applies to code — long Composable lambda chains are fine
+ktlint_standard_max-line-length = disabled
+
+[*.kts]
+indent_size = 4
+
+[*.xml]
+indent_size = 4
+
+[*.json]
+indent_size = 2
