@@ -234,10 +234,10 @@ fun ShambaGuardNavGraph(
                          onIncrementTrees = vm::onIncrementTrees,
                          onDecrementTrees = vm::onDecrementTrees,
                          onComplete = {
-                             // Agents return to their dashboard; farmers select coverage tier
+                             // Agents go home; farmers still pick a coverage tier first
                              if (role == UserRole.Agent) {
                                  backStack.clear()
-                                 backStack.add(AgentHomeKey)
+                                 backStack.add(initialKey)
                              } else {
                                  backStack.add(FarmerPolicyKey)
                              }
@@ -348,7 +348,11 @@ fun ShambaGuardNavGraph(
                         uiState = state,
                         onTierSelected = vm::onTierSelected,
                         onPayWithMpesa = vm::onPayWithMpesa,
-                        onPaymentDone = { backStack.removeLastOrNull() },
+                        onPaymentDone = {
+                            // Clear the registration stack; land on role's home screen
+                            backStack.clear()
+                            backStack.add(initialKey)
+                        },
                     )
                 }
                 entry<FarmerPayoutsKey> { PlaceholderScreen("Farmer Payout History") }

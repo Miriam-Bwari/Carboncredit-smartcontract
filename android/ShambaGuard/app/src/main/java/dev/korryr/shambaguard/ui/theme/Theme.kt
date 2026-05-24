@@ -110,7 +110,7 @@ fun ShambaGuardTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) ShambaDarkColorScheme else ShambaDarkColorScheme
+    val colorScheme = if (darkTheme) ShambaDarkColorScheme else ShambaLightColorScheme
 
     // Make the system status bar transparent & adapt icon tint to theme
     val view = LocalView.current
