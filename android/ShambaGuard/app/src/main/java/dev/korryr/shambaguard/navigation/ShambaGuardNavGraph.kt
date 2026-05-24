@@ -41,6 +41,8 @@ import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerProfileScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.MyFarmScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
+import dev.korryr.shambaguard.ui.features.agent.presentation.AgentDashboardViewModel
+import dev.korryr.shambaguard.ui.features.agent.view.AgentDashboardScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
@@ -223,22 +225,26 @@ fun ShambaGuardNavGraph(
                     val vm: FarmPracticesViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
-                    FarmPracticesScreen(
-                        uiState = state,
-                        canComplete = vm.canComplete(),
-                        onCropToggled = vm::onCropToggled,
-                        onMethodSelected = vm::onMethodSelected,
-                        onWaterSelected = vm::onWaterSelected,
-                        onIncrementTrees = vm::onIncrementTrees,
-                        onDecrementTrees = vm::onDecrementTrees,
-                        onComplete = {
-                            // Step 3 complete — go directly to PolicyScreen (Option A)
-                            // so the farmer selects a coverage tier before reaching the dashboard
-                            backStack.add(FarmerPolicyKey)
-                        },
-                        onBack = { backStack.removeLastOrNull() },
-                    )
-                }
+                     FarmPracticesScreen(
+                         uiState = state,
+                         canComplete = vm.canComplete(),
+                         onCropToggled = vm::onCropToggled,
+                         onMethodSelected = vm::onMethodSelected,
+                         onWaterSelected = vm::onWaterSelected,
+                         onIncrementTrees = vm::onIncrementTrees,
+                         onDecrementTrees = vm::onDecrementTrees,
+                         onComplete = {
+                             // Agents return to their dashboard; farmers select coverage tier
+                             if (role == UserRole.Agent) {
+                                 backStack.clear()
+                                 backStack.add(AgentHomeKey)
+                             } else {
+                                 backStack.add(FarmerPolicyKey)
+                             }
+                         },
+                         onBack = { backStack.removeLastOrNull() },
+                     )
+                 }
 
                 // Auth screens
                 entry<LoginKey> { PlaceholderScreen("Login") }
@@ -249,9 +255,20 @@ fun ShambaGuardNavGraph(
                 entry<AdminAgentsKey> { PlaceholderScreen("Admin Agents Management") }
 
                 // Agent screens
-                entry<AgentHomeKey> { PlaceholderScreen("Agent Dashboard") }
+                entry<AgentHomeKey> {
+                    val vm: AgentDashboardViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    AgentDashboardScreen(
+                        uiState          = state,
+                        onRegisterFarmer = { backStack.add(RegistrationKey) },
+                        onSyncNow        = vm::onSyncNow,
+                        onFilterToggled  = vm::onFilterToggled,
+                        onFarmerClicked  = { /* AgentFarmerDetailKey(it) — Week 5 */ },
+                    )
+                }
                 entry<AgentFarmersKey> { PlaceholderScreen("Agent Farmers Management") }
-                entry<AgentSyncKey> { PlaceholderScreen("Agent Sync Status") }
+                entry<AgentSyncKey>    { PlaceholderScreen("Agent Sync Status") }
 
                 // Farmer screens
                 entry<FarmerHomeKey> {
