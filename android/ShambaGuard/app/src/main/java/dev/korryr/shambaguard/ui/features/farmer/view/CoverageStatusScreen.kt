@@ -31,6 +31,7 @@ import dev.korryr.shambaguard.ui.features.farmer.presentation.CoverageStatusUiSt
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
 import dev.korryr.shambaguard.ui.theme.Green95
+import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.theme.ShambaAmber
 import dev.korryr.shambaguard.ui.theme.ShambaRed
 import dev.korryr.shambaguard.ui.theme.White
@@ -50,7 +51,7 @@ fun CoverageStatusScreen(
             .background(MaterialTheme.colorScheme.background),
     ) {
         // Top bar (matches EarlyWarningScreen)
-        CoverageTopBar(onBack = onBack)
+        ShambaTopBar(onBack = onBack)
 
         Column(
             modifier = Modifier
@@ -59,7 +60,6 @@ fun CoverageStatusScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            // Page title
             Column {
                 Text(
                     text  = "Coverage Status",
@@ -77,47 +77,10 @@ fun CoverageStatusScreen(
                     ),
                 )
             }
-
             ActivePolicyCard(uiState)
             CurrentTriggersSection(uiState)
             HistorySection(uiState.history)
             Spacer(Modifier.height(16.dp))
-        }
-    }
-}
-
-// Top bar
-
-@Composable
-private fun CoverageTopBar(onBack: () -> Unit) {
-    Row(
-        modifier          = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        IconButton(onClick = onBack) {
-            Icon(
-                imageVector        = Icons.Filled.ArrowBack,
-                contentDescription = "Back",
-                tint               = MaterialTheme.colorScheme.primary,
-            )
-        }
-        Text(
-            text      = "Habari, Shamba Guard",
-            modifier  = Modifier.weight(1f),
-            textAlign = TextAlign.Center,
-            style     = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color      = MaterialTheme.colorScheme.primary,
-            ),
-        )
-        IconButton(onClick = {}) {
-            Icon(
-                imageVector        = Icons.Filled.LocationOn,
-                contentDescription = "Location",
-                tint               = MaterialTheme.colorScheme.primary,
-            )
         }
     }
 }

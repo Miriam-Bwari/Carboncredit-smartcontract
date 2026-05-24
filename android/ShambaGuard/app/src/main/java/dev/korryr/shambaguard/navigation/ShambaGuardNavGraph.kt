@@ -28,14 +28,18 @@ import dev.korryr.shambaguard.ui.features.auth.view.FarmBoundaryScreen
 import dev.korryr.shambaguard.ui.features.auth.view.FarmPracticesScreen
 import dev.korryr.shambaguard.ui.features.auth.view.RegistrationStep1Screen
 import dev.korryr.shambaguard.ui.features.auth.view.RoleSelectionScreen
+import dev.korryr.shambaguard.ui.features.farmer.presentation.CarbonViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerDashboardViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerProfileViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.MyFarmViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
+import dev.korryr.shambaguard.ui.features.farmer.view.CarbonScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.CoverageStatusScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.EarlyWarningScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerProfileScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.MyFarmScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
@@ -271,8 +275,28 @@ fun ShambaGuardNavGraph(
                         onFullAnalysis = { backStack.add(FarmerDroughtInsightsKey) },
                     )
                 }
-                entry<FarmerMyFarmKey> { PlaceholderScreen("My Farm — Practices & Map") }
-                entry<FarmerCarbonKey> { PlaceholderScreen("Carbon Credits") }
+                entry<FarmerMyFarmKey> {
+                    val vm: MyFarmViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    MyFarmScreen(
+                        uiState       = state,
+                        onBack        = { backStack.removeLastOrNull() },
+                        onAddPractice = {},
+                        onViewOnMap   = {},
+                    )
+                }
+                entry<FarmerCarbonKey> {
+                    val vm: CarbonViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    CarbonScreen(
+                        uiState           = state,
+                        onBack            = { backStack.removeLastOrNull() },
+                        onSellCredits     = {},
+                        onViewAllEarnings = {},
+                    )
+                }
                 entry<FarmerProfileKey> {
                     val vm: FarmerProfileViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()

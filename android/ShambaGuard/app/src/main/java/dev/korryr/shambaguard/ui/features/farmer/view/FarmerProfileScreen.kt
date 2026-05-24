@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerProfileUiState
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
@@ -28,16 +29,16 @@ import dev.korryr.shambaguard.ui.theme.Green95
 
 @Composable
 fun FarmerProfileScreen(
-    uiState:               FarmerProfileUiState,
-    onLanguageSelected:    (String) -> Unit,
-    onPushNotifications:   () -> Unit,
-    onDroughtAlerts:       () -> Unit,
-    onBiometricToggled:    () -> Unit,
-    onChangePinClicked:    () -> Unit,
-    onPolicyDocsClicked:   () -> Unit,
-    onPrivacyPolicyClicked:() -> Unit,
-    onSignOut:             () -> Unit,
-    modifier:              Modifier = Modifier,
+    uiState: FarmerProfileUiState,
+    onLanguageSelected: (String) -> Unit,
+    onPushNotifications: () -> Unit,
+    onDroughtAlerts: () -> Unit,
+    onBiometricToggled: () -> Unit,
+    onChangePinClicked: () -> Unit,
+    onPolicyDocsClicked: () -> Unit,
+    onPrivacyPolicyClicked: () -> Unit,
+    onSignOut: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -46,7 +47,7 @@ fun FarmerProfileScreen(
             .background(MaterialTheme.colorScheme.background),
     ) {
         // Top bar
-        ProfileTopBar()
+        ShambaTopBar(onBack = null)
 
         Column(
             modifier = Modifier
@@ -64,21 +65,21 @@ fun FarmerProfileScreen(
             ProfileSection(title = "PREFERENCES") {
                 // Language toggle (ENG / SWA)
                 LanguageRow(
-                    selected   = uiState.selectedLanguage,
-                    onSelect   = onLanguageSelected,
+                    selected = uiState.selectedLanguage,
+                    onSelect = onLanguageSelected,
                 )
                 SettingsDivider()
                 SwitchRow(
-                    icon     = Icons.Filled.Notifications,
-                    label    = "Push Notifications",
-                    checked  = uiState.pushNotificationsOn,
+                    icon = Icons.Filled.Notifications,
+                    label = "Push Notifications",
+                    checked = uiState.pushNotificationsOn,
                     onToggle = onPushNotifications,
                 )
                 SettingsDivider()
                 SwitchRow(
-                    icon     = Icons.Filled.WbSunny,
-                    label    = "Drought Alerts",
-                    checked  = uiState.droughtAlertsOn,
+                    icon = Icons.Filled.WbSunny,
+                    label = "Drought Alerts",
+                    checked = uiState.droughtAlertsOn,
                     onToggle = onDroughtAlerts,
                 )
             }
@@ -86,15 +87,15 @@ fun FarmerProfileScreen(
             // SECURITY section
             ProfileSection(title = "SECURITY") {
                 SwitchRow(
-                    icon     = Icons.Filled.Fingerprint,
-                    label    = "Biometric Unlock",
-                    checked  = uiState.biometricEnabled,
+                    icon = Icons.Filled.Fingerprint,
+                    label = "Biometric Unlock",
+                    checked = uiState.biometricEnabled,
                     onToggle = onBiometricToggled,
                 )
                 SettingsDivider()
                 ChevronRow(
-                    icon    = Icons.Filled.Password,
-                    label   = "Change PIN",
+                    icon = Icons.Filled.Password,
+                    label = "Change PIN",
                     onClick = onChangePinClicked,
                 )
             }
@@ -102,14 +103,14 @@ fun FarmerProfileScreen(
             // LEGAL & SUPPORT section
             ProfileSection(title = "LEGAL & SUPPORT") {
                 ChevronRow(
-                    icon    = Icons.Filled.Article,
-                    label   = "Policy Documents",
+                    icon = Icons.Filled.Article,
+                    label = "Policy Documents",
                     onClick = onPolicyDocsClicked,
                 )
                 SettingsDivider()
                 ChevronRow(
-                    icon    = Icons.Filled.Shield,
-                    label   = "Privacy Policy",
+                    icon = Icons.Filled.Shield,
+                    label = "Privacy Policy",
                     onClick = onPrivacyPolicyClicked,
                 )
             }
@@ -117,8 +118,10 @@ fun FarmerProfileScreen(
             // Sign Out button — outlined red style
             OutlinedButton(
                 onClick = onSignOut,
-                modifier = Modifier.fillMaxWidth().height(52.dp),
-                shape  = RoundedCornerShape(14.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(14.dp),
                 border = androidx.compose.foundation.BorderStroke(
                     1.5.dp, MaterialTheme.colorScheme.error
                 ),
@@ -127,27 +130,27 @@ fun FarmerProfileScreen(
                 ),
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.Logout,
+                    imageVector = Icons.Filled.Logout,
                     contentDescription = null,
-                    tint               = MaterialTheme.colorScheme.error,
-                    modifier           = Modifier.size(18.dp),
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(18.dp),
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text  = "Sign Out",
+                    text = "Sign Out",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.SemiBold,
-                        color      = MaterialTheme.colorScheme.error,
+                        color = MaterialTheme.colorScheme.error,
                     ),
                 )
             }
 
             // App version
             Text(
-                text      = "Shamba Guard ${uiState.appVersion}",
-                modifier  = Modifier.fillMaxWidth(),
+                text = "Shamba Guard ${uiState.appVersion}",
+                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                style     = MaterialTheme.typography.bodySmall.copy(
+                style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
             )
@@ -156,69 +159,39 @@ fun FarmerProfileScreen(
     }
 }
 
-// Profile header — avatar illustration, name, ID, verified badge
-@Composable
-private fun ProfileTopBar() {
-    Row(
-        modifier          = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        // No back arrow on tab screens — spacer to keep title centered
-        Spacer(Modifier.size(48.dp))
-        Text(
-            text      = "Habari, Shamba Guard",
-            modifier  = Modifier.weight(1f),
-            textAlign = TextAlign.Center,
-            style     = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color      = MaterialTheme.colorScheme.primary,
-            ),
-        )
-        IconButton(onClick = {}) {
-            Icon(
-                imageVector        = Icons.Filled.LocationOn,
-                contentDescription = "Location",
-                tint               = MaterialTheme.colorScheme.primary,
-            )
-        }
-    }
-}
-
 @Composable
 private fun ProfileHeader(uiState: FarmerProfileUiState) {
     Column(
-        modifier            = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         // Avatar circle (placeholder illustration)
         Box(
-            modifier         = Modifier
+            modifier = Modifier
                 .size(90.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector        = Icons.Filled.Person,
+                imageVector = Icons.Filled.Person,
                 contentDescription = null,
-                tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier           = Modifier.size(56.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(56.dp),
             )
         }
 
         Text(
-            text  = uiState.farmerName,
+            text = uiState.farmerName,
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground,
             ),
         )
 
         Text(
-            text  = "ID: ${uiState.farmerId}  •  ${uiState.phone}",
+            text = "ID: ${uiState.farmerId}  •  ${uiState.phone}",
             style = MaterialTheme.typography.bodySmall.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
@@ -226,7 +199,7 @@ private fun ProfileHeader(uiState: FarmerProfileUiState) {
 
         if (uiState.isVerified) {
             Row(
-                modifier          = Modifier
+                modifier = Modifier
                     .clip(RoundedCornerShape(50))
                     .background(Green95)
                     .border(1.dp, Green90, RoundedCornerShape(50))
@@ -234,16 +207,16 @@ private fun ProfileHeader(uiState: FarmerProfileUiState) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.CheckCircle,
+                    imageVector = Icons.Filled.CheckCircle,
                     contentDescription = null,
-                    tint               = Green40,
-                    modifier           = Modifier.size(14.dp),
+                    tint = Green40,
+                    modifier = Modifier.size(14.dp),
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text  = "Verified Farmer",
+                    text = "Verified Farmer",
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color      = Green40,
+                        color = Green40,
                         fontWeight = FontWeight.SemiBold,
                     ),
                 )
@@ -255,17 +228,17 @@ private fun ProfileHeader(uiState: FarmerProfileUiState) {
 // Section wrapper with grey caps title and white card
 @Composable
 private fun ProfileSection(
-    title:   String,
+    title: String,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            text  = title,
+            text = title,
             style = MaterialTheme.typography.labelSmall.copy(
-                color         = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight    = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp,
-                fontSize      = 11.sp,
+                fontSize = 11.sp,
             ),
         )
         Column(
@@ -283,22 +256,22 @@ private fun ProfileSection(
 @Composable
 private fun LanguageRow(selected: String, onSelect: (String) -> Unit) {
     Row(
-        modifier          = Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            imageVector        = Icons.Filled.Language,
+            imageVector = Icons.Filled.Language,
             contentDescription = null,
-            tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier           = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp),
         )
         Spacer(Modifier.width(14.dp))
         Text(
-            text     = "Language",
+            text = "Language",
             modifier = Modifier.weight(1f),
-            style    = MaterialTheme.typography.bodyMedium.copy(
+            style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
         )
@@ -311,7 +284,7 @@ private fun LanguageRow(selected: String, onSelect: (String) -> Unit) {
             listOf("ENG", "SWA").forEach { lang ->
                 val isSelected = selected == lang
                 Box(
-                    modifier         = Modifier
+                    modifier = Modifier
                         .clip(RoundedCornerShape(7.dp))
                         .background(if (isSelected) MaterialTheme.colorScheme.surface else Color.Transparent)
                         .clickable { onSelect(lang) }
@@ -319,11 +292,11 @@ private fun LanguageRow(selected: String, onSelect: (String) -> Unit) {
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text  = lang,
+                        text = lang,
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            color      = if (isSelected) MaterialTheme.colorScheme.onSurface
-                                         else MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = if (isSelected) MaterialTheme.colorScheme.onSurface
+                            else MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     )
                 }
@@ -335,37 +308,37 @@ private fun LanguageRow(selected: String, onSelect: (String) -> Unit) {
 // Row with switch toggle
 @Composable
 private fun SwitchRow(
-    icon:     ImageVector,
-    label:    String,
-    checked:  Boolean,
+    icon: ImageVector,
+    label: String,
+    checked: Boolean,
     onToggle: () -> Unit,
 ) {
     Row(
-        modifier          = Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            imageVector        = icon,
+            imageVector = icon,
             contentDescription = null,
-            tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier           = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp),
         )
         Spacer(Modifier.width(14.dp))
         Text(
-            text     = label,
+            text = label,
             modifier = Modifier.weight(1f),
-            style    = MaterialTheme.typography.bodyMedium.copy(
+            style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
         )
         Switch(
-            checked         = checked,
+            checked = checked,
             onCheckedChange = { onToggle() },
-            colors          = SwitchDefaults.colors(
-                checkedThumbColor  = MaterialTheme.colorScheme.surface,
-                checkedTrackColor  = Green40,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.surface,
+                checkedTrackColor = Green40,
                 uncheckedThumbColor = MaterialTheme.colorScheme.surface,
                 uncheckedTrackColor = MaterialTheme.colorScheme.outlineVariant,
             ),
@@ -376,36 +349,36 @@ private fun SwitchRow(
 // Row with chevron (navigation)
 @Composable
 private fun ChevronRow(
-    icon:    ImageVector,
-    label:   String,
+    icon: ImageVector,
+    label: String,
     onClick: () -> Unit,
 ) {
     Row(
-        modifier          = Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            imageVector        = icon,
+            imageVector = icon,
             contentDescription = null,
-            tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier           = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp),
         )
         Spacer(Modifier.width(14.dp))
         Text(
-            text     = label,
+            text = label,
             modifier = Modifier.weight(1f),
-            style    = MaterialTheme.typography.bodyMedium.copy(
+            style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
         )
         Icon(
-            imageVector        = Icons.Filled.ChevronRight,
+            imageVector = Icons.Filled.ChevronRight,
             contentDescription = null,
-            tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier           = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp),
         )
     }
 }
@@ -413,8 +386,8 @@ private fun ChevronRow(
 @Composable
 private fun SettingsDivider() {
     HorizontalDivider(
-        modifier  = Modifier.padding(start = 50.dp),
+        modifier = Modifier.padding(start = 50.dp),
         thickness = 0.5.dp,
-        color     = MaterialTheme.colorScheme.outlineVariant,
+        color = MaterialTheme.colorScheme.outlineVariant,
     )
 }

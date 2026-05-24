@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.features.farmer.presentation.EarlyWarningUiState
 import dev.korryr.shambaguard.ui.features.farmer.presentation.RainfallDay
 import dev.korryr.shambaguard.ui.theme.Green40
@@ -57,7 +58,7 @@ fun EarlyWarningScreen(
             .background(MaterialTheme.colorScheme.background),
     ) {
         // Top bar
-        EarlyWarningTopBar(onBack = onBack)
+        ShambaTopBar(onBack = onBack)
 
         Column(
             modifier = Modifier
@@ -73,41 +74,6 @@ fun EarlyWarningScreen(
             AIRecommendationCard(uiState)
             CoverageCard(uiState)
             Spacer(Modifier.height(16.dp))
-        }
-    }
-}
-
-// Top bar — back arrow | "Habari, Shamba Guard" | location pin
-@Composable
-private fun EarlyWarningTopBar(onBack: () -> Unit) {
-    Row(
-        modifier          = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        IconButton(onClick = onBack) {
-            Icon(
-                imageVector        = Icons.Filled.ArrowBack,
-                contentDescription = "Back",
-                tint               = MaterialTheme.colorScheme.primary,
-            )
-        }
-        Text(
-            text      = "Habari, Shamba Guard",
-            modifier  = Modifier.weight(1f),
-            textAlign = TextAlign.Center,
-            style     = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color      = MaterialTheme.colorScheme.primary,
-            ),
-        )
-        IconButton(onClick = {}) {
-            Icon(
-                imageVector        = Icons.Filled.LocationOn,
-                contentDescription = "Location",
-                tint               = MaterialTheme.colorScheme.primary,
-            )
         }
     }
 }
