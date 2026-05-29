@@ -61,7 +61,10 @@ import dev.korryr.shambaguard.ui.theme.Green95
 import dev.korryr.shambaguard.ui.theme.Green99
 import dev.korryr.shambaguard.ui.theme.ShambaAmber
 import dev.korryr.shambaguard.ui.theme.White
-
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.compose.ui.platform.LocalContext
 // PolicyScreen — Chagua Bima / Choose Your Coverage
 // Accessible via the Farmer "Policy" bottom-nav tab AND immediately after Step 3 registration.
 @Composable
@@ -81,6 +84,29 @@ fun PolicyScreen(
         if (uiState.paymentState is PaymentState.Success) {
             kotlinx.coroutines.delay(1_500L)
             onPaymentDone()
+        }
+    }
+
+    val context = LocalContext.current
+    val handlePayClick = {
+        val activity = context as? FragmentActivity
+        if (activity != null) {
+            val executor = ContextCompat.getMainExecutor(activity)
+            val biometricPrompt = BiometricPrompt(activity, executor,
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        super.onAuthenticationSucceeded(result)
+                        onPayWithMpesa()
+                    }
+                })
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Verify Payment")
+                .setSubtitle("Confirm M-Pesa STK Push with biometrics")
+                .setNegativeButtonText("Cancel")
+                .build()
+            biometricPrompt.authenticate(promptInfo)
+        } else {
+            onPayWithMpesa()
         }
     }
 
@@ -122,7 +148,7 @@ fun PolicyScreen(
             MpesaPaymentFooter(
                 isEnabled = uiState.selectedTier != null,
                 paymentState = uiState.paymentState,
-                onPayWithMpesa = onPayWithMpesa,
+                onPayWithMpesa = handlePayClick,
             )
         }
     }
