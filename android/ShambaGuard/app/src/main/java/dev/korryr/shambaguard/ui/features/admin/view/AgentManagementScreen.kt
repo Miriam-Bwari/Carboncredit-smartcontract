@@ -16,7 +16,7 @@ fun AgentManagementScreen(
         topBar = {
             ShambaTopBar(
                 title = "Manage Agents",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

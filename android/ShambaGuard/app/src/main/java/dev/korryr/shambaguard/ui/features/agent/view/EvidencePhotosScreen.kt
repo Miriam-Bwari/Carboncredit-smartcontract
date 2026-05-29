@@ -19,7 +19,7 @@ fun EvidencePhotosScreen(
         topBar = {
             ShambaTopBar(
                 title = "Capture Evidence",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

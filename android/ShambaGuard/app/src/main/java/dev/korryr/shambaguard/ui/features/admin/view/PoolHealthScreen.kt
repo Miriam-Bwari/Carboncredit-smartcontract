@@ -15,7 +15,7 @@ fun PoolHealthScreen(
         topBar = {
             ShambaTopBar(
                 title = "Pool Health",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

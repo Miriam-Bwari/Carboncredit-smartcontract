@@ -46,6 +46,11 @@ import dev.korryr.shambaguard.ui.features.agent.view.AgentDashboardScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
 import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
 import dev.korryr.shambaguard.ui.features.splash.SplashScreen
+import dev.korryr.shambaguard.ui.features.admin.view.AdminHomeScreen
+import dev.korryr.shambaguard.ui.features.admin.view.FarmMapScreen
+import dev.korryr.shambaguard.ui.features.admin.view.PoolHealthScreen
+import dev.korryr.shambaguard.ui.features.admin.view.AgentManagementScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.PayoutHistoryScreen
 
 enum class UserRole {
     Admin, Agent, Farmer, Unauthenticated
@@ -250,9 +255,16 @@ fun ShambaGuardNavGraph(
                 entry<LoginKey> { PlaceholderScreen("Login") }
 
                 // Admin screens
-                entry<AdminHomeKey> { PlaceholderScreen("Admin Dashboard") }
-                entry<AdminMapKey> { PlaceholderScreen("Admin Farm Map") }
-                entry<AdminAgentsKey> { PlaceholderScreen("Admin Agents Management") }
+                entry<AdminHomeKey> { 
+                    AdminHomeScreen(
+                        onNavigateToAgents = { backStack.add(AdminAgentsKey) },
+                        onNavigateToMap = { backStack.add(AdminMapKey) },
+                        onNavigateToPool = { backStack.add(AdminPoolKey) }
+                    )
+                }
+                entry<AdminMapKey> { FarmMapScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AdminAgentsKey> { AgentManagementScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AdminPoolKey> { PoolHealthScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
 
                 // Agent screens
                 entry<AgentHomeKey> {
@@ -355,7 +367,7 @@ fun ShambaGuardNavGraph(
                         },
                     )
                 }
-                entry<FarmerPayoutsKey> { PlaceholderScreen("Farmer Payout History") }
+                entry<FarmerPayoutsKey> { PayoutHistoryScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
             }
         )
     }

@@ -16,7 +16,7 @@ fun PayoutHistoryScreen(
         topBar = {
             ShambaTopBar(
                 title = "Payout History",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

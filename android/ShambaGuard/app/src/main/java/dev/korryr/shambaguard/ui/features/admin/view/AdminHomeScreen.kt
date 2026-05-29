@@ -17,7 +17,7 @@ fun AdminHomeScreen(
         topBar = {
             ShambaTopBar(
                 title = "Admin Dashboard",
-                onNavigateBack = null
+                onBack = null
             )
         }
     ) { padding ->

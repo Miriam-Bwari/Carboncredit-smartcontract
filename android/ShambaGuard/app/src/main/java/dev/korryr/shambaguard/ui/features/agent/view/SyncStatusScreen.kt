@@ -17,7 +17,7 @@ fun SyncStatusScreen(
         topBar = {
             ShambaTopBar(
                 title = "Sync Status",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

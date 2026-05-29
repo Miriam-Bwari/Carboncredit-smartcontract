@@ -21,7 +21,7 @@ fun FarmPracticesScreen(
         topBar = {
             ShambaTopBar(
                 title = "Farm Practices",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

@@ -22,7 +22,7 @@ fun FarmerRegistrationScreen(
         topBar = {
             ShambaTopBar(
                 title = "Register Farmer",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

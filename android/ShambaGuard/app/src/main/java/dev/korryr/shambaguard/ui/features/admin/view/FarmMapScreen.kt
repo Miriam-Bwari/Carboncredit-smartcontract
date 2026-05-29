@@ -22,7 +22,7 @@ fun FarmMapScreen(
         topBar = {
             ShambaTopBar(
                 title = "Farm Map (NDVI Overlay)",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

@@ -29,7 +29,7 @@ fun MapPolygonScreen(
         topBar = {
             ShambaTopBar(
                 title = "Draw Farm Boundary",
-                onNavigateBack = onNavigateBack
+                onBack = onNavigateBack
             )
         }
     ) { padding ->

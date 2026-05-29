@@ -52,6 +52,9 @@ data object AdminMapKey
 @Serializable
 data object AdminAgentsKey
 
+@Serializable
+data object AdminPoolKey
+
 // Agent routes
 @Serializable
 data object AgentHomeKey
