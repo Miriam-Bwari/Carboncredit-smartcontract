@@ -252,7 +252,7 @@ fun ShambaGuardNavGraph(
                  }
 
                 // Auth screens
-                entry<LoginKey> { PlaceholderScreen("Login") }
+                entry<LoginKey> { PlaceholderScreen(UserRole.Unauthenticated, "Login") }
 
                 // Admin screens
                 entry<AdminHomeKey> { 
@@ -279,8 +279,8 @@ fun ShambaGuardNavGraph(
                         onFarmerClicked  = { /* AgentFarmerDetailKey(it) — Week 5 */ },
                     )
                 }
-                entry<AgentFarmersKey> { PlaceholderScreen("Agent Farmers Management") }
-                entry<AgentSyncKey>    { PlaceholderScreen("Agent Sync Status") }
+                entry<AgentFarmersKey> { PlaceholderScreen(role, "Agent Farmers Management") }
+                entry<AgentSyncKey>    { dev.korryr.shambaguard.ui.features.agent.view.SyncStatusScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
 
                 // Farmer screens
                 entry<FarmerHomeKey> {
@@ -374,9 +374,47 @@ fun ShambaGuardNavGraph(
 }
 
 @Composable
-fun PlaceholderScreen(title: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = title)
+fun PlaceholderScreen(role: UserRole, title: String) {
+    androidx.compose.foundation.layout.Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val roleColor = when (role) {
+            UserRole.Admin -> androidx.compose.ui.graphics.Color(0xFFE53935)
+            UserRole.Agent -> androidx.compose.ui.graphics.Color(0xFF1E88E5)
+            UserRole.Farmer -> androidx.compose.ui.graphics.Color(0xFF43A047)
+            else -> androidx.compose.ui.graphics.Color.Gray
+        }
+
+        androidx.compose.material3.Card(
+            colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = roleColor.copy(alpha = 0.1f)),
+            border = androidx.compose.foundation.BorderStroke(2.dp, roleColor)
+        ) {
+            androidx.compose.foundation.layout.Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Role: ${role.name.uppercase()}",
+                    style = androidx.compose.material3.MaterialTheme.typography.titleLarge,
+                    color = roleColor,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+                androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(8.dp))
+                Text(
+                    text = title,
+                    style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(16.dp))
+                Text(
+                    text = "This screen is currently under construction.",
+                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
+        }
     }
 }
 
