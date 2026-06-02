@@ -1,0 +1,434 @@
+package dev.korryr.shambaguard.navigation
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import dev.korryr.shambaguard.R
+import dev.korryr.shambaguard.ui.features.auth.presentation.FarmBoundaryViewModel
+import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
+import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
+import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
+import dev.korryr.shambaguard.ui.features.auth.view.FarmBoundaryScreen
+import dev.korryr.shambaguard.ui.features.auth.view.FarmPracticesScreen
+import dev.korryr.shambaguard.ui.features.auth.view.RegistrationStep1Screen
+import dev.korryr.shambaguard.ui.features.auth.view.RoleSelectionScreen
+import dev.korryr.shambaguard.ui.features.farmer.presentation.CarbonViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerDashboardViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerProfileViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.MyFarmViewModel
+import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
+import dev.korryr.shambaguard.ui.features.farmer.view.CarbonScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.CoverageStatusScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.EarlyWarningScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.FarmerProfileScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.MyFarmScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
+import dev.korryr.shambaguard.ui.features.agent.presentation.AgentDashboardViewModel
+import dev.korryr.shambaguard.ui.features.agent.view.AgentDashboardScreen
+import dev.korryr.shambaguard.ui.features.onboarding.OnboardingScreen
+import dev.korryr.shambaguard.ui.features.onboarding.OnboardingViewModel
+import dev.korryr.shambaguard.ui.features.splash.SplashScreen
+import dev.korryr.shambaguard.ui.features.admin.view.AdminHomeScreen
+import dev.korryr.shambaguard.ui.features.admin.view.FarmMapScreen
+import dev.korryr.shambaguard.ui.features.admin.view.PoolHealthScreen
+import dev.korryr.shambaguard.ui.features.admin.view.AgentManagementScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.PayoutHistoryScreen
+
+enum class UserRole {
+    Admin, Agent, Farmer, Unauthenticated
+}
+
+@Composable
+fun ShambaGuardNavGraph(
+    modifier: Modifier = Modifier,
+    role: UserRole = UserRole.Farmer // Defaulting to Farmer for development until Auth is done
+) {
+    // 1. Determine starting key based on role
+    val initialKey = remember(role) {
+        when (role) {
+            UserRole.Admin -> AdminHomeKey
+            UserRole.Agent -> AgentHomeKey
+            UserRole.Farmer -> FarmerHomeKey
+            UserRole.Unauthenticated -> LoginKey
+        }
+    }
+
+    // 2. Determine tabs based on role
+    val tabs = remember(role) {
+        when (role) {
+            UserRole.Admin -> BottomTab.adminTabs
+            UserRole.Agent -> BottomTab.agentTabs
+            UserRole.Farmer -> BottomTab.farmerTabs
+            UserRole.Unauthenticated -> emptyList()
+        }
+    }
+
+    // Back stack — always starts on the splash screen
+    val backStack = remember(role) { mutableStateListOf<Any>(SplashKey) }
+    val currentKey = backStack.lastOrNull()
+
+    // Show the bottom bar only when one of the root tabs is on top
+    val rootKeys = tabs.map { it.key }.toSet()
+    val showBottomBar = currentKey in rootKeys && tabs.isNotEmpty()
+
+    // Handle system back: pop unless we're at the root
+    BackHandler(enabled = backStack.size > 1) {
+        backStack.removeLastOrNull()
+    }
+
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        bottomBar = {
+            if (showBottomBar) {
+                BottomNavBar(
+                    tabs = tabs,
+                    currentKey = currentKey,
+                    onTabSelected = { key ->
+                        // Switch root tab: keep only that tab on the stack
+                        backStack.clear()
+                        backStack.add(key)
+                    }
+                )
+            }
+        }
+    ) { innerPadding ->
+
+        NavDisplay(
+            backStack = backStack,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            onBack = { backStack.removeLastOrNull() },
+            entryProvider = entryProvider {
+
+                // Splash screen
+                entry<SplashKey> {
+                    val onboardingVm: OnboardingViewModel = hiltViewModel()
+                    val onboardingDone by onboardingVm.onboardingCompleted
+                        .collectAsStateWithLifecycle()
+
+                    SplashScreen(
+                        onSplashComplete = {
+                            backStack.clear()
+                            when (onboardingDone) {
+                                // Still loading from disk — wait for the LaunchedEffect below
+                                null -> Unit
+                                // First launch — show onboarding
+                                false -> backStack.add(OnboardingKey)
+                                // Returning user — go straight to home
+                                true -> backStack.add(initialKey)
+                            }
+                        }
+                    )
+
+                    // Safety: if the DataStore value resolves after the splash timer fires,
+                    // navigate immediately from Splash.
+                    LaunchedEffect(onboardingDone) {
+                        if (onboardingDone != null && backStack.lastOrNull() == SplashKey) {
+                            backStack.clear()
+                            if (onboardingDone == false) {
+                                backStack.add(OnboardingKey)
+                            } else {
+                                backStack.add(initialKey)
+                            }
+                        }
+                    }
+                }
+
+                // Onboarding
+                entry<OnboardingKey> {
+                    val onboardingVm: OnboardingViewModel = hiltViewModel()
+
+                    OnboardingScreen(
+                        onFinish = {
+                            onboardingVm.markOnboardingDone()
+                            backStack.clear()
+                            backStack.add(RoleSelectionKey)
+                        }
+                    )
+                }
+
+                // Role Selection
+                entry<RoleSelectionKey> {
+                    val vm: RoleSelectionViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    RoleSelectionScreen(
+                        uiState = state,
+                        onRoleSelected = vm::onRoleSelected,
+                        onContinue = {
+                            // Navigate to registration once a role is chosen
+                            backStack.add(RegistrationKey)
+                        },
+                    )
+                }
+
+                // Step 1: Personal Details
+                entry<RegistrationKey> {
+                    val vm: RegistrationViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    val errorNameEmpty = stringResource(R.string.reg_error_full_name_empty)
+                    val errorIdInvalid = stringResource(R.string.reg_error_national_id_invalid)
+                    val errorPhoneInvalid = stringResource(R.string.reg_error_phone_invalid)
+
+                    RegistrationStep1Screen(
+                        uiState = state,
+                        onFullNameChanged = vm::onFullNameChanged,
+                        onNationalIdChanged = vm::onNationalIdChanged,
+                        onMpesaPhoneChanged = vm::onMpesaPhoneChanged,
+                        onNextStep = {
+                            if (vm.validateStep1(
+                                    errorNameEmpty,
+                                    errorIdInvalid,
+                                    errorPhoneInvalid
+                                )
+                            ) {
+                                backStack.add(FarmBoundaryKey)
+                            }
+                        },
+                        onBack = { backStack.removeLastOrNull() },
+                    )
+                }
+
+                // Step 2: Draw farm polygon
+                entry<FarmBoundaryKey> {
+                    val vm: FarmBoundaryViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    FarmBoundaryScreen(
+                        uiState = state,
+                        canSave = vm.canSave(),
+                        onMapTapped = vm::onMapTapped,
+                        onUndo = vm::onUndoLastPoint,
+                        onToggleLayer = vm::onToggleMapType,
+                        onSave = { backStack.add(FarmPracticesKey) },
+                        onBack = { backStack.removeLastOrNull() },
+                    )
+                }
+
+                // Step 3: Farm practices
+                entry<FarmPracticesKey> {
+                    val vm: FarmPracticesViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                     FarmPracticesScreen(
+                         uiState = state,
+                         canComplete = vm.canComplete(),
+                         onCropToggled = vm::onCropToggled,
+                         onMethodSelected = vm::onMethodSelected,
+                         onWaterSelected = vm::onWaterSelected,
+                         onIncrementTrees = vm::onIncrementTrees,
+                         onDecrementTrees = vm::onDecrementTrees,
+                         onComplete = {
+                             // Agents go home; farmers still pick a coverage tier first
+                             if (role == UserRole.Agent) {
+                                 backStack.clear()
+                                 backStack.add(initialKey)
+                             } else {
+                                 backStack.add(FarmerPolicyKey)
+                             }
+                         },
+                         onBack = { backStack.removeLastOrNull() },
+                     )
+                 }
+
+                // Auth screens
+                entry<LoginKey> { PlaceholderScreen(UserRole.Unauthenticated, "Login") }
+
+                // Admin screens
+                entry<AdminHomeKey> { 
+                    AdminHomeScreen(
+                        onNavigateToAgents = { backStack.add(AdminAgentsKey) },
+                        onNavigateToMap = { backStack.add(AdminMapKey) },
+                        onNavigateToPool = { backStack.add(AdminPoolKey) }
+                    )
+                }
+                entry<AdminMapKey> { FarmMapScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AdminAgentsKey> { AgentManagementScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AdminPoolKey> { PoolHealthScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+
+                // Agent screens
+                entry<AgentHomeKey> {
+                    val vm: AgentDashboardViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    AgentDashboardScreen(
+                        uiState          = state,
+                        onRegisterFarmer = { backStack.add(RegistrationKey) },
+                        onSyncNow        = vm::onSyncNow,
+                        onFilterToggled  = vm::onFilterToggled,
+                        onFarmerClicked  = { /* AgentFarmerDetailKey(it) — Week 5 */ },
+                    )
+                }
+                entry<AgentFarmersKey> { PlaceholderScreen(role, "Agent Farmers Management") }
+                entry<AgentSyncKey>    { dev.korryr.shambaguard.ui.features.agent.view.SyncStatusScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+
+                // Farmer screens
+                entry<FarmerHomeKey> {
+                    val vm: FarmerDashboardViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    FarmerDashboardScreen(
+                        uiState = state,
+                        onSeeInsights = { backStack.add(FarmerDroughtKey) },
+                        onViewPolicy = { backStack.add(FarmerPolicyKey) },
+                        onViewCarbon = { backStack.add(FarmerCarbonKey) },
+                    )
+                }
+                entry<FarmerDroughtKey> {
+                    val vm: DroughtViewModel = hiltViewModel()
+                    val state by vm.warningState.collectAsStateWithLifecycle()
+
+                    EarlyWarningScreen(
+                        uiState        = state,
+                        onBack         = { backStack.removeLastOrNull() },
+                        onFullAnalysis = { backStack.add(FarmerDroughtInsightsKey) },
+                    )
+                }
+                entry<FarmerMyFarmKey> {
+                    val vm: MyFarmViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    MyFarmScreen(
+                        uiState       = state,
+                        onBack        = { backStack.removeLastOrNull() },
+                        onAddPractice = {},
+                        onViewOnMap   = {},
+                    )
+                }
+                entry<FarmerCarbonKey> {
+                    val vm: CarbonViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    CarbonScreen(
+                        uiState           = state,
+                        onBack            = { backStack.removeLastOrNull() },
+                        onSellCredits     = {},
+                        onViewAllEarnings = {},
+                    )
+                }
+                entry<FarmerProfileKey> {
+                    val vm: FarmerProfileViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    FarmerProfileScreen(
+                        uiState                = state,
+                        onLanguageSelected     = vm::onLanguageSelected,
+                        onPushNotifications    = vm::onPushNotificationsToggled,
+                        onDroughtAlerts        = vm::onDroughtAlertsToggled,
+                        onBiometricToggled     = vm::onBiometricToggled,
+                        onChangePinClicked     = {},
+                        onPolicyDocsClicked    = {},
+                        onPrivacyPolicyClicked = {},
+                        onSignOut              = { backStack.clear(); backStack.add(initialKey) },
+                    )
+                }
+                // Non-tab screens — navigated from dashboard or tabs
+                entry<FarmerDroughtInsightsKey> {
+                    val vm: DroughtViewModel = hiltViewModel()
+                    val state by vm.coverageState.collectAsStateWithLifecycle()
+
+                    CoverageStatusScreen(
+                        uiState = state,
+                        onBack  = { backStack.removeLastOrNull() },
+                    )
+                }
+                entry<FarmerPolicyKey> {
+                    val vm: PolicyViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    PolicyScreen(
+                        uiState = state,
+                        onTierSelected = vm::onTierSelected,
+                        onPayWithMpesa = vm::onPayWithMpesa,
+                        onPaymentDone = {
+                            // Clear the registration stack; land on role's home screen
+                            backStack.clear()
+                            backStack.add(initialKey)
+                        },
+                    )
+                }
+                entry<FarmerPayoutsKey> { PayoutHistoryScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+            }
+        )
+    }
+}
+
+@Composable
+fun PlaceholderScreen(role: UserRole, title: String) {
+    androidx.compose.foundation.layout.Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val roleColor = when (role) {
+            UserRole.Admin -> androidx.compose.ui.graphics.Color(0xFFE53935)
+            UserRole.Agent -> androidx.compose.ui.graphics.Color(0xFF1E88E5)
+            UserRole.Farmer -> androidx.compose.ui.graphics.Color(0xFF43A047)
+            else -> androidx.compose.ui.graphics.Color.Gray
+        }
+
+        androidx.compose.material3.Card(
+            colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = roleColor.copy(alpha = 0.1f)),
+            border = androidx.compose.foundation.BorderStroke(2.dp, roleColor)
+        ) {
+            androidx.compose.foundation.layout.Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Role: ${role.name.uppercase()}",
+                    style = androidx.compose.material3.MaterialTheme.typography.titleLarge,
+                    color = roleColor,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+                androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(8.dp))
+                Text(
+                    text = title,
+                    style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(16.dp))
+                Text(
+                    text = "This screen is currently under construction.",
+                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PlaceholderScreenWithAction(title: String, buttonText: String, onClick: () -> Unit) {
+    androidx.compose.foundation.layout.Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = title)
+        androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(16.dp))
+        androidx.compose.material3.Button(onClick = onClick) {
+            Text(text = buttonText)
+        }
+    }
+}
