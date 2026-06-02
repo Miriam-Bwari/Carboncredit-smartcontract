@@ -17,14 +17,29 @@ import dev.korryr.shambaguard.ui.theme.ShambaGuardTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    
+    @javax.inject.Inject
+    lateinit var sessionManager: dev.korryr.shambaguard.core.datastore.SessionManager
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ShambaGuardTheme {
+                val savedRole by sessionManager.userRoleFlow.collectAsState(initial = null)
+                
+                // Show loading or splash if we haven't read the role yet
+                if (savedRole == null) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                    return@ShambaGuardTheme
+                }
+                
+                // If unauthenticated, show the Dev Role Switcher or go straight to Auth
                 var selectedRole by remember { mutableStateOf<UserRole?>(null) }
                 
-                if (selectedRole == null) {
+                if (savedRole == UserRole.Unauthenticated.name && selectedRole == null) {
                     Scaffold { padding ->
                         Column(
                             modifier = Modifier.fillMaxSize().padding(padding),
@@ -41,7 +56,12 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 } else {
-                    ShambaGuardNavGraph(role = selectedRole!!)
+                    val finalRole = selectedRole ?: try {
+                        UserRole.valueOf(savedRole!!)
+                    } catch (e: Exception) {
+                        UserRole.Unauthenticated
+                    }
+                    ShambaGuardNavGraph(role = finalRole)
                 }
             }
         }

@@ -252,7 +252,27 @@ fun ShambaGuardNavGraph(
                  }
 
                 // Auth screens
-                entry<LoginKey> { PlaceholderScreen(UserRole.Unauthenticated, "Login") }
+                entry<LoginKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.auth.presentation.LoginViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.auth.view.LoginScreen(
+                        uiState = state,
+                        onPhoneChanged = vm::onPhoneChanged,
+                        onOtpChanged = vm::onOtpChanged,
+                        onSendOtp = vm::sendOtp,
+                        onVerifyOtp = vm::verifyOtp,
+                        onLoginSuccess = { loggedInRole ->
+                            val homeKey = when (loggedInRole) {
+                                UserRole.Admin -> AdminHomeKey
+                                UserRole.Agent -> AgentHomeKey
+                                else -> FarmerHomeKey
+                            }
+                            backStack.clear()
+                            backStack.add(homeKey)
+                        }
+                    )
+                }
 
                 // Admin screens
                 entry<AdminHomeKey> { 

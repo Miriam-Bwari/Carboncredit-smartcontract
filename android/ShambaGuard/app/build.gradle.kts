@@ -41,6 +41,9 @@ android {
 
         // Inject Maps API key into the manifest
         manifestPlaceholders["MAPS_API_KEY"] = keysProperty("MAPS_API_KEY")
+        
+        // Add Base URL for Retrofit
+        buildConfigField("String", "BASE_URL", "\"${keysProperty("BASE_URL", "https://api.shambaguard.co.ke/")}\"")
     }
 
     buildTypes {
