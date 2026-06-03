@@ -1,6 +1,7 @@
 package dev.korryr.shambaguard.ui.features.farmer.data.remote
 
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmDto
+import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmRegisterRequestDto
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmReportDto
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto
 import retrofit2.http.Body
@@ -10,8 +11,8 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface FarmApi {
-    @POST("api/v1/farms")
-    suspend fun registerFarm(@Body farm: FarmDto): FarmDto
+    @POST("api/farms/register")
+    suspend fun registerFarm(@Body farm: FarmRegisterRequestDto)
 
     @GET("api/v1/farms/{farm_id}")
     suspend fun getFarm(@Path("farm_id") farmId: String): FarmDto

@@ -6,6 +6,7 @@ import dev.korryr.shambaguard.data.local.entity.FarmEntity
 import dev.korryr.shambaguard.data.local.entity.FarmReportEntity
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.FarmApi
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmDto
+import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmRegisterRequestDto
 import dev.korryr.shambaguard.ui.features.farmer.domain.repository.FarmRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -47,13 +48,28 @@ class FarmRepositoryImpl @Inject constructor(
 
     override suspend fun pushPendingFarm(farmEntity: FarmEntity): Result<Unit> {
         return try {
-            val dto = FarmDto(
-                farmId = farmEntity.farmId,
-                farmerId = farmEntity.farmerId,
-                agentId = farmEntity.agentId,
-                polygon = farmEntity.polygonJson,
-                areaHectares = farmEntity.areaHectares,
-                region = farmEntity.region
+            // Parse polygonJson to List<List<Double>>. Fallback to empty if missing.
+            val coords = try {
+                val jsonArray = org.json.JSONArray(farmEntity.polygonJson)
+                val list = mutableListOf<List<Double>>()
+                for (i in 0 until jsonArray.length()) {
+                    val point = jsonArray.getJSONObject(i)
+                    list.add(listOf(point.getDouble("lat"), point.getDouble("lng")))
+                }
+                list
+            } catch (e: Exception) {
+                emptyList()
+            }
+
+            val farmerIdInt = farmEntity.farmerId.toIntOrNull() ?: 0
+
+            val dto = FarmRegisterRequestDto(
+                farmerId = farmerIdInt,
+                name = "Farm ${farmEntity.farmId.take(4)}", // Mock name
+                boundaryCoords = coords,
+                soilType = "Loam", // Default placeholder
+                cropType = farmEntity.cropType.takeIf { it.isNotBlank() } ?: "Maize",
+                county = farmEntity.region
             )
             farmApi.registerFarm(dto)
             

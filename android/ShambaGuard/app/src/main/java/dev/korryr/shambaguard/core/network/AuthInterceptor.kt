@@ -16,10 +16,9 @@ class AuthInterceptor @Inject constructor(
         val originalRequest = chain.request()
 
         // Endpoints that don't need auth token
-        if (originalRequest.url.encodedPath.contains("/auth/login") ||
-            originalRequest.url.encodedPath.contains("/auth/register") ||
-            originalRequest.url.encodedPath.contains("/auth/otp/send") ||
-            originalRequest.url.encodedPath.contains("/auth/otp/verify")
+        if (originalRequest.url.encodedPath.contains("/api/farmers/login") ||
+            originalRequest.url.encodedPath.contains("/api/farmers/register") ||
+            originalRequest.url.encodedPath.contains("/api/farms/register")
         ) {
             return chain.proceed(originalRequest)
         }

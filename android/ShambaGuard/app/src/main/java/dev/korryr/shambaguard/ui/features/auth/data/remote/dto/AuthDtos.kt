@@ -2,18 +2,20 @@ package dev.korryr.shambaguard.ui.features.auth.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class SendOtpRequestDto(
-    @SerializedName("phone") val phone: String
+data class FarmerLoginRequestDto(
+    @SerializedName("phone_number") val phoneNumber: String,
+    @SerializedName("password") val password: String
 )
 
-data class VerifyOtpRequestDto(
-    @SerializedName("phone") val phone: String,
-    @SerializedName("otp") val otp: String
+data class FarmerRegisterRequestDto(
+    @SerializedName("full_name") val fullName: String,
+    @SerializedName("phone_number") val phoneNumber: String,
+    @SerializedName("password") val password: String,
+    @SerializedName("county") val county: String
 )
 
 data class AuthResponseDto(
     @SerializedName("access_token") val accessToken: String,
-    @SerializedName("refresh_token") val refreshToken: String,
-    @SerializedName("role") val role: String,
-    @SerializedName("user_id") val userId: String
+    @SerializedName("role") val role: String?,
+    @SerializedName("user_id") val userId: String?
 )

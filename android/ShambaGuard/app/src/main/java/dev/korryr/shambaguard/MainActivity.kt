@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
+import dev.korryr.shambaguard.core.datastore.SessionManager
 import dev.korryr.shambaguard.navigation.ShambaGuardNavGraph
 import dev.korryr.shambaguard.navigation.UserRole
 import dev.korryr.shambaguard.ui.theme.ShambaGuardTheme
@@ -19,7 +20,7 @@ import dev.korryr.shambaguard.ui.theme.ShambaGuardTheme
 class MainActivity : ComponentActivity() {
     
     @javax.inject.Inject
-    lateinit var sessionManager: dev.korryr.shambaguard.core.datastore.SessionManager
+    lateinit var sessionManager: SessionManager
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

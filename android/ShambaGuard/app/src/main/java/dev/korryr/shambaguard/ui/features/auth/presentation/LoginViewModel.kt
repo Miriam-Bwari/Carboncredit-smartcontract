@@ -14,8 +14,7 @@ import javax.inject.Inject
 
 data class LoginUiState(
     val phone: String = "",
-    val otp: String = "",
-    val isOtpSent: Boolean = false,
+    val pin: String = "",
     val isLoading: Boolean = false,
     val error: String? = null,
     val successRole: UserRole? = null
@@ -33,45 +32,25 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(phone = phone, error = null) }
     }
 
-    fun onOtpChanged(otp: String) {
-        _uiState.update { it.copy(otp = otp, error = null) }
+    fun onPinChanged(pin: String) {
+        _uiState.update { it.copy(pin = pin, error = null) }
     }
 
-    fun sendOtp() {
-        val phone = _uiState.value.phone
-        if (phone.isBlank()) {
-            _uiState.update { it.copy(error = "Phone number is required") }
-            return
-        }
-        
-        _uiState.update { it.copy(isLoading = true, error = null) }
-        viewModelScope.launch {
-            authRepository.sendOtp(phone).fold(
-                onSuccess = {
-                    _uiState.update { it.copy(isLoading = false, isOtpSent = true) }
-                },
-                onFailure = { e ->
-                    _uiState.update { it.copy(isLoading = false, error = e.message ?: "Failed to send OTP") }
-                }
-            )
-        }
-    }
-
-    fun verifyOtp() {
+    fun login() {
         val state = _uiState.value
-        if (state.otp.isBlank()) {
-            _uiState.update { it.copy(error = "OTP is required") }
+        if (state.phone.isBlank() || state.pin.isBlank()) {
+            _uiState.update { it.copy(error = "Phone and Password/PIN are required") }
             return
         }
 
         _uiState.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
-            authRepository.verifyOtp(state.phone, state.otp).fold(
+            authRepository.login(state.phone, state.pin).fold(
                 onSuccess = { role ->
                     _uiState.update { it.copy(isLoading = false, successRole = role) }
                 },
                 onFailure = { e ->
-                    _uiState.update { it.copy(isLoading = false, error = e.message ?: "Failed to verify OTP") }
+                    _uiState.update { it.copy(isLoading = false, error = e.message ?: "Login failed") }
                 }
             )
         }

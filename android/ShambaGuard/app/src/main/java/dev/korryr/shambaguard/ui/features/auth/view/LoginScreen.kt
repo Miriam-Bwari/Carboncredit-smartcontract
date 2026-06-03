@@ -1,13 +1,14 @@
 package dev.korryr.shambaguard.ui.features.auth.view
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import dev.korryr.shambaguard.navigation.UserRole
 import dev.korryr.shambaguard.sharedComposables.ShambaButton
@@ -17,9 +18,8 @@ import dev.korryr.shambaguard.ui.features.auth.presentation.LoginUiState
 fun LoginScreen(
     uiState: LoginUiState,
     onPhoneChanged: (String) -> Unit,
-    onOtpChanged: (String) -> Unit,
-    onSendOtp: () -> Unit,
-    onVerifyOtp: () -> Unit,
+    onPinChanged: (String) -> Unit,
+    onLogin: () -> Unit,
     onLoginSuccess: (UserRole) -> Unit
 ) {
     LaunchedEffect(uiState.successRole) {
@@ -42,7 +42,7 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Your farm, watched from space. Protected by code.",
+            text = "Your farm, watched from space.",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -54,20 +54,20 @@ fun LoginScreen(
             label = { Text("Phone Number") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             modifier = Modifier.fillMaxWidth(),
-            enabled = !uiState.isLoading && !uiState.isOtpSent
+            enabled = !uiState.isLoading
         )
 
-        if (uiState.isOtpSent) {
-            Spacer(modifier = Modifier.height(16.dp))
-            OutlinedTextField(
-                value = uiState.otp,
-                onValueChange = onOtpChanged,
-                label = { Text("Enter OTP") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !uiState.isLoading
-            )
-        }
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        OutlinedTextField(
+            value = uiState.pin,
+            onValueChange = onPinChanged,
+            label = { Text("Password or 4-Digit PIN") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !uiState.isLoading
+        )
 
         if (uiState.error != null) {
             Spacer(modifier = Modifier.height(8.dp))
@@ -84,8 +84,8 @@ fun LoginScreen(
             CircularProgressIndicator()
         } else {
             ShambaButton(
-                text = if (uiState.isOtpSent) "Verify OTP & Login" else "Send OTP",
-                onClick = { if (uiState.isOtpSent) onVerifyOtp() else onSendOtp() }
+                text = "Login",
+                onClick = onLogin
             )
         }
     }

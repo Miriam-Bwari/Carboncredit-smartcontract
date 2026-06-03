@@ -2,6 +2,15 @@ package dev.korryr.shambaguard.ui.features.farmer.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
+data class FarmRegisterRequestDto(
+    @SerializedName("farmer_id") val farmerId: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("boundary_coords") val boundaryCoords: List<List<Double>>,
+    @SerializedName("soil_type") val soilType: String,
+    @SerializedName("crop_type") val cropType: String,
+    @SerializedName("county") val county: String
+)
+
 data class FarmDto(
     @SerializedName("farm_id") val farmId: String,
     @SerializedName("farmer_id") val farmerId: String,

@@ -21,6 +21,9 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import dev.korryr.shambaguard.R
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmBoundaryViewModel
+import dev.korryr.shambaguard.ui.features.auth.presentation.LoginViewModel
+import dev.korryr.shambaguard.ui.features.auth.view.LoginScreen
+import dev.korryr.shambaguard.ui.features.agent.view.SyncStatusScreen
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
@@ -253,15 +256,14 @@ fun ShambaGuardNavGraph(
 
                 // Auth screens
                 entry<LoginKey> {
-                    val vm: dev.korryr.shambaguard.ui.features.auth.presentation.LoginViewModel = hiltViewModel()
-                    val state by vm.uiState.collectAsStateWithLifecycle()
+                    val vm: LoginViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsState()
 
-                    dev.korryr.shambaguard.ui.features.auth.view.LoginScreen(
+                    LoginScreen(
                         uiState = state,
                         onPhoneChanged = vm::onPhoneChanged,
-                        onOtpChanged = vm::onOtpChanged,
-                        onSendOtp = vm::sendOtp,
-                        onVerifyOtp = vm::verifyOtp,
+                        onPinChanged = vm::onPinChanged,
+                        onLogin = vm::login,
                         onLoginSuccess = { loggedInRole ->
                             val homeKey = when (loggedInRole) {
                                 UserRole.Admin -> AdminHomeKey
@@ -300,7 +302,7 @@ fun ShambaGuardNavGraph(
                     )
                 }
                 entry<AgentFarmersKey> { PlaceholderScreen(role, "Agent Farmers Management") }
-                entry<AgentSyncKey>    { dev.korryr.shambaguard.ui.features.agent.view.SyncStatusScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AgentSyncKey>    { SyncStatusScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
 
                 // Farmer screens
                 entry<FarmerHomeKey> {
