@@ -13,7 +13,7 @@ router = APIRouter()
 
 # ── START SATELLITE SCAN ────────────────────────────────────────────────
 @router.post("/scan/{farm_id}")
-def scan_farm(farm_id: int, bg: BackgroundTasks, db: Session = Depends(get_db)):
+def scan_farm(farm_id: str, bg: BackgroundTasks, db: Session = Depends(get_db)):
 
     farm = db.query(Farm).filter(Farm.id == farm_id).first()
     if not farm:
@@ -95,7 +95,7 @@ def run_real_scan(farm_id: int):
 
 # ── HISTORY ENDPOINT ────────────────────────────────────────────────────
 @router.get("/history/{farm_id}")
-def carbon_history(farm_id: int, db: Session = Depends(get_db)):
+def carbon_history(farm_id: str, db: Session = Depends(get_db)):
 
     records = (
         db.query(CarbonRecord)
