@@ -36,7 +36,7 @@ class FarmResponse(BaseModel):
     id: str
     farmer_id: str
     name: str
-    boundary_coords: List[List[float]]
+    boundary_coords: dict  # Will be a GeoJSON Polygon
     area_hectares: float
     soil_type: str
     crop_type: str
