@@ -48,25 +48,33 @@ class FarmRepositoryImpl @Inject constructor(
 
     override suspend fun pushPendingFarm(farmEntity: FarmEntity): Result<Unit> {
         return try {
-            // Parse polygonJson to List<List<Double>>. Fallback to empty if missing.
-            val coords = try {
+            // Parse polygonJson to GeoJsonPolygonDto.
+            // GeoJSON expects [longitude, latitude]!
+            val coordsList = mutableListOf<List<Double>>()
+            try {
                 val jsonArray = org.json.JSONArray(farmEntity.polygonJson)
-                val list = mutableListOf<List<Double>>()
                 for (i in 0 until jsonArray.length()) {
                     val point = jsonArray.getJSONObject(i)
-                    list.add(listOf(point.getDouble("lat"), point.getDouble("lng")))
+                    // GeoJSON format: [longitude, latitude]
+                    coordsList.add(listOf(point.getDouble("lng"), point.getDouble("lat")))
                 }
-                list
+                
+                // GeoJSON Polygon MUST be closed (first point == last point)
+                if (coordsList.isNotEmpty() && coordsList.first() != coordsList.last()) {
+                    coordsList.add(coordsList.first())
+                }
             } catch (e: Exception) {
-                emptyList()
+                // Return empty if parsing fails
             }
 
-            val farmerIdInt = farmEntity.farmerId.toIntOrNull() ?: 0
+            val geoJsonPolygon = dev.korryr.shambaguard.core.network.GeoJsonPolygonDto(
+                coordinates = listOf(coordsList) // Wrap in another list for the outer ring
+            )
 
             val dto = FarmRegisterRequestDto(
-                farmerId = farmerIdInt,
+                farmerId = farmEntity.farmerId,
                 name = "Farm ${farmEntity.farmId.take(4)}", // Mock name
-                boundaryCoords = coords,
+                boundaryCoords = geoJsonPolygon,
                 soilType = "Loam", // Default placeholder
                 cropType = farmEntity.cropType.takeIf { it.isNotBlank() } ?: "Maize",
                 county = farmEntity.region
