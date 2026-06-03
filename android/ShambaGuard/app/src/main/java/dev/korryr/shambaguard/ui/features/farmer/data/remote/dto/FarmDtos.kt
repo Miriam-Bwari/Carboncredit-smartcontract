@@ -11,13 +11,16 @@ data class FarmRegisterRequestDto(
     @SerializedName("county") val county: String
 )
 
+// Matches backend FarmResponse schema
 data class FarmDto(
-    @SerializedName("farm_id") val farmId: String,
+    @SerializedName("id") val farmId: String,
     @SerializedName("farmer_id") val farmerId: String,
-    @SerializedName("agent_id") val agentId: String,
-    @SerializedName("polygon") val polygon: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("boundary_coords") val boundaryCoords: List<List<Double>>,
     @SerializedName("area_hectares") val areaHectares: Double,
-    @SerializedName("region") val region: String
+    @SerializedName("soil_type") val soilType: String,
+    @SerializedName("crop_type") val cropType: String,
+    @SerializedName("county") val county: String
 )
 
 data class PracticeLogDto(
