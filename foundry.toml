@@ -2,7 +2,7 @@
 src = "src"
 out = "out"
 libs = ["lib"]
-solc_version = "0.8.20"
+solc_version = "0.8.24"
 
 [rpc_endpoints]
-polygon_amoy = "${ALCHEMY_AMOY_URL}"
+polygon_amoy = "${https://polygon-mainnet.g.alchemy.com/v2/4kuHyqNYxuMoKZ9We0TVR}"

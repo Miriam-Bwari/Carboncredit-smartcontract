@@ -1,6 +1,6 @@
 // src/CarbonCredit.sol
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -49,7 +49,7 @@ contract CarbonCredit is ERC1155, Ownable {
         
         emit CreditMinted(id, farmId, carbonKg);
         return id;
-    } https://faucet.polygon.technology
+    } 
 
     // Called by a buyer to purchase a credit directly from the marketplace functionality
     function purchaseCredit(uint256 creditId) external payable {
