@@ -1,30 +1,17 @@
-# routers/farmers.py
-# Handles: farmer registration, login, and profile retrieval
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from passlib.context import CryptContext
 from database.connection import get_db
 from database.models import Farmer
-
+from core.security import create_access_token, get_current_user
+from schemas.responses import LoginResponse, FarmerRegisterResponse, FarmerResponse
 from pydantic import BaseModel
-from passlib.context import CryptContext
-from jose import jwt
-from datetime import datetime, timedelta
-import os
 
 router = APIRouter()
 
-# Password hashing system
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# JWT config
-SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret_key")
-ALGORITHM = "HS256"
 
-
-# ─────────────────────────────────────────────
-# REQUEST SCHEMAS
-# ─────────────────────────────────────────────
 class FarmerRegister(BaseModel):
     full_name: str
     phone_number: str
@@ -37,21 +24,11 @@ class FarmerLogin(BaseModel):
     password: str
 
 
-# ─────────────────────────────────────────────
-# REGISTER FARMER
-# ─────────────────────────────────────────────
-@router.post("/register")
+@router.post("/register", response_model=FarmerRegisterResponse)
 def register_farmer(data: FarmerRegister, db: Session = Depends(get_db)):
-
-    existing = db.query(Farmer).filter(
-        Farmer.phone_number == data.phone_number
-    ).first()
-
+    existing = db.query(Farmer).filter(Farmer.phone_number == data.phone_number).first()
     if existing:
-        raise HTTPException(
-            status_code=400,
-            detail="Phone number already registered"
-        )
+        raise HTTPException(status_code=400, detail="Phone number already registered")
 
     farmer = Farmer(
         full_name=data.full_name,
@@ -59,68 +36,34 @@ def register_farmer(data: FarmerRegister, db: Session = Depends(get_db)):
         password_hash=pwd_context.hash(data.password),
         county=data.county
     )
-
     db.add(farmer)
     db.commit()
     db.refresh(farmer)
 
-    return {
-        "message": "Farmer registered successfully",
-        "farmer_id": farmer.id
-    }
+    return FarmerRegisterResponse(message="Farmer registered successfully", farmer_id=farmer.id)
 
 
-# ─────────────────────────────────────────────
-# LOGIN FARMER
-# ─────────────────────────────────────────────
-@router.post("/login")
+@router.post("/login", response_model=LoginResponse)
 def login_farmer(data: FarmerLogin, db: Session = Depends(get_db)):
+    farmer = db.query(Farmer).filter(Farmer.phone_number == data.phone_number).first()
 
-    farmer = db.query(Farmer).filter(
-        Farmer.phone_number == data.phone_number
-    ).first()
-
-    # FIX: force string so Pylance stops complaining
     if not farmer or not pwd_context.verify(data.password, str(farmer.password_hash)):
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid phone number or password"
-        )
+        raise HTTPException(status_code=401, detail="Invalid phone number or password")
 
-    token = jwt.encode(
-        {
-            "sub": str(farmer.id),
-            "exp": datetime.utcnow() + timedelta(hours=24)
-        },
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
+    token = create_access_token(user_id=farmer.id, role="Farmer")
 
-    return {
-        "access_token": token,
-        "farmer_id": farmer.id
-    }
+    return LoginResponse(access_token=token, role="Farmer", user_id=farmer.id)
 
 
-# ─────────────────────────────────────────────
-# GET FARMER PROFILE
-# ─────────────────────────────────────────────
-@router.get("/{farmer_id}")
-def get_farmer(farmer_id: int, db: Session = Depends(get_db)):
-
-    farmer = db.query(Farmer).filter(
-        Farmer.id == farmer_id
-    ).first()
-
+@router.get("/{farmer_id}", response_model=FarmerResponse)
+def get_farmer(farmer_id: str, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    farmer = db.query(Farmer).filter(Farmer.id == farmer_id).first()
     if not farmer:
-        raise HTTPException(
-            status_code=404,
-            detail="Farmer not found"
-        )
+        raise HTTPException(status_code=404, detail="Farmer not found")
 
-    return {
-        "id": farmer.id,
-        "full_name": farmer.full_name,
-        "phone_number": farmer.phone_number,
-        "county": farmer.county
-    }
+    return FarmerResponse(
+        id=farmer.id,
+        full_name=farmer.full_name,
+        phone_number=farmer.phone_number,
+        county=farmer.county or ""
+    )

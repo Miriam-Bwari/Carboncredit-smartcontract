@@ -109,6 +109,7 @@ ui/features/<feature>/
 - **No business logic in Composables**: Composable screens are purely for rendering UI and forwarding user events to the ViewModel. All logic belongs in the ViewModel or lower layers.
 - **Prefer `StateFlow` / `MutableStateFlow` over `LiveData`**: Use `StateFlow` for all new UI state in ViewModels. `LiveData` should not be used in new code.
 - **Repositories are the single source of truth**: ViewModels must never directly call Retrofit, Room, or any other data source. They must always go through a Repository.
+- **Correct hiltViewModel Import**: Always use `import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel`. Do NOT use `import androidx.hilt.navigation.compose.hiltViewModel` as it is deprecated or incorrect for our current navigation setup.
 
 ### UI Rules
 

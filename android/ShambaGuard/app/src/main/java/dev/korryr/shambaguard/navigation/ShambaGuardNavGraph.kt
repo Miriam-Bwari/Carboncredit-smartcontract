@@ -15,7 +15,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
@@ -277,7 +288,7 @@ fun ShambaGuardNavGraph(
                 }
 
                 // Admin screens
-                entry<AdminHomeKey> { 
+                entry<AdminHomeKey> {
                     AdminHomeScreen(
                         onNavigateToAgents = { backStack.add(AdminAgentsKey) },
                         onNavigateToMap = { backStack.add(AdminMapKey) },
@@ -411,29 +422,29 @@ fun PlaceholderScreen(role: UserRole, title: String) {
             else -> androidx.compose.ui.graphics.Color.Gray
         }
 
-        androidx.compose.material3.Card(
-            colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = roleColor.copy(alpha = 0.1f)),
-            border = androidx.compose.foundation.BorderStroke(2.dp, roleColor)
+        Card(
+            colors = CardDefaults.cardColors(containerColor = roleColor.copy(alpha = 0.1f)),
+            border = BorderStroke(2.dp, roleColor)
         ) {
-            androidx.compose.foundation.layout.Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "Role: ${role.name.uppercase()}",
-                    style = androidx.compose.material3.MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleLarge,
                     color = roleColor,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                    fontWeight = FontWeight.Bold
                 )
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(8.dp))
                 Text(
                     text = title,
-                    style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center
                 )
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(16.dp))
+                Spacer(modifier = Modifier.padding(16.dp))
                 Text(
                     text = "This screen is currently under construction.",
-                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -442,14 +453,14 @@ fun PlaceholderScreen(role: UserRole, title: String) {
 
 @Composable
 fun PlaceholderScreenWithAction(title: String, buttonText: String, onClick: () -> Unit) {
-    androidx.compose.foundation.layout.Column(
+    Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = title)
-        androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(16.dp))
-        androidx.compose.material3.Button(onClick = onClick) {
+        Spacer(modifier = Modifier.padding(16.dp))
+        Button(onClick = onClick) {
             Text(text = buttonText)
         }
     }

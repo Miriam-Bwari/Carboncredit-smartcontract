@@ -1,115 +1,91 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+from typing import List
 from database.connection import get_db
 from database.models import Farm
-
+from core.security import get_current_user, require_agent
+from schemas.responses import FarmResponse, FarmRegisterResponse, FarmSummary
+from schemas.geojson import GeoJsonPolygon
 from pydantic import BaseModel
-from typing import List
 
 router = APIRouter()
 
 
-# ── REQUEST SCHEMA ───────────────────────────────────────────────────────
 class FarmRegister(BaseModel):
-    farmer_id: int
+    farmer_id: str
     name: str
-    boundary_coords: List[List[float]]  # [[lat,lng],[lat,lng]...]
+    boundary_coords: GeoJsonPolygon
     soil_type: str
     crop_type: str
     county: str
 
 
-# ── AREA CALCULATION (IMPROVED SAFETY) ───────────────────────────────────
-def calculate_area_hectares(coords: List[List[float]]) -> float:
+def calculate_area_hectares(polygon: GeoJsonPolygon) -> float:
+    coords = polygon.coordinates[0] if polygon.coordinates else []
     if not coords or len(coords) < 3:
         return 0.0
-
     area = 0.0
-
     for i in range(len(coords)):
         j = (i + 1) % len(coords)
-        area += coords[i][1] * coords[j][0]
-        area -= coords[j][1] * coords[i][0]
-
-    # crude geo conversion (good for MVP, replace later with Geo libraries)
+        # coords[i] is [longitude, latitude]
+        # X is longitude (coords[0]), Y is latitude (coords[1])
+        area += coords[i][0] * coords[j][1]
+        area -= coords[j][0] * coords[i][1]
     area_m2 = abs(area) / 2.0 * (111320 ** 2)
-
     return round(area_m2 / 10000, 2)
 
 
-# ── REGISTER FARM ────────────────────────────────────────────────────────
-@router.post("/register")
-def register_farm(data: FarmRegister, db: Session = Depends(get_db)):
+@router.post("/register", response_model=FarmRegisterResponse)
+def register_farm(data: FarmRegister, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    coords = data.boundary_coords.coordinates[0] if data.boundary_coords.coordinates else []
+    if len(coords) < 3:
+        raise HTTPException(status_code=400, detail="Invalid farm boundary: need at least 3 coordinates")
 
-    # validate polygon
-    if len(data.boundary_coords) < 3:
-        raise HTTPException(status_code=400, detail="Invalid farm boundary")
-
-    # prevent duplicate farm name per farmer (basic safety rule)
-    existing = (
-        db.query(Farm)
-        .filter(Farm.farmer_id == data.farmer_id, Farm.name == data.name)
-        .first()
-    )
-
+    existing = db.query(Farm).filter(Farm.farmer_id == data.farmer_id, Farm.name == data.name).first()
     if existing:
-        raise HTTPException(status_code=409, detail="Farm already exists")
+        raise HTTPException(status_code=409, detail="Farm with this name already exists for this farmer")
 
     area = calculate_area_hectares(data.boundary_coords)
 
     farm = Farm(
         farmer_id=data.farmer_id,
+        agent_id=current_user["user_id"] if current_user["role"] == "Agent" else None,
         name=data.name,
-        boundary_coords=data.boundary_coords,
+        boundary_coords=data.boundary_coords.model_dump(),
         area_hectares=area,
         soil_type=data.soil_type,
         crop_type=data.crop_type,
         county=data.county
     )
-
     db.add(farm)
     db.commit()
     db.refresh(farm)
 
-    return {
-        "message": "Farm registered successfully",
-        "farm_id": farm.id,
-        "area_hectares": area
-    }
+    return FarmRegisterResponse(message="Farm registered successfully", farm_id=farm.id, area_hectares=area)
 
 
-# ── GET SINGLE FARM ──────────────────────────────────────────────────────
-@router.get("/{farm_id}")
-def get_farm(farm_id: int, db: Session = Depends(get_db)):
-
+@router.get("/{farm_id}", response_model=FarmResponse)
+def get_farm(farm_id: str, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     farm = db.query(Farm).filter(Farm.id == farm_id).first()
-
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
 
-    return {
-        "id": farm.id,
-        "name": farm.name,
-        "area_hectares": farm.area_hectares,
-        "crop_type": farm.crop_type,
-        "soil_type": farm.soil_type,
-        "county": farm.county
-    }
+    return FarmResponse(
+        id=farm.id,
+        farmer_id=farm.farmer_id,
+        name=farm.name or "",
+        boundary_coords=farm.boundary_coords or {},
+        area_hectares=farm.area_hectares or 0.0,
+        soil_type=farm.soil_type or "",
+        crop_type=farm.crop_type or "",
+        county=farm.county or ""
+    )
 
 
-# ── GET ALL FARMS FOR FARMER ─────────────────────────────────────────────
-@router.get("/farmer/{farmer_id}")
-def get_farmer_farms(farmer_id: int, db: Session = Depends(get_db)):
-
+@router.get("/farmer/{farmer_id}", response_model=List[FarmSummary])
+def get_farmer_farms(farmer_id: str, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     farms = db.query(Farm).filter(Farm.farmer_id == farmer_id).all()
-
     return [
-        {
-            "id": f.id,
-            "name": f.name,
-            "area_hectares": f.area_hectares,
-            "crop_type": f.crop_type
-        }
+        FarmSummary(id=f.id, name=f.name or "", area_hectares=f.area_hectares or 0.0, crop_type=f.crop_type or "")
         for f in farms
     ]

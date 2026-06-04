@@ -16,6 +16,7 @@ data class FarmerRegisterRequestDto(
 
 data class AuthResponseDto(
     @SerializedName("access_token") val accessToken: String,
-    @SerializedName("role") val role: String?,
-    @SerializedName("user_id") val userId: String?
+    @SerializedName("token_type") val tokenType: String = "bearer",
+    @SerializedName("role") val role: String,       // "Farmer" | "Agent" | "Admin"
+    @SerializedName("user_id") val userId: String   // UUID
 )

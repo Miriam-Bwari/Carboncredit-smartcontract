@@ -14,7 +14,7 @@ router = APIRouter()
 # GET FARM ADVICE
 # ─────────────────────────────────────────────
 @router.get("/{farm_id}")
-def get_advice(farm_id: int, db: Session = Depends(get_db)):
+def get_advice(farm_id: str, db: Session = Depends(get_db)):
 
     farm = db.query(Farm).filter(Farm.id == farm_id).first()
 

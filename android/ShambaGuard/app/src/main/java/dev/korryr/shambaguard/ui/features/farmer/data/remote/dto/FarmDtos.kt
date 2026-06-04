@@ -1,23 +1,27 @@
 package dev.korryr.shambaguard.ui.features.farmer.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
+import dev.korryr.shambaguard.core.network.GeoJsonPolygonDto
 
 data class FarmRegisterRequestDto(
-    @SerializedName("farmer_id") val farmerId: Int,
+    @SerializedName("farmer_id") val farmerId: String,
     @SerializedName("name") val name: String,
-    @SerializedName("boundary_coords") val boundaryCoords: List<List<Double>>,
+    @SerializedName("boundary_coords") val boundaryCoords: GeoJsonPolygonDto,
     @SerializedName("soil_type") val soilType: String,
     @SerializedName("crop_type") val cropType: String,
     @SerializedName("county") val county: String
 )
 
+// Matches backend FarmResponse schema
 data class FarmDto(
-    @SerializedName("farm_id") val farmId: String,
+    @SerializedName("id") val farmId: String,
     @SerializedName("farmer_id") val farmerId: String,
-    @SerializedName("agent_id") val agentId: String,
-    @SerializedName("polygon") val polygon: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("boundary_coords") val boundaryCoords: GeoJsonPolygonDto,
     @SerializedName("area_hectares") val areaHectares: Double,
-    @SerializedName("region") val region: String
+    @SerializedName("soil_type") val soilType: String,
+    @SerializedName("crop_type") val cropType: String,
+    @SerializedName("county") val county: String
 )
 
 data class PracticeLogDto(
