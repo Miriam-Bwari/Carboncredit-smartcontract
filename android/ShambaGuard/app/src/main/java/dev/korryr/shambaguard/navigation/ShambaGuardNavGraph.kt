@@ -339,12 +339,7 @@ fun ShambaGuardNavGraph(
                     if (dev.korryr.shambaguard.BuildConfig.DEBUG) {
                         DevBypassPanel(
                             onBypass = { selectedRole ->
-                                val homeKey = when (selectedRole) {
-                                    UserRole.Admin -> AdminHomeKey
-                                    UserRole.Agent -> AgentHomeKey
-                                    else           -> FarmerHomeKey
-                                }
-                                navigateTo(homeKey)
+                                vm.devBypass(selectedRole)
                             }
                         )
                     }

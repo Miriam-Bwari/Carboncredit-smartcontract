@@ -29,9 +29,12 @@ data class LoginUiState(
     val successRole: UserRole? = null,              // non-null on successful login
 )
 
+import dev.korryr.shambaguard.core.datastore.SessionManager
+
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -87,6 +90,20 @@ class LoginViewModel @Inject constructor(
                     }
                 },
             )
+        }
+    }
+    
+    // Dev Bypass
+    fun devBypass(role: UserRole) {
+        viewModelScope.launch {
+            // Save a dummy session so the NavGraph displays the correct bottom tabs
+            // Note: Since this is a fake ID, backend API calls will return empty/404.
+            sessionManager.saveSession(
+                token = "dev_bypass_token",
+                role = role.name,
+                userId = "dev_bypass_user_id"
+            )
+            _uiState.update { it.copy(successRole = role) }
         }
     }
 
