@@ -16,4 +16,12 @@ interface FarmRepository {
     
     fun getFarmReport(farmId: String): Flow<FarmReportEntity?>
     suspend fun syncFarmReport(farmId: String): Result<Unit>
+    
+    // Remote dashboard data fetching
+    suspend fun getFarmer(farmerId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmerDetailsDto>
+    suspend fun getFarmerFarms(farmerId: String): Result<List<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmSummaryDto>>
+    suspend fun getCarbonHistory(farmId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.CarbonHistoryDto>
+    suspend fun getAdvice(farmId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.AdviceDto>
+    suspend fun getWeather(farmId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.WeatherDto>
+    suspend fun getPolicy(farmerId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PolicyDto>
 }

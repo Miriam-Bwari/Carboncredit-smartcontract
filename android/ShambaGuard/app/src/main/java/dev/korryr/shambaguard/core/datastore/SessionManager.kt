@@ -32,6 +32,10 @@ class SessionManager @Inject constructor(
         preferences[JWT_TOKEN]
     }
 
+    val userIdFlow: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[USER_ID]
+    }
+
     suspend fun saveSession(token: String, role: String, userId: String) {
         context.dataStore.edit { preferences ->
             preferences[JWT_TOKEN] = token
