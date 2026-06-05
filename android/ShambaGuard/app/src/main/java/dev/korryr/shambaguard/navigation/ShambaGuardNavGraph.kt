@@ -6,8 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -74,7 +80,7 @@ enum class UserRole {
 @Composable
 fun ShambaGuardNavGraph(
     modifier: Modifier = Modifier,
-    role: UserRole = UserRole.Farmer, // Defaulting to Farmer for development until Auth is done
+    role: UserRole = UserRole.Unauthenticated, // Always start at Login; use dev bypass to skip
 ) {
     // 1. Determine starting key based on role
     val initialKey = remember(role) {
@@ -326,7 +332,19 @@ fun ShambaGuardNavGraph(
                         },
                         onSignUpClicked = { navigateTo(RoleSelectionKey) },
                     )
+
+                    // ─────────────────────────────────────────────────────────
+                    // DEV BYPASS — compiled out in release/production builds
+                    // ─────────────────────────────────────────────────────────
+                    if (dev.korryr.shambaguard.BuildConfig.DEBUG) {
+                        DevBypassPanel(
+                            onBypass = { selectedRole ->
+                                vm.devBypass(selectedRole)
+                            }
+                        )
+                    }
                 }
+
 
                 // Admin screens
                 entry<AdminHomeKey> {
@@ -443,20 +461,79 @@ fun ShambaGuardNavGraph(
     }
 }
 
+
+@Composable
+fun DevBypassPanel(onBypass: (UserRole) -> Unit) {
+    val amber = Color(0xFFFFC107)
+    val bgColor = Color(0xFF1A1200)
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+            colors = CardDefaults.cardColors(containerColor = bgColor),
+            border = BorderStroke(1.dp, amber.copy(alpha = 0.6f)),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    text = "⚠  DEV BYPASS — DEBUG ONLY",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = amber,
+                    fontWeight = FontWeight.Bold,
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    listOf(
+                        Triple("🌾", "Farmer", UserRole.Farmer),
+                        Triple("🛡", "Agent",  UserRole.Agent),
+                        Triple("🔑", "Admin",  UserRole.Admin),
+                    ).forEach { (icon, label, role) ->
+                        Button(
+                            onClick = { onBypass(role) },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = amber.copy(alpha = 0.15f),
+                                contentColor   = amber
+                            ),
+                            border = BorderStroke(1.dp, amber.copy(alpha = 0.4f)),
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(text = icon, style = MaterialTheme.typography.titleMedium)
+                                Text(text = label, style = MaterialTheme.typography.labelSmall)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun PlaceholderScreen(role: UserRole, title: String) {
-    androidx.compose.foundation.layout.Column(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(32.dp),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val roleColor = when (role) {
-            UserRole.Admin -> androidx.compose.ui.graphics.Color(0xFFE53935)
-            UserRole.Agent -> androidx.compose.ui.graphics.Color(0xFF1E88E5)
-            UserRole.Farmer -> androidx.compose.ui.graphics.Color(0xFF43A047)
-            else -> androidx.compose.ui.graphics.Color.Gray
+            UserRole.Admin -> Color(0xFFE53935)
+            UserRole.Agent -> Color(0xFF1E88E5)
+            UserRole.Farmer -> Color(0xFF43A047)
+            else -> Color.Gray
         }
 
         Card(

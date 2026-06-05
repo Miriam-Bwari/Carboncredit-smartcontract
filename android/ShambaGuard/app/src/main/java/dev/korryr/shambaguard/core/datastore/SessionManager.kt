@@ -24,12 +24,16 @@ class SessionManager @Inject constructor(
         private val USER_ID = stringPreferencesKey("user_id")
     }
 
-    val userRoleFlow: Flow<String?> = context.dataStore.data.map { preferences ->
-        preferences[USER_ROLE]
+    val userRoleFlow: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[USER_ROLE] ?: "Unauthenticated"
     }
 
     val jwtTokenFlow: Flow<String?> = context.dataStore.data.map { preferences ->
         preferences[JWT_TOKEN]
+    }
+
+    val userIdFlow: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[USER_ID]
     }
 
     suspend fun saveSession(token: String, role: String, userId: String) {

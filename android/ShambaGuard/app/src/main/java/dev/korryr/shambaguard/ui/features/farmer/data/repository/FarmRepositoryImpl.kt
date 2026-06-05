@@ -121,4 +121,52 @@ class FarmRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun getFarmer(farmerId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmerDetailsDto> {
+        return try {
+            Result.success(farmApi.getFarmer(farmerId))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getFarmerFarms(farmerId: String): Result<List<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmSummaryDto>> {
+        return try {
+            Result.success(farmApi.getFarmerFarms(farmerId))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getCarbonHistory(farmId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.CarbonHistoryDto> {
+        return try {
+            Result.success(farmApi.getCarbonHistory(farmId))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getAdvice(farmId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.AdviceDto> {
+        return try {
+            Result.success(farmApi.getAdvice(farmId))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getWeather(farmId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.WeatherDto> {
+        return try {
+            Result.success(farmApi.getWeather(farmId))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPolicy(farmerId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PolicyDto> {
+        return try {
+            Result.success(farmApi.getPolicy(farmerId))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

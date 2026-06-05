@@ -29,41 +29,19 @@ class MainActivity : ComponentActivity() {
             ShambaGuardTheme {
                 val savedRole by sessionManager.userRoleFlow.collectAsState(initial = null)
                 
-                // Show loading or splash if we haven't read the role yet
+                // Show a blank box for the split-second DataStore takes to emit its first value
                 if (savedRole == null) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
+                    Box(modifier = Modifier.fillMaxSize())
                     return@ShambaGuardTheme
                 }
                 
-                // If unauthenticated, show the Dev Role Switcher or go straight to Auth
-                var selectedRole by remember { mutableStateOf<UserRole?>(null) }
-                
-                if (savedRole == UserRole.Unauthenticated.name && selectedRole == null) {
-                    Scaffold { padding ->
-                        Column(
-                            modifier = Modifier.fillMaxSize().padding(padding),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text("Dev Environment Role Selector", style = MaterialTheme.typography.headlineMedium)
-                            Spacer(modifier = Modifier.height(32.dp))
-                            Button(onClick = { selectedRole = UserRole.Admin }) { Text("Log in as Admin") }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { selectedRole = UserRole.Agent }) { Text("Log in as Agent") }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { selectedRole = UserRole.Farmer }) { Text("Log in as Farmer") }
-                        }
-                    }
-                } else {
-                    val finalRole = selectedRole ?: try {
-                        UserRole.valueOf(savedRole!!)
-                    } catch (e: Exception) {
-                        UserRole.Unauthenticated
-                    }
-                    ShambaGuardNavGraph(role = finalRole)
+                val finalRole = try {
+                    UserRole.valueOf(savedRole!!)
+                } catch (e: Exception) {
+                    UserRole.Unauthenticated
                 }
+                
+                ShambaGuardNavGraph(role = finalRole)
             }
         }
     }
