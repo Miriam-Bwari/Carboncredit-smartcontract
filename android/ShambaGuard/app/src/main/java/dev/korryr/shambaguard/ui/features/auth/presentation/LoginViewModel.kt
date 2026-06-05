@@ -12,47 +12,86 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// ---------------------------------------------------------------------------
+// LoginViewModel.kt
+// Handles login for both Farmers and Agents using phone + password.
+// Role is selected on this screen (via toggle) so the correct
+// backend endpoint is called.
+// ---------------------------------------------------------------------------
+
 data class LoginUiState(
-    val phone: String = "",
-    val pin: String = "",
-    val isLoading: Boolean = false,
-    val error: String? = null,
-    val successRole: UserRole? = null
+    val phone:       String    = "",
+    val password:    String    = "",
+    val role:        UserRole  = UserRole.Farmer,   // which endpoint to call
+    val passwordVisible: Boolean = false,
+    val isLoading:   Boolean   = false,
+    val error:       String?   = null,
+    val successRole: UserRole? = null,              // non-null on successful login
 )
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
+    // Field updates
+
     fun onPhoneChanged(phone: String) {
         _uiState.update { it.copy(phone = phone, error = null) }
     }
 
-    fun onPinChanged(pin: String) {
-        _uiState.update { it.copy(pin = pin, error = null) }
+    fun onPasswordChanged(password: String) {
+        _uiState.update { it.copy(password = password, error = null) }
     }
 
-    fun login() {
+    fun onRoleToggled(role: UserRole) {
+        _uiState.update { it.copy(role = role, error = null) }
+    }
+
+    fun onTogglePasswordVisibility() {
+        _uiState.update { it.copy(passwordVisible = !it.passwordVisible) }
+    }
+
+    // Login
+
+    fun login(
+        errorFieldsRequired: String,
+    ) {
         val state = _uiState.value
-        if (state.phone.isBlank() || state.pin.isBlank()) {
-            _uiState.update { it.copy(error = "Phone and Password/PIN are required") }
+
+        if (state.phone.isBlank() || state.password.isBlank()) {
+            _uiState.update { it.copy(error = errorFieldsRequired) }
             return
         }
 
         _uiState.update { it.copy(isLoading = true, error = null) }
+
         viewModelScope.launch {
-            authRepository.login(state.phone, state.pin).fold(
+            authRepository.login(
+                phone    = state.phone.replace(" ", ""),
+                password = state.password,
+                role     = state.role,
+            ).fold(
                 onSuccess = { role ->
                     _uiState.update { it.copy(isLoading = false, successRole = role) }
                 },
                 onFailure = { e ->
-                    _uiState.update { it.copy(isLoading = false, error = e.message ?: "Login failed") }
-                }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error     = e.message ?: "Login failed. Check your details and try again.",
+                        )
+                    }
+                },
             )
         }
+    }
+
+    /** Call after navigation to prevent re-triggering on recomposition. */
+    fun onNavigationConsumed() {
+        _uiState.update { it.copy(successRole = null) }
     }
 }

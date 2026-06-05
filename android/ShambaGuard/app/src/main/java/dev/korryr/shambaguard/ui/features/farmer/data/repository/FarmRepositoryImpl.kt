@@ -25,19 +25,19 @@ class FarmRepositoryImpl @Inject constructor(
         return try {
             val dto = farmApi.getFarm(farmId)
             val entity = FarmEntity(
-                farmId = dto.farmId,
-                farmerId = dto.farmerId,
-                agentId = dto.agentId,
-                polygonJson = dto.polygon,
-                areaHectares = dto.areaHectares,
-                region = dto.region,
-                cropType = "",
+                farmId        = dto.farmId,
+                farmerId      = dto.farmerId,
+                agentId       = "",             // backend FarmDto doesn't include agentId
+                polygonJson   = dto.boundaryCoords.toString(),
+                areaHectares  = dto.areaHectares,
+                region        = dto.county,     // backend uses county; stored as region locally
+                cropType      = dto.cropType,
                 tillageMethod = "",
-                treeCount = 0,
-                carbonStatus = "PENDING",
-                syncStatus = "SYNCED",
-                lastSyncedAt = System.currentTimeMillis(),
-                createdAt = System.currentTimeMillis()
+                treeCount     = 0,
+                carbonStatus  = "PENDING",
+                syncStatus    = "SYNCED",
+                lastSyncedAt  = System.currentTimeMillis(),
+                createdAt     = System.currentTimeMillis()
             )
             farmDao.insertFarm(entity)
             Result.success(Unit)

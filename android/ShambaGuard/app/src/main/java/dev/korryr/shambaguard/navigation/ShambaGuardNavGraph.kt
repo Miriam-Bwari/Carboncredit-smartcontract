@@ -38,6 +38,7 @@ import dev.korryr.shambaguard.ui.features.agent.view.SyncStatusScreen
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RegistrationViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.RoleSelectionViewModel
+import dev.korryr.shambaguard.ui.features.auth.view.AgentPendingScreen
 import dev.korryr.shambaguard.ui.features.auth.view.FarmBoundaryScreen
 import dev.korryr.shambaguard.ui.features.auth.view.FarmPracticesScreen
 import dev.korryr.shambaguard.ui.features.auth.view.RegistrationStep1Screen
@@ -186,104 +187,143 @@ fun ShambaGuardNavGraph(
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     RoleSelectionScreen(
-                        uiState = state,
+                        uiState        = state,
                         onRoleSelected = vm::onRoleSelected,
-                        onContinue = {
-                            // Navigate to registration once a role is chosen
-                            backStack.add(RegistrationKey)
-                        },
+                        onContinue     = { backStack.add(RegistrationKey) },
                     )
                 }
 
-                // Step 1: Personal Details
+                // Account creation (Farmer + Agent share this screen)
                 entry<RegistrationKey> {
+                    val roleVm: RoleSelectionViewModel = hiltViewModel()
+                    val roleState by roleVm.uiState.collectAsStateWithLifecycle()
+                    val selectedAppRole = roleState.selectedRole
+                        ?: dev.korryr.shambaguard.ui.features.auth.presentation.AppUserRole.Farmer
+
                     val vm: RegistrationViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
-                    val errorNameEmpty = stringResource(R.string.reg_error_full_name_empty)
-                    val errorIdInvalid = stringResource(R.string.reg_error_national_id_invalid)
-                    val errorPhoneInvalid = stringResource(R.string.reg_error_phone_invalid)
+                    val errName     = stringResource(R.string.reg_error_full_name_empty)
+                    val errPhone    = stringResource(R.string.reg_error_phone_invalid)
+                    val errCounty   = stringResource(R.string.reg_error_county_empty)
+                    val errShort    = stringResource(R.string.reg_error_password_short)
+                    val errMismatch = stringResource(R.string.reg_error_password_mismatch)
+
+                    // Navigate on successful registration
+                    androidx.compose.runtime.LaunchedEffect(state.successId) {
+                        if (state.successId != null) {
+                            vm.onNavigationConsumed()
+                            backStack.removeLastOrNull()
+                            when (selectedAppRole) {
+                                dev.korryr.shambaguard.ui.features.auth.presentation.AppUserRole.Farmer ->
+                                    backStack.add(FarmBoundaryKey)
+                                dev.korryr.shambaguard.ui.features.auth.presentation.AppUserRole.Agent ->
+                                    backStack.add(AgentPendingKey)
+                            }
+                        }
+                    }
 
                     RegistrationStep1Screen(
-                        uiState = state,
-                        onFullNameChanged = vm::onFullNameChanged,
-                        onNationalIdChanged = vm::onNationalIdChanged,
-                        onMpesaPhoneChanged = vm::onMpesaPhoneChanged,
-                        onNextStep = {
-                            if (vm.validateStep1(
-                                    errorNameEmpty,
-                                    errorIdInvalid,
-                                    errorPhoneInvalid
-                                )
-                            ) {
-                                backStack.add(FarmBoundaryKey)
-                            }
+                        uiState                         = state,
+                        role                            = selectedAppRole,
+                        onFullNameChanged               = vm::onFullNameChanged,
+                        onPhoneChanged                  = vm::onPhoneChanged,
+                        onCountyChanged                 = vm::onCountyChanged,
+                        onPasswordChanged               = vm::onPasswordChanged,
+                        onConfirmPasswordChanged        = vm::onConfirmPasswordChanged,
+                        onTogglePasswordVisibility      = vm::onTogglePasswordVisibility,
+                        onToggleConfirmPasswordVisibility = vm::onToggleConfirmPasswordVisibility,
+                        onCreateAccount = {
+                            vm.register(
+                                role                 = selectedAppRole,
+                                errorNameEmpty       = errName,
+                                errorPhoneInvalid    = errPhone,
+                                errorCountyEmpty     = errCounty,
+                                errorPasswordShort   = errShort,
+                                errorPasswordMismatch = errMismatch,
+                            )
+                        },
+                        onSignInClicked = {
+                            backStack.removeLastOrNull()
+                            backStack.removeLastOrNull() // pop RoleSelection too
+                            backStack.add(LoginKey)
                         },
                         onBack = { backStack.removeLastOrNull() },
                     )
                 }
 
-                // Step 2: Draw farm polygon
+                // Agent waiting for admin approval
+                entry<AgentPendingKey> {
+                    AgentPendingScreen(
+                        onGoToLogin = {
+                            backStack.clear()
+                            backStack.add(LoginKey)
+                        }
+                    )
+                }
+
+                // Farm setup Step 1: Draw farm polygon (Farmers only)
                 entry<FarmBoundaryKey> {
                     val vm: FarmBoundaryViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     FarmBoundaryScreen(
-                        uiState = state,
-                        canSave = vm.canSave(),
-                        onMapTapped = vm::onMapTapped,
-                        onUndo = vm::onUndoLastPoint,
+                        uiState       = state,
+                        canSave       = vm.canSave(),
+                        onMapTapped   = vm::onMapTapped,
+                        onUndo        = vm::onUndoLastPoint,
                         onToggleLayer = vm::onToggleMapType,
-                        onSave = { backStack.add(FarmPracticesKey) },
-                        onBack = { backStack.removeLastOrNull() },
+                        onSave        = { backStack.add(FarmPracticesKey) },
+                        onBack        = { backStack.removeLastOrNull() },
                     )
                 }
 
-                // Step 3: Farm practices
+                // Farm setup Step 2: Farm practices (Farmers only)
                 entry<FarmPracticesKey> {
                     val vm: FarmPracticesViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
-                     FarmPracticesScreen(
-                         uiState = state,
-                         canComplete = vm.canComplete(),
-                         onCropToggled = vm::onCropToggled,
-                         onMethodSelected = vm::onMethodSelected,
-                         onWaterSelected = vm::onWaterSelected,
-                         onIncrementTrees = vm::onIncrementTrees,
-                         onDecrementTrees = vm::onDecrementTrees,
-                         onComplete = {
-                             // Agents go home; farmers still pick a coverage tier first
-                             if (role == UserRole.Agent) {
-                                 backStack.clear()
-                                 backStack.add(initialKey)
-                             } else {
-                                 backStack.add(FarmerPolicyKey)
-                             }
-                         },
-                         onBack = { backStack.removeLastOrNull() },
-                     )
-                 }
+                    FarmPracticesScreen(
+                        uiState          = state,
+                        canComplete      = vm.canComplete(),
+                        onCropToggled    = vm::onCropToggled,
+                        onMethodSelected = vm::onMethodSelected,
+                        onWaterSelected  = vm::onWaterSelected,
+                        onIncrementTrees = vm::onIncrementTrees,
+                        onDecrementTrees = vm::onDecrementTrees,
+                        onComplete       = { backStack.add(FarmerPolicyKey) },
+                        onBack           = { backStack.removeLastOrNull() },
+                    )
+                }
 
-                // Auth screens
+                // Login
                 entry<LoginKey> {
                     val vm: LoginViewModel = hiltViewModel()
-                    val state by vm.uiState.collectAsState()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    val errRequired = stringResource(R.string.login_error_fields_required)
 
                     LoginScreen(
-                        uiState = state,
-                        onPhoneChanged = vm::onPhoneChanged,
-                        onPinChanged = vm::onPinChanged,
-                        onLogin = vm::login,
+                        uiState                   = state,
+                        onPhoneChanged            = vm::onPhoneChanged,
+                        onPasswordChanged         = vm::onPasswordChanged,
+                        onRoleToggled             = vm::onRoleToggled,
+                        onTogglePasswordVisibility = vm::onTogglePasswordVisibility,
+                        onLogin = { vm.login(errRequired) },
                         onLoginSuccess = { loggedInRole ->
+                            vm.onNavigationConsumed()
                             val homeKey = when (loggedInRole) {
                                 UserRole.Admin -> AdminHomeKey
                                 UserRole.Agent -> AgentHomeKey
-                                else -> FarmerHomeKey
+                                else           -> FarmerHomeKey
                             }
                             backStack.clear()
                             backStack.add(homeKey)
-                        }
+                        },
+                        onSignUpClicked = {
+                            backStack.clear()
+                            backStack.add(RoleSelectionKey)
+                        },
                     )
                 }
 

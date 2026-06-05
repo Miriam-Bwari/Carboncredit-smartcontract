@@ -234,23 +234,84 @@ Shamba Guard has **three distinct user roles** accessed through a **single Andro
 
 ### 5.1 Authentication Service
 
-#### Requirements
+> **MVP Decision (Locked):** Phone + Password auth for Farmers and Agents. OTP-only login is a Post-MVP improvement. Admin accounts remain email + password + MFA.
 
-- `POST /api/v1/auth/register` — Register admin, agent, or farmer with role assignment
-- `POST /api/v1/auth/login` — Returns JWT access token (15-minute expiry) + refresh token (7-day expiry)
-- `POST /api/v1/auth/refresh` — Rotates refresh token, returns new access token
-- `POST /api/v1/auth/otp/send` — Sends OTP to phone number via Africa's Talking SMS
-- `POST /api/v1/auth/otp/verify` — Verifies OTP, returns JWT for farmer/agent login
-- `POST /api/v1/auth/logout` — Invalidates refresh token server-side
-- Role must be embedded in JWT payload — Android reads role on login and navigates accordingly
+#### Actual Backend Endpoints (MVP)
+
+- `POST /api/farmers/register` — Register a new Farmer account
+- `POST /api/farmers/login` — Farmer login, returns JWT
+- `POST /api/agents/register` — Register a new Agent account (status: PENDING until admin approves)
+- `POST /api/agents/login` — Agent login (requires `is_active = true`, set by admin on approval)
+
+#### Registration Request Body (Both Farmer and Agent)
+
+```json
+{
+  "full_name": "Jane Muthoni",
+  "phone_number": "+254712345678",
+  "password": "securepassword",
+  "county": "Kitui"
+}
+```
+
+> **Field Note:** The location field is `county` (e.g., "Kitui", "Meru", "Machakos"), not `region`. This matches the backend database model.
+
+#### Registration Response
+
+```json
+// Farmer: POST /api/farmers/register
+{ "message": "Farmer registered successfully", "farmer_id": "uuid" }
+
+// Agent: POST /api/agents/register
+{ "message": "Agent registered successfully", "agent_id": "uuid" }
+```
+
+#### Login Request Body
+
+```json
+{
+  "phone_number": "+254712345678",
+  "password": "securepassword"
+}
+```
+
+#### Login Response (Both Farmer and Agent)
+
+```json
+{
+  "access_token": "eyJ...",
+  "token_type": "bearer",
+  "role": "Farmer",
+  "user_id": "uuid"
+}
+```
+
+- Role must be embedded in JWT payload — Android reads role on login and routes to the correct home screen
 - All tokens must be invalidated on password change or account suspension
+
+#### Registration Flow — Farmer vs Agent
+
+```
+Farmer Registration:
+  1. Account creation (name, phone, county, password) → POST /api/farmers/register
+  2. Farm boundary drawing (Google Maps polygon)
+  3. Farm practices form (crop type, tillage, water source, tree count)
+  4. Coverage tier selection + M-Pesa STK Push
+  → Lands on FarmerDashboard
+
+Agent Registration:
+  1. Account creation (name, phone, county, password) → POST /api/agents/register
+  2. AgentPendingScreen shown — explains admin must approve before login
+  → Admin approves in backend → Agent can then log in
+  → Lands on AgentDashboard
+```
 
 #### Business Rules
 
-- One national ID maps to exactly one farmer account — duplicates rejected at registration
-- Agent accounts require admin approval before activation — status: `PENDING` → `APPROVED` → `SUSPENDED`
-- Admin accounts require MFA — OTP sent to registered phone on every login
-- Farmer OTP login only — no password. Phone number is the identity
+- One phone number maps to exactly one farmer account — duplicate phone rejected at registration
+- Agent accounts require admin approval before activation — `is_active` flag set to `true` by admin
+- Admin accounts require MFA (Post-MVP — not yet implemented on backend)
+- Post-MVP: OTP-only login (Africa's Talking SMS) to replace password-based auth
 
 ---
 
@@ -1237,18 +1298,25 @@ Kiwango: Tier [TIER] | Kiasi: KES [COVERAGE] | Mwisho: [DATE]. -ShambGuard"
 
 ### Authentication
 
+> **MVP Note:** Auth uses phone + password. OTP login is Post-MVP. County field is used (not region).
+
 ```
-POST /api/v1/auth/otp/send
-Body: { "phone": "2547XXXXXXXX" }
-Response: { "message": "OTP sent", "expires_in": 300 }
+POST /api/farmers/register
+Body: { "full_name": "...", "phone_number": "+254712345678", "password": "...", "county": "Kitui" }
+Response: { "message": "Farmer registered successfully", "farmer_id": "uuid" }
 
-POST /api/v1/auth/otp/verify
-Body: { "phone": "2547XXXXXXXX", "otp": "123456" }
-Response: { "access_token": "...", "refresh_token": "...", "role": "FARMER", "user_id": "..." }
+POST /api/farmers/login
+Body: { "phone_number": "+254712345678", "password": "..." }
+Response: { "access_token": "...", "token_type": "bearer", "role": "Farmer", "user_id": "uuid" }
 
-POST /api/v1/auth/agent/login
-Body: { "phone": "2547XXXXXXXX", "otp": "123456" }
-Response: { "access_token": "...", "role": "AGENT", "approved": true }
+POST /api/agents/register
+Body: { "full_name": "...", "phone_number": "+254712345678", "password": "...", "county": "Meru" }
+Response: { "message": "Agent registered successfully", "agent_id": "uuid" }
+
+POST /api/agents/login
+Body: { "phone_number": "+254712345678", "password": "..." }
+Response: { "access_token": "...", "token_type": "bearer", "role": "Agent", "user_id": "uuid" }
+Note: Returns 401 if agent account is not yet approved by admin (is_active = false)
 ```
 
 ---
