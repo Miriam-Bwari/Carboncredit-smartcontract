@@ -56,3 +56,43 @@ def login_agent(data: AgentLogin, db: Session = Depends(get_db)):
     token = create_access_token(user_id=agent.id, role="Agent")
 
     return LoginResponse(access_token=token, role="Agent", user_id=agent.id)
+
+
+@router.get("/dashboard/{agent_id}")
+def get_agent_dashboard(agent_id: str, db: Session = Depends(get_db)):
+    from database.models import Farm, Farmer
+    from datetime import datetime, timedelta
+
+    # Count total farms registered by this agent (assuming 1 farm = 1 farmer for metrics)
+    total_farms = db.query(Farm).filter(Farm.agent_id == agent_id).count()
+
+    # Count new farms this month
+    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+    new_this_month = db.query(Farm)\
+        .filter(Farm.agent_id == agent_id, Farm.created_at >= thirty_days_ago)\
+        .count()
+
+    # Get recent registrations (using Farm joined with Farmer)
+    recent_farms = db.query(Farm)\
+        .filter(Farm.agent_id == agent_id)\
+        .order_by(Farm.created_at.desc())\
+        .limit(5)\
+        .all()
+
+    recent_registrations = []
+    for f in recent_farms:
+        farmer = db.query(Farmer).filter(Farmer.id == f.farmer_id).first()
+        recent_registrations.append({
+            "id": f.farmer_id,
+            "name": farmer.full_name if farmer else "Unknown",
+            "county": f.county or "Unknown",
+            "status": "ACTIVE",
+            "syncText": "Synced"
+        })
+
+    return {
+        "farmersRegistered": total_farms,
+        "pendingSyncs": 0, # Backend doesn't know about pending local syncs
+        "newThisMonth": new_this_month,
+        "recentRegistrations": recent_registrations
+    }

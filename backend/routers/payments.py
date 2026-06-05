@@ -71,3 +71,30 @@ def payment_status(checkout_id: str, db: Session = Depends(get_db), current_user
         amount_kes=payment.amount_kes,
         mpesa_reference=payment.mpesa_reference
     )
+
+
+@router.get("/policy/{farmer_id}")
+def get_farmer_policy(farmer_id: str, db: Session = Depends(get_db)):
+    # Find any completed payment for this farmer to determine policy status
+    payment = db.query(Payment)\
+        .filter(Payment.farmer_id == farmer_id, Payment.status == "completed")\
+        .order_by(Payment.created_at.desc())\
+        .first()
+
+    if not payment:
+        return {
+            "farmer_id": farmer_id,
+            "is_active": False,
+            "expiry_date": None
+        }
+
+    # Simplified policy logic: Active for 1 year from payment
+    from datetime import timedelta
+    expiry_date = payment.created_at + timedelta(days=365)
+    is_active = expiry_date > payment.created_at  # Always true given the logic, but handles future current_time logic if added
+
+    return {
+        "farmer_id": farmer_id,
+        "is_active": is_active,
+        "expiry_date": expiry_date.strftime("%Y-%m-%d")
+    }
