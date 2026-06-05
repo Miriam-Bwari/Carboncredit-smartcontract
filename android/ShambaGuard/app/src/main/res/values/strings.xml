@@ -134,4 +134,46 @@
     <string name="insights_source">Source: %1$s</string>
     <string name="insights_last_updated">Updated: %1$s</string>
 
+    <!-- Login Screen -->
+    <string name="login_title">Karibu Tena</string>
+    <string name="login_subtitle">Welcome back to Shamba Guard</string>
+    <string name="login_role_farmer">Farmer</string>
+    <string name="login_role_agent">Field Agent</string>
+    <string name="login_phone_label">Phone Number</string>
+    <string name="login_phone_hint">+254 7XX XXX XXX</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_show_password">Show password</string>
+    <string name="login_hide_password">Hide password</string>
+    <string name="login_cta">Sign In</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_sign_up">Sign up</string>
+    <string name="login_error_fields_required">Please enter your phone number and password</string>
+
+    <!-- Account Registration Screen -->
+    <string name="reg_account_title_farmer">Create Farmer Account</string>
+    <string name="reg_account_title_agent">Create Agent Account</string>
+    <string name="reg_account_subtitle">Enter your details to get started with Shamba Guard.</string>
+    <string name="reg_phone_label">Phone Number</string>
+    <string name="reg_phone_hint">+254 7XX XXX XXX</string>
+    <string name="reg_phone_helper">This number will be used to log in and receive M-Pesa payouts</string>
+    <string name="reg_county_label">County</string>
+    <string name="reg_county_hint">e.g. Kitui, Meru, Machakos</string>
+    <string name="reg_password_label">Password</string>
+    <string name="reg_confirm_password_label">Confirm Password</string>
+    <string name="reg_create_account_cta">Create Account</string>
+    <string name="reg_have_account">Already have an account?</string>
+    <string name="reg_sign_in">Sign in</string>
+    <!-- New validation errors -->
+    <string name="reg_error_phone_empty">Phone number is required</string>
+    <string name="reg_error_county_empty">County is required</string>
+    <string name="reg_error_password_short">Password must be at least 8 characters</string>
+    <string name="reg_error_password_mismatch">Passwords do not match</string>
+
+    <!-- Agent Pending Screen -->
+    <string name="agent_pending_title">Registration Received!</string>
+    <string name="agent_pending_subtitle">Asante / Thank you</string>
+    <string name="agent_pending_body">Your agent account is pending admin approval. You will receive an SMS once your account is activated.</string>
+    <string name="agent_pending_contact_hint">Contact your supervisor if you need faster approval.</string>
+    <string name="agent_pending_go_to_login">Go to Login</string>
+
 </resources>

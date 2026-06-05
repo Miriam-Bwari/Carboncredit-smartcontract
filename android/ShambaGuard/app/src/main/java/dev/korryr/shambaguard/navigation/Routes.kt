@@ -31,13 +31,16 @@ data object OnboardingKey
 data object RoleSelectionKey
 
 @Serializable
-data object RegistrationKey   // Step 1: Personal details
+data object RegistrationKey   // Account creation: name, phone, county, password
 
 @Serializable
-data object FarmBoundaryKey   // Step 2: Draw farm polygon
+data object AgentPendingKey   // Shown after agent registers — awaiting admin approval
 
 @Serializable
-data object FarmPracticesKey  // Step 3: Farm practices
+data object FarmBoundaryKey   // Farm setup Step 1: Draw farm polygon (Farmers only)
+
+@Serializable
+data object FarmPracticesKey  // Farm setup Step 2: Farm practices (Farmers only)
 
 @Serializable
 data object LoginKey
