@@ -26,7 +26,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -57,6 +58,7 @@ import dev.korryr.shambaguard.sharedComposables.ShambaButton
 import dev.korryr.shambaguard.sharedComposables.ShambaTextField
 import dev.korryr.shambaguard.ui.features.auth.presentation.LoginUiState
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LoginScreen(
     uiState: LoginUiState,
@@ -74,15 +76,15 @@ fun LoginScreen(
     }
 
     val fieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor   = MaterialTheme.colorScheme.primary,
+        focusedBorderColor = MaterialTheme.colorScheme.primary,
         unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-        focusedLabelColor    = MaterialTheme.colorScheme.primary,
-        cursorColor          = MaterialTheme.colorScheme.primary,
+        focusedLabelColor = MaterialTheme.colorScheme.primary,
+        cursorColor = MaterialTheme.colorScheme.primary,
     )
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color    = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
             modifier = Modifier
@@ -96,27 +98,27 @@ fun LoginScreen(
 
             // Hero badge
             Box(
-                modifier         = Modifier
+                modifier = Modifier
                     .size(64.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    painter            = painterResource(R.drawable.leaf),
+                    painter = painterResource(R.drawable.leaf),
                     contentDescription = null,
-                    tint               = MaterialTheme.colorScheme.primary,
-                    modifier           = Modifier.size(32.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp),
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text      = stringResource(R.string.login_title),
-                style     = MaterialTheme.typography.headlineMedium.copy(
+                text = stringResource(R.string.login_title),
+                style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = MaterialTheme.colorScheme.onBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                 ),
                 textAlign = TextAlign.Center,
             )
@@ -124,8 +126,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text      = stringResource(R.string.login_subtitle),
-                style     = MaterialTheme.typography.bodyLarge.copy(
+                text = stringResource(R.string.login_subtitle),
+                style = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
                 textAlign = TextAlign.Center,
@@ -135,9 +137,11 @@ fun LoginScreen(
 
             // Role toggle
             RoleToggle(
-                selectedRole  = uiState.role,
+                selectedRole = uiState.role,
                 onRoleToggled = onRoleToggled,
-                modifier      = Modifier.padding(horizontal = 24.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -145,28 +149,28 @@ fun LoginScreen(
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
 
                 ShambaTextField(
-                    value           = uiState.phone,
-                    onValueChange   = onPhoneChanged,
-                    label           = stringResource(R.string.login_phone_label),
+                    value = uiState.phone,
+                    onValueChange = onPhoneChanged,
+                    label = stringResource(R.string.login_phone_label),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
-                        imeAction    = ImeAction.Next,
+                        imeAction = ImeAction.Next,
                     ),
                     enabled = !uiState.isLoading,
-                    colors  = fieldColors,
+                    colors = fieldColors,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ShambaTextField(
-                    value                = uiState.password,
-                    onValueChange        = onPasswordChanged,
-                    label                = stringResource(R.string.login_password_label),
+                    value = uiState.password,
+                    onValueChange = onPasswordChanged,
+                    label = stringResource(R.string.login_password_label),
                     visualTransformation = if (uiState.passwordVisible)
                         VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions      = KeyboardOptions(
+                    keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
-                        imeAction    = ImeAction.Done,
+                        imeAction = ImeAction.Done,
                     ),
                     trailingIcon = {
                         IconButton(onClick = onTogglePasswordVisibility) {
@@ -182,14 +186,14 @@ fun LoginScreen(
                         }
                     },
                     enabled = !uiState.isLoading,
-                    colors  = fieldColors,
+                    colors = fieldColors,
                 )
 
                 if (uiState.error != null) {
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text     = uiState.error,
-                        style    = MaterialTheme.typography.bodySmall.copy(
+                        text = uiState.error,
+                        style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.error,
                         ),
                         modifier = Modifier
@@ -206,19 +210,18 @@ fun LoginScreen(
 
                 if (uiState.isLoading) {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(
-                            color    = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(40.dp),
+                        CircularWavyProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary,
                         )
                     }
                 } else {
                     ShambaButton(
-                        text      = stringResource(R.string.login_cta),
-                        onClick   = onLogin,
-                        modifier  = Modifier.fillMaxWidth(),
+                        text = stringResource(R.string.login_cta),
+                        onClick = onLogin,
+                        modifier = Modifier.fillMaxWidth(),
                         textStyle = MaterialTheme.typography.labelLarge.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize   = 16.sp,
+                            fontSize = 16.sp,
                         ),
                     )
                 }
@@ -226,12 +229,12 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Row(
-                    modifier              = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment     = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text  = stringResource(R.string.login_no_account),
+                        text = stringResource(R.string.login_no_account),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
@@ -239,10 +242,10 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.width(4.dp))
                     TextButton(onClick = onSignUpClicked) {
                         Text(
-                            text  = stringResource(R.string.login_sign_up),
+                            text = stringResource(R.string.login_sign_up),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                color      = MaterialTheme.colorScheme.primary,
+                                color = MaterialTheme.colorScheme.primary,
                             ),
                         )
                     }
@@ -268,22 +271,22 @@ private fun RoleToggle(
     ) {
         listOf(
             UserRole.Farmer to R.string.login_role_farmer,
-            UserRole.Agent  to R.string.login_role_agent,
+            UserRole.Agent to R.string.login_role_agent,
         ).forEach { (role, labelRes) ->
             val isSelected = selectedRole == role
             val bgColor by animateColorAsState(
-                targetValue   = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
                 animationSpec = tween(200),
-                label         = "RoleTabBg",
+                label = "RoleTabBg",
             )
             val textColor by animateColorAsState(
-                targetValue   = if (isSelected) MaterialTheme.colorScheme.onPrimary
-                                else MaterialTheme.colorScheme.onSurfaceVariant,
+                targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary
+                else MaterialTheme.colorScheme.onSurfaceVariant,
                 animationSpec = tween(200),
-                label         = "RoleTabText",
+                label = "RoleTabText",
             )
             Box(
-                modifier         = Modifier
+                modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(12.dp))
                     .background(bgColor)
@@ -292,10 +295,10 @@ private fun RoleToggle(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text  = stringResource(labelRes),
+                    text = stringResource(labelRes),
                     style = MaterialTheme.typography.labelLarge.copy(
                         fontWeight = FontWeight.SemiBold,
-                        color      = textColor,
+                        color = textColor,
                     ),
                 )
             }

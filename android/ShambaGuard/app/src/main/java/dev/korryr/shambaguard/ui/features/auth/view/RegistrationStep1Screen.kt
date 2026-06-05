@@ -26,12 +26,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,6 +63,7 @@ import dev.korryr.shambaguard.ui.features.auth.presentation.AppUserRole
 // Account creation screen — collects name, phone, county, password, confirm password.
 // Farm setup (polygon + practices) comes after this, for Farmers only.
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun RegistrationStep1Screen(
     uiState: AccountRegistrationUiState,
@@ -80,15 +84,15 @@ fun RegistrationStep1Screen(
     LaunchedEffect(Unit) { contentVisible = true }
 
     val fieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor   = MaterialTheme.colorScheme.primary,
+        focusedBorderColor = MaterialTheme.colorScheme.primary,
         unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-        focusedLabelColor    = MaterialTheme.colorScheme.primary,
-        cursorColor          = MaterialTheme.colorScheme.primary,
+        focusedLabelColor = MaterialTheme.colorScheme.primary,
+        cursorColor = MaterialTheme.colorScheme.primary,
     )
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color    = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
             modifier = Modifier
@@ -98,32 +102,32 @@ fun RegistrationStep1Screen(
         ) {
             // Top bar
             Row(
-                modifier          = Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(onClick = onBack) {
                     Icon(
-                        imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.reg_back_content_description),
-                        tint               = MaterialTheme.colorScheme.primary,
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 }
                 Text(
-                    text  = stringResource(R.string.reg_screen_title),
+                    text = stringResource(R.string.reg_screen_title),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color      = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.primary,
                     ),
                 )
             }
 
             // Scrollable form
             AnimatedVisibility(
-                visible  = contentVisible,
-                enter    = fadeIn(tween(400)) + slideInVertically(
-                    animationSpec  = tween(400),
+                visible = contentVisible,
+                enter = fadeIn(tween(400)) + slideInVertically(
+                    animationSpec = tween(400),
                     initialOffsetY = { it / 8 },
                 ),
                 modifier = Modifier.weight(1f),
@@ -138,22 +142,22 @@ fun RegistrationStep1Screen(
 
                     // Role-aware heading
                     Text(
-                        text  = stringResource(
+                        text = stringResource(
                             if (role == AppUserRole.Farmer) R.string.reg_account_title_farmer
-                            else R.string.reg_account_title_agent
+                            else R.string.reg_account_title_agent,
                         ),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.ExtraBold,
-                            color      = MaterialTheme.colorScheme.onBackground,
+                            color = MaterialTheme.colorScheme.onBackground,
                         ),
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text  = stringResource(R.string.reg_account_subtitle),
+                        text = stringResource(R.string.reg_account_subtitle),
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             lineHeight = 22.sp,
                         ),
                     )
@@ -162,48 +166,48 @@ fun RegistrationStep1Screen(
 
                     // Full name
                     ShambaTextField(
-                        value          = uiState.fullName,
-                        onValueChange  = onFullNameChanged,
-                        label          = stringResource(R.string.reg_full_name_label),
-                        isError        = uiState.fullNameError != null,
-                        errorMessage   = uiState.fullNameError,
+                        value = uiState.fullName,
+                        onValueChange = onFullNameChanged,
+                        label = stringResource(R.string.reg_full_name_label),
+                        isError = uiState.fullNameError != null,
+                        errorMessage = uiState.fullNameError,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Words,
-                            imeAction      = ImeAction.Next,
+                            imeAction = ImeAction.Next,
                         ),
-                        colors         = fieldColors,
+                        colors = fieldColors,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Phone number
                     ShambaTextField(
-                        value          = uiState.phone,
-                        onValueChange  = onPhoneChanged,
-                        label          = stringResource(R.string.reg_phone_label),
-                        isError        = uiState.phoneError != null,
-                        errorMessage   = uiState.phoneError,
+                        value = uiState.phone,
+                        onValueChange = onPhoneChanged,
+                        label = stringResource(R.string.reg_phone_label),
+                        isError = uiState.phoneError != null,
+                        errorMessage = uiState.phoneError,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Phone,
-                            imeAction    = ImeAction.Next,
+                            imeAction = ImeAction.Next,
                         ),
-                        colors         = fieldColors,
+                        colors = fieldColors,
                     )
 
                     // Phone helper text
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier          = Modifier.padding(top = 6.dp, start = 4.dp),
+                        modifier = Modifier.padding(top = 6.dp, start = 4.dp),
                     ) {
                         Icon(
-                            imageVector        = Icons.Filled.Circle,
+                            imageVector = Icons.Filled.Circle,
                             contentDescription = null,
-                            tint               = MaterialTheme.colorScheme.primary,
-                            modifier           = Modifier.size(7.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(7.dp),
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text  = stringResource(R.string.reg_phone_helper),
+                            text = stringResource(R.string.reg_phone_helper),
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = MaterialTheme.colorScheme.primary,
                             ),
@@ -214,41 +218,41 @@ fun RegistrationStep1Screen(
 
                     // County
                     ShambaTextField(
-                        value          = uiState.county,
-                        onValueChange  = onCountyChanged,
-                        label          = stringResource(R.string.reg_county_label),
-                        isError        = uiState.countyError != null,
-                        errorMessage   = uiState.countyError,
+                        value = uiState.county,
+                        onValueChange = onCountyChanged,
+                        label = stringResource(R.string.reg_county_label),
+                        isError = uiState.countyError != null,
+                        errorMessage = uiState.countyError,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Words,
-                            imeAction      = ImeAction.Next,
+                            imeAction = ImeAction.Next,
                         ),
-                        colors         = fieldColors,
+                        colors = fieldColors,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Password
                     ShambaTextField(
-                        value                  = uiState.password,
-                        onValueChange          = onPasswordChanged,
-                        label                  = stringResource(R.string.reg_password_label),
-                        isError                = uiState.passwordError != null,
-                        errorMessage           = uiState.passwordError,
-                        visualTransformation   = if (uiState.passwordVisible)
+                        value = uiState.password,
+                        onValueChange = onPasswordChanged,
+                        label = stringResource(R.string.reg_password_label),
+                        isError = uiState.passwordError != null,
+                        errorMessage = uiState.passwordError,
+                        visualTransformation = if (uiState.passwordVisible)
                             VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions        = KeyboardOptions(
+                        keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
-                            imeAction    = ImeAction.Next,
+                            imeAction = ImeAction.Next,
                         ),
                         trailingIcon = {
                             IconButton(onClick = onTogglePasswordVisibility) {
                                 Icon(
-                                    imageVector        = if (uiState.passwordVisible)
+                                    imageVector = if (uiState.passwordVisible)
                                         Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
                                     contentDescription = stringResource(
                                         if (uiState.passwordVisible) R.string.login_hide_password
-                                        else R.string.login_show_password
+                                        else R.string.login_show_password,
                                     ),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -261,25 +265,25 @@ fun RegistrationStep1Screen(
 
                     // Confirm password
                     ShambaTextField(
-                        value                = uiState.confirmPassword,
-                        onValueChange        = onConfirmPasswordChanged,
-                        label                = stringResource(R.string.reg_confirm_password_label),
-                        isError              = uiState.confirmPasswordError != null,
-                        errorMessage         = uiState.confirmPasswordError,
+                        value = uiState.confirmPassword,
+                        onValueChange = onConfirmPasswordChanged,
+                        label = stringResource(R.string.reg_confirm_password_label),
+                        isError = uiState.confirmPasswordError != null,
+                        errorMessage = uiState.confirmPasswordError,
                         visualTransformation = if (uiState.confirmPasswordVisible)
                             VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions      = KeyboardOptions(
+                        keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
-                            imeAction    = ImeAction.Done,
+                            imeAction = ImeAction.Done,
                         ),
                         trailingIcon = {
                             IconButton(onClick = onToggleConfirmPasswordVisibility) {
                                 Icon(
-                                    imageVector        = if (uiState.confirmPasswordVisible)
+                                    imageVector = if (uiState.confirmPasswordVisible)
                                         Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
                                     contentDescription = stringResource(
                                         if (uiState.confirmPasswordVisible) R.string.login_hide_password
-                                        else R.string.login_show_password
+                                        else R.string.login_show_password,
                                     ),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -292,7 +296,7 @@ fun RegistrationStep1Screen(
                     if (uiState.networkError != null) {
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text  = uiState.networkError,
+                            text = uiState.networkError,
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = MaterialTheme.colorScheme.error,
                             ),
@@ -318,34 +322,41 @@ fun RegistrationStep1Screen(
                     .padding(horizontal = 24.dp, vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                ShambaButton(
-                    text     = stringResource(R.string.reg_create_account_cta),
-                    onClick  = onCreateAccount,
-                    enabled  = !uiState.isLoading,
-                    modifier = Modifier.fillMaxWidth(),
-                    textStyle = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize   = 16.sp,
-                    ),
-                )
+                if (uiState.isLoading) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        CircularWavyProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                } else {
+                    ShambaButton(
+                        text = stringResource(R.string.reg_create_account_cta),
+                        onClick = onCreateAccount,
+                        modifier = Modifier.fillMaxWidth(),
+                        textStyle = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                        ),
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // "Already have an account? Sign in"
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text  = stringResource(R.string.reg_have_account),
+                        text = stringResource(R.string.reg_have_account),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    androidx.compose.material3.TextButton(onClick = onSignInClicked) {
+                    TextButton(onClick = onSignInClicked) {
                         Text(
-                            text  = stringResource(R.string.reg_sign_in),
+                            text = stringResource(R.string.reg_sign_in),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                color      = MaterialTheme.colorScheme.primary,
+                                color = MaterialTheme.colorScheme.primary,
                             ),
                         )
                     }

@@ -2,7 +2,9 @@ package dev.korryr.shambaguard.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -105,6 +107,7 @@ private val ShambaDarkColorScheme = darkColorScheme(
     inversePrimary      = Green40,
 )
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ShambaGuardTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -126,6 +129,7 @@ fun ShambaGuardTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography  = Typography,
-        content     = content
+        content     = content,
+        motionScheme = MotionScheme.expressive(),
     )
 }
