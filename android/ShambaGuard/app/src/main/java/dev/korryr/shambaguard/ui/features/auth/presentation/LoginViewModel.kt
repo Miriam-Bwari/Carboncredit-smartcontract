@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+import dev.korryr.shambaguard.core.datastore.SessionManager
 // ---------------------------------------------------------------------------
 // LoginViewModel.kt
 // Handles login for both Farmers and Agents using phone + password.
@@ -29,7 +29,6 @@ data class LoginUiState(
     val successRole: UserRole? = null,              // non-null on successful login
 )
 
-import dev.korryr.shambaguard.core.datastore.SessionManager
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -92,7 +91,7 @@ class LoginViewModel @Inject constructor(
             )
         }
     }
-    
+
     // Dev Bypass
     fun devBypass(role: UserRole) {
         viewModelScope.launch {
