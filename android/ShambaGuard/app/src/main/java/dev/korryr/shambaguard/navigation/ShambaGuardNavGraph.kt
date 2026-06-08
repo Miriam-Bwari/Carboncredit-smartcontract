@@ -62,6 +62,7 @@ import dev.korryr.shambaguard.ui.features.farmer.presentation.MyFarmViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
 import dev.korryr.shambaguard.ui.features.farmer.view.CarbonScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.CoverageStatusScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.DroughtInsightsScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.EarlyWarningScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerProfileScreen
@@ -436,6 +437,15 @@ fun ShambaGuardNavGraph(
                 }
                 // Non-tab screens — navigated from dashboard or tabs
                 entry<FarmerDroughtInsightsKey> {
+                    val vm: DroughtViewModel = hiltViewModel()
+                    val state by vm.insightsState.collectAsStateWithLifecycle()
+
+                    DroughtInsightsScreen(
+                        uiState = state,
+                        onBack = { backStack.removeLastOrNull() },
+                    )
+                }
+                entry<FarmerCoverageKey> {
                     val vm: DroughtViewModel = hiltViewModel()
                     val state by vm.coverageState.collectAsStateWithLifecycle()
 

@@ -11,36 +11,22 @@ data class CoverageHistoryItem(
 
 data class CoverageStatusUiState(
     // Policy card
-    val policyName:           String        = "Premium Weather Index",
-    val isActive:             Boolean       = true,
-    val validThrough:         String        = "Long Rains (May 2024)",
+    val policyName:           String        = "Fetching Policy...",
+    val isActive:             Boolean       = false,
+    val validThrough:         String        = "---",
     // Installment circles: true = paid (green ✓), false = pending (grey ○)
-    val premiumInstallments:  List<Boolean> = listOf(true, true, false),
+    val premiumInstallments:  List<Boolean> = emptyList(),
 
     // Current triggers
-    val triggersLastUpdated:  String = "Today",
-    val rainfallMm:           Float  = 142f,
+    val triggersLastUpdated:  String = "Syncing",
+    val rainfallMm:           Float  = 0f,
     val rainfallTriggerMm:    Float  = 120f,
     val rainfallMaxMm:        Float  = 200f,
-    val ndviValue:            Float  = 0.38f,
+    val ndviValue:            Float  = 0.0f,
     val ndviWarning:          Float  = 0.40f,
 
     // History timeline
-    val history: List<CoverageHistoryItem> = listOf(
-        CoverageHistoryItem(
-            title    = "Drought Payout - Phase 2",
-            date     = "Nov 12, 2023",
-            detail   = "Paid via M-Pesa",
-            amount   = "+ KES 12,500",
-            isPayout = true,
-        ),
-        CoverageHistoryItem(
-            title    = "Policy Renewed",
-            date     = "Oct 01, 2023",
-            detail   = "",
-            isPayout = false,
-        ),
-    ),
+    val history: List<CoverageHistoryItem> = emptyList(),
 
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
 )

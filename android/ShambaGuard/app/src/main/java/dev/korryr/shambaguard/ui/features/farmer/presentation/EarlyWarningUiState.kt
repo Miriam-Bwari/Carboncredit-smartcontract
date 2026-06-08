@@ -9,34 +9,26 @@ data class RainfallDay(
 
 data class EarlyWarningUiState(
     // Alert banner
-    val alertTitleSwahili: String = "Ukame unakuja /",
-    val alertTitleEnglish: String = "Drought Coming",
-    val alertBody:         String = "Severe lack of rain expected in the next 14 days.",
-    val aiConfidence:      Int    = 89,
+    val alertTitleSwahili: String = "Inapakia...",
+    val alertTitleEnglish: String = "Loading...",
+    val alertBody:         String = "Fetching latest drought data...",
+    val aiConfidence:      Int    = 0,
 
     // Farm stress map
-    val mapLastUpdated: String  = "Today",
+    val mapLastUpdated: String  = "Syncing",
 
     // 7-day rainfall forecast
-    val rainfallForecast: List<RainfallDay> = listOf(
-        RainfallDay("Mon", false, 0),
-        RainfallDay("Tue", false, 0),
-        RainfallDay("Wed", true,  1),
-        RainfallDay("Thu", false, 0),
-        RainfallDay("Fri", false, 0),
-        RainfallDay("Sat", false, 0),
-        RainfallDay("Sun", false, 0),
-    ),
+    val rainfallForecast: List<RainfallDay> = emptyList(),
 
     // AI crop recommendation
-    val aiCropTitle:  String = "Panda Cowpeas, si Mahindi",
-    val aiCropBody:   String = "Due to the projected severe lack of rainfall over the next crucial growing weeks, maize (mahindi) will likely fail. Cowpeas are highly drought-resistant and have a 75% higher chance of yield in current conditions.",
+    val aiCropTitle:  String = "Analysing farm...",
+    val aiCropBody:   String = "Fetching AI recommendations for your crop.",
 
     // Policy coverage card
-    val coverageActive:    Boolean = true,
-    val payoutKes:         Int     = 8_000,
-    val payoutCondition:   String  = "If drought is confirmed by end of month.",
+    val coverageActive:    Boolean = false,
+    val payoutKes:         Int     = 0,
+    val payoutCondition:   String  = "Loading policy details...",
 
-    val currentRisk: DroughtRisk = DroughtRisk.HIGH,
-    val isLoading:   Boolean     = false,
+    val currentRisk: DroughtRisk = DroughtRisk.LOW,
+    val isLoading:   Boolean     = true,
 )

@@ -94,6 +94,9 @@ data object FarmerPayoutsKey   // Payout history
 @Serializable
 data object FarmerDroughtInsightsKey // Drought Insights deep dive
 
+@Serializable
+data object FarmerCoverageKey        // Coverage Status details
+
 // Bottom-nav tab metadata
 sealed class BottomTab(
     val title: String,
