@@ -47,10 +47,4 @@ interface FarmApi {
 
     @GET("api/payments/policy/{farmer_id}")
     suspend fun getPolicy(@Path("farmer_id") farmerId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PolicyDto
-
-    @POST("api/payments/stk-push")
-    suspend fun triggerStkPush(@Body request: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.StkPushRequestDto): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.StkPushResponseDto
-
-    @GET("api/payments/status/{checkout_id}")
-    suspend fun getPaymentStatus(@Path("checkout_id") checkoutId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PaymentStatusResponseDto
 }

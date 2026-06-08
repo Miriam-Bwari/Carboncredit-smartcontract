@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.korryr.shambaguard.core.datastore.SessionManager
 import dev.korryr.shambaguard.ui.features.farmer.domain.repository.FarmRepository
+import dev.korryr.shambaguard.ui.features.farmer.domain.repository.PaymentRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PolicyViewModel @Inject constructor(
     private val farmRepository: FarmRepository,
+    private val paymentRepository: PaymentRepository,
     private val sessionManager: SessionManager,
 ) : ViewModel() {
 
@@ -45,7 +47,7 @@ class PolicyViewModel @Inject constructor(
                 return@launch
             }
 
-            val pushResult = farmRepository.triggerStkPush(
+            val pushResult = paymentRepository.triggerStkPush(
                 farmerId = farmerId,
                 phoneNumber = farmerResult.phoneNumber,
                 amountKes = selected.premiumKes,
@@ -64,7 +66,7 @@ class PolicyViewModel @Inject constructor(
         // Poll every 3 seconds for up to 60 seconds (20 attempts)
         repeat(20) {
             delay(3000)
-            val statusResult = farmRepository.getPaymentStatus(checkoutId).getOrNull()
+            val statusResult = paymentRepository.getPaymentStatus(checkoutId).getOrNull()
             if (statusResult != null) {
                 when (statusResult.status) {
                     "completed" -> {

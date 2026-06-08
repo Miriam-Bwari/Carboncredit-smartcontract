@@ -96,23 +96,3 @@ data class FarmerDetailsDto(
     @SerializedName("phone_number") val phoneNumber: String,
     @SerializedName("county") val county: String,
 )
-
-data class StkPushRequestDto(
-    @SerializedName("farmer_id") val farmerId: String,
-    @SerializedName("phone_number") val phoneNumber: String,
-    @SerializedName("amount_kes") val amountKes: Int,
-)
-
-data class StkPushResponseDto(
-    @SerializedName("success") val success: Boolean,
-    @SerializedName("message") val message: String,
-    @SerializedName("checkout_id") val checkoutId: String?,
-    @SerializedName("merchant_id") val merchantId: String?,
-)
-
-data class PaymentStatusResponseDto(
-    @SerializedName("checkout_id") val checkoutId: String,
-    @SerializedName("status") val status: String,
-    @SerializedName("amount_kes") val amountKes: Int,
-    @SerializedName("mpesa_reference") val mpesaReference: String?,
-)

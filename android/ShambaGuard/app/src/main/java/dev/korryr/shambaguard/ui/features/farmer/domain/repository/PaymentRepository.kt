@@ -3,7 +3,8 @@ package dev.korryr.shambaguard.ui.features.farmer.domain.repository
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.CarbonCreditDto
 
 interface PaymentRepository {
-    suspend fun payPremium(phone: String, amount: Int, farmId: String, tier: Int): Result<String>
+    suspend fun triggerStkPush(farmerId: String, phoneNumber: String, amountKes: Int): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.StkPushResponseDto>
+    suspend fun getPaymentStatus(checkoutId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PaymentStatusResponseDto>
 }
 
 interface CarbonRepository {

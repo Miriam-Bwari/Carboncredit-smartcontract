@@ -153,23 +153,6 @@ class FarmRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-    override suspend fun triggerStkPush(farmerId: String, phoneNumber: String, amountKes: Int): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.StkPushResponseDto> = try {
-        val request = dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.StkPushRequestDto(
-            farmerId = farmerId,
-            phoneNumber = phoneNumber,
-            amountKes = amountKes,
-        )
-        Result.success(farmApi.triggerStkPush(request))
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
-
-    override suspend fun getPaymentStatus(checkoutId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PaymentStatusResponseDto> = try {
-        Result.success(farmApi.getPaymentStatus(checkoutId))
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
-
     override suspend fun addPractice(
         farmId: String,
         practice: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto,

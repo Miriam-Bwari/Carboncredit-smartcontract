@@ -25,9 +25,6 @@ interface FarmRepository {
     suspend fun getWeather(farmId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.WeatherDto>
     suspend fun getPolicy(farmerId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PolicyDto>
 
-    suspend fun triggerStkPush(farmerId: String, phoneNumber: String, amountKes: Int): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.StkPushResponseDto>
-    suspend fun getPaymentStatus(checkoutId: String): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PaymentStatusResponseDto>
-
     suspend fun addPractice(farmId: String, practice: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto>
     suspend fun getPractices(farmId: String): Result<List<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto>>
 }
