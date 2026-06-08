@@ -1,9 +1,9 @@
 package dev.korryr.shambaguard.ui.features.farmer.presentation
 
 data class FarmerProfileUiState(
-    val farmerName:     String  = "Ezekiel Mutua",
-    val farmerId:       String  = "84739201",
-    val phone:          String  = "+254 722 000 111",
+    val farmerName:     String  = "",
+    val farmerId:       String  = "",
+    val phone:          String  = "",
     val isVerified:     Boolean = true,
 
     // Preferences
