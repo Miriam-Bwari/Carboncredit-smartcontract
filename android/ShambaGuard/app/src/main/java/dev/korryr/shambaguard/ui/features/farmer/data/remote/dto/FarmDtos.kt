@@ -10,6 +10,11 @@ data class FarmerRegisterRequestDto(
     @SerializedName("county") val county: String,
 )
 
+data class FarmerRegisterResponseDto(
+    @SerializedName("message") val message: String,
+    @SerializedName("farmer_id") val farmerId: String,
+)
+
 data class FarmRegisterRequestDto(
     @SerializedName("farmer_id") val farmerId: String,
     @SerializedName("name") val name: String,
