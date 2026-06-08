@@ -11,7 +11,7 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 
 @Composable
 fun FarmMapScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
     val kenyaCenter = LatLng(0.0236, 37.9062)
     val cameraPositionState = rememberCameraPositionState {
@@ -22,20 +22,20 @@ fun FarmMapScreen(
         topBar = {
             ShambaTopBar(
                 title = "Farm Map (NDVI Overlay)",
-                onBack = onNavigateBack
+                onBack = onNavigateBack,
             )
-        }
+        },
     ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
         ) {
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState
+                cameraPositionState = cameraPositionState,
             ) {
-                // In a real implementation, we would iterate through all farms 
+                // In a real implementation, we would iterate through all farms
                 // and draw polygons with colors based on their NDVI/Drought status
             }
         }

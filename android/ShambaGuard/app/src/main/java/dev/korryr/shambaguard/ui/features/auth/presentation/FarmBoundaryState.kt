@@ -3,9 +3,6 @@ package dev.korryr.shambaguard.ui.features.auth.presentation
 import com.google.android.gms.maps.model.LatLng
 import kotlin.math.abs
 import kotlin.math.sin
-import kotlin.math.cos
-import kotlin.math.sqrt
-import kotlin.math.atan2
 
 // Step 2 — farm polygon drawing state
 data class FarmBoundaryUiState(

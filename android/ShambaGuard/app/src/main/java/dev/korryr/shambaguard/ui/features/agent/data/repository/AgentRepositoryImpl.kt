@@ -6,15 +6,13 @@ import dev.korryr.shambaguard.ui.features.agent.domain.repository.AgentRepositor
 import javax.inject.Inject
 
 class AgentRepositoryImpl @Inject constructor(
-    private val agentApi: AgentApi
+    private val agentApi: AgentApi,
 ) : AgentRepository {
 
-    override suspend fun getDashboardStats(agentId: String): Result<AgentDashboardDto> {
-        return try {
-            val response = agentApi.getAgentDashboard(agentId)
-            Result.success(response)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun getDashboardStats(agentId: String): Result<AgentDashboardDto> = try {
+        val response = agentApi.getAgentDashboard(agentId)
+        Result.success(response)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 }

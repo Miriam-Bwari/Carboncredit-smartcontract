@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 data class UserEntity(
     @PrimaryKey val userId: String,
     val phone: String,
-    val role: String,           // ADMIN | AGENT | FARMER
+    val role: String, // ADMIN | AGENT | FARMER
     val name: String,
-    val nationalId: String?,    // Agents and farmers only
+    val nationalId: String?, // Agents and farmers only
     val region: String?,
-    val isApproved: Boolean,    // Agents require admin approval
-    val createdAt: Long
+    val isApproved: Boolean, // Agents require admin approval
+    val createdAt: Long,
 )

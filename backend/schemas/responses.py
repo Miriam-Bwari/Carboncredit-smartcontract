@@ -56,6 +56,19 @@ class FarmSummary(BaseModel):
     crop_type: str
 
 
+class PracticeLogCreate(BaseModel):
+    crop_type: str
+    tillage_method: str
+    tree_count: int
+    irrigation_source: str
+
+
+class PracticeLogResponse(PracticeLogCreate):
+    id: str
+    farm_id: str
+    created_at: str
+
+
 # Carbon
 class CarbonScanRecord(BaseModel):
     date: str

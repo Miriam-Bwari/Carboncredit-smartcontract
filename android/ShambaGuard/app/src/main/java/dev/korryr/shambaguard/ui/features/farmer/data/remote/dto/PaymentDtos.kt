@@ -3,16 +3,23 @@ package dev.korryr.shambaguard.ui.features.farmer.data.remote.dto
 import com.google.gson.annotations.SerializedName
 
 data class StkPushRequestDto(
-    @SerializedName("phone") val phone: String,
-    @SerializedName("amount") val amount: Int,
-    @SerializedName("farm_id") val farmId: String,
-    @SerializedName("tier") val tier: Int
+    @SerializedName("farmer_id") val farmerId: String,
+    @SerializedName("phone_number") val phoneNumber: String,
+    @SerializedName("amount_kes") val amountKes: Int,
 )
 
 data class StkPushResponseDto(
-    @SerializedName("checkout_request_id") val checkoutRequestId: String,
-    @SerializedName("merchant_request_id") val merchantRequestId: String,
-    @SerializedName("customer_message") val customerMessage: String
+    @SerializedName("success") val success: Boolean,
+    @SerializedName("message") val message: String,
+    @SerializedName("checkout_id") val checkoutId: String?,
+    @SerializedName("merchant_id") val merchantId: String?,
+)
+
+data class PaymentStatusResponseDto(
+    @SerializedName("checkout_id") val checkoutId: String,
+    @SerializedName("status") val status: String,
+    @SerializedName("amount_kes") val amountKes: Int,
+    @SerializedName("mpesa_reference") val mpesaReference: String?,
 )
 
 data class CarbonCreditDto(
@@ -20,5 +27,5 @@ data class CarbonCreditDto(
     @SerializedName("farm_id") val farmId: String,
     @SerializedName("carbon_tonnes") val carbonTonnes: Double,
     @SerializedName("status") val status: String, // MINTED, RETIRED
-    @SerializedName("issued_at") val issuedAt: Long
+    @SerializedName("issued_at") val issuedAt: Long,
 )

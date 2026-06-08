@@ -18,14 +18,12 @@ abstract class AuthModule {
     @Binds
     @Singleton
     abstract fun bindAuthRepository(
-        authRepositoryImpl: AuthRepositoryImpl
+        authRepositoryImpl: AuthRepositoryImpl,
     ): AuthRepository
 
     companion object {
         @Provides
         @Singleton
-        fun provideAuthApi(retrofit: Retrofit): AuthApi {
-            return retrofit.create(AuthApi::class.java)
-        }
+        fun provideAuthApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
     }
 }

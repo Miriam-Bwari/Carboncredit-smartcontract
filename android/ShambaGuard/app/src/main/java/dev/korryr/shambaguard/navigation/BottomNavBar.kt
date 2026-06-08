@@ -7,7 +7,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
@@ -15,7 +14,7 @@ import androidx.compose.ui.unit.sp
 fun BottomNavBar(
     tabs: List<BottomTab>,
     currentKey: Any?,
-    onTabSelected: (Any) -> Unit
+    onTabSelected: (Any) -> Unit,
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -52,7 +51,7 @@ fun BottomNavBar(
                     // Unselected — Grey50 (light) / Grey80 (dark)
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                ),
             )
         }
     }

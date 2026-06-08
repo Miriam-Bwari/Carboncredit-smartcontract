@@ -13,14 +13,14 @@ import timber.log.Timber
 class FarmSyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val syncQueueDao: SyncQueueDao
+    private val syncQueueDao: SyncQueueDao,
     // TODO: Add SyncRepository here when created
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
         return try {
             val pendingItems = syncQueueDao.getPendingQueue()
-            
+
             if (pendingItems.isEmpty()) {
                 Timber.d("No pending items to sync.")
                 return Result.success()
@@ -33,15 +33,18 @@ class FarmSyncWorker @AssistedInject constructor(
                 //     "PRACTICE_LOG" -> syncRepository.postPractices(item)
                 //     "EVIDENCE_PHOTO" -> syncRepository.uploadPhoto(item)
                 // }
-                
+
                 // On success:
                 syncQueueDao.deleteSyncItem(item.id)
             }
             Result.success()
         } catch (e: Exception) {
             Timber.e(e, "Error during sync")
-            if (runAttemptCount < 3) Result.retry()
-            else Result.failure()
+            if (runAttemptCount < 3) {
+                Result.retry()
+            } else {
+                Result.failure()
+            }
         }
     }
 }

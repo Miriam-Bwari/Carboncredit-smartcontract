@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from database.connection import get_db
-from database.models import Farm
+from database.models import Farm, PracticeLog
 from core.security import get_current_user, require_agent
-from schemas.responses import FarmResponse, FarmRegisterResponse, FarmSummary
+from schemas.responses import FarmResponse, FarmRegisterResponse, FarmSummary, PracticeLogCreate, PracticeLogResponse
 from schemas.geojson import GeoJsonPolygon
 from pydantic import BaseModel
 
@@ -88,4 +88,49 @@ def get_farmer_farms(farmer_id: str, db: Session = Depends(get_db), current_user
     return [
         FarmSummary(id=f.id, name=f.name or "", area_hectares=f.area_hectares or 0.0, crop_type=f.crop_type or "")
         for f in farms
+    ]
+
+
+@router.post("/{farm_id}/practices", response_model=PracticeLogResponse)
+def add_practice_log(farm_id: str, data: PracticeLogCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    farm = db.query(Farm).filter(Farm.id == farm_id).first()
+    if not farm:
+        raise HTTPException(status_code=404, detail="Farm not found")
+
+    log = PracticeLog(
+        farm_id=farm_id,
+        crop_type=data.crop_type,
+        tillage_method=data.tillage_method,
+        tree_count=data.tree_count,
+        irrigation_source=data.irrigation_source
+    )
+    db.add(log)
+    db.commit()
+    db.refresh(log)
+
+    return PracticeLogResponse(
+        id=log.id,
+        farm_id=log.farm_id,
+        crop_type=log.crop_type or "",
+        tillage_method=log.tillage_method or "",
+        tree_count=log.tree_count or 0,
+        irrigation_source=log.irrigation_source or "",
+        created_at=log.created_at.isoformat() if log.created_at else ""
+    )
+
+
+@router.get("/{farm_id}/practices", response_model=List[PracticeLogResponse])
+def get_practice_logs(farm_id: str, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    logs = db.query(PracticeLog).filter(PracticeLog.farm_id == farm_id).order_by(PracticeLog.created_at.desc()).all()
+    return [
+        PracticeLogResponse(
+            id=log.id,
+            farm_id=log.farm_id,
+            crop_type=log.crop_type or "",
+            tillage_method=log.tillage_method or "",
+            tree_count=log.tree_count or 0,
+            irrigation_source=log.irrigation_source or "",
+            created_at=log.created_at.isoformat() if log.created_at else ""
+        )
+        for log in logs
     ]

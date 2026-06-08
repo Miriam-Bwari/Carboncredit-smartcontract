@@ -9,7 +9,7 @@ enum class PolicyTier(
     val coverageKes: Int,
     val features: List<String>,
     val isRecommended: Boolean = false,
-    val isPremiumDark: Boolean = false,  // Nguvu card uses inverted dark green style
+    val isPremiumDark: Boolean = false, // Nguvu card uses inverted dark green style
 ) {
     MSINGI(
         tierNumber = 1,
@@ -60,6 +60,6 @@ sealed class PaymentState {
 }
 
 data class PolicyUiState(
-    val selectedTier: PolicyTier? = PolicyTier.IMARA,  // Pre-select recommended tier
+    val selectedTier: PolicyTier? = PolicyTier.IMARA, // Pre-select recommended tier
     val paymentState: PaymentState = PaymentState.Idle,
 )

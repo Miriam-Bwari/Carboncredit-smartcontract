@@ -1,10 +1,7 @@
 package dev.korryr.shambaguard.ui.features.auth.view
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,8 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Undo
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Card
@@ -107,7 +102,7 @@ fun FarmBoundaryScreen(
                 com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN -> com.google.maps.android.compose.MapType.TERRAIN
                 com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID -> com.google.maps.android.compose.MapType.HYBRID
                 else -> com.google.maps.android.compose.MapType.SATELLITE
-            }
+            },
         )
     }
 
@@ -329,7 +324,6 @@ private fun ConfirmBoundarySheet(
         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
     ) {
         Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)) {
-
             // Drag handle
             Box(
                 modifier = Modifier
@@ -384,9 +378,11 @@ private fun ConfirmBoundarySheet(
                         ),
                     )
                     Text(
-                        text = if (estimatedAcres != null)
+                        text = if (estimatedAcres != null) {
                             stringResource(R.string.farm_step2_area_acres_format, estimatedAcres)
-                        else "— ac",
+                        } else {
+                            "— ac"
+                        },
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary,

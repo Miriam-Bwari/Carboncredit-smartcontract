@@ -25,14 +25,14 @@ class AuthRepositoryImpl @Inject constructor(
     ): Result<UserRole> = runCatching {
         val response = when (role) {
             UserRole.Farmer -> authApi.loginFarmer(FarmerLoginRequestDto(phone, password))
-            UserRole.Agent  -> authApi.loginAgent(AgentLoginRequestDto(phone, password))
+            UserRole.Agent -> authApi.loginAgent(AgentLoginRequestDto(phone, password))
             // Admin login not yet implemented on backend — fallback to farmer endpoint
-            else            -> authApi.loginFarmer(FarmerLoginRequestDto(phone, password))
+            else -> authApi.loginFarmer(FarmerLoginRequestDto(phone, password))
         }
 
         sessionManager.saveSession(
-            token  = response.accessToken,
-            role   = response.role,
+            token = response.accessToken,
+            role = response.role,
             userId = response.userId,
         )
 
@@ -55,11 +55,11 @@ class AuthRepositoryImpl @Inject constructor(
     ): Result<String> = runCatching {
         val response = authApi.registerFarmer(
             FarmerRegisterRequestDto(
-                fullName    = fullName,
+                fullName = fullName,
                 phoneNumber = phone,
-                password    = password,
-                county      = county,
-            )
+                password = password,
+                county = county,
+            ),
         )
         response.farmerId
     }
@@ -74,11 +74,11 @@ class AuthRepositoryImpl @Inject constructor(
     ): Result<String> = runCatching {
         val response = authApi.registerAgent(
             AgentRegisterRequestDto(
-                fullName    = fullName,
+                fullName = fullName,
                 phoneNumber = phone,
-                password    = password,
-                county      = county,
-            )
+                password = password,
+                county = county,
+            ),
         )
         response.agentId
     }

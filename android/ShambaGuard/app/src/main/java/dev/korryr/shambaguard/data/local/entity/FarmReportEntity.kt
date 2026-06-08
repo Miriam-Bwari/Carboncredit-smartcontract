@@ -11,7 +11,7 @@ data class FarmReportEntity(
     val rainfallMm: Double,
     val droughtScore: Double,
     val forecastScore: Double,
-    val riskLevel: String,      // LOW | MODERATE | HIGH | CRITICAL
+    val riskLevel: String, // LOW | MODERATE | HIGH | CRITICAL
     val recommendation: String, // e.g., "Plant cowpeas instead of maize"
-    val generatedAt: Long
+    val generatedAt: Long,
 )

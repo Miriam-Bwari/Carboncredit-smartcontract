@@ -11,7 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,31 +25,34 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.sharedComposables.ShambaButton
+import dev.korryr.shambaguard.sharedComposables.ShambaButtonType
+import dev.korryr.shambaguard.sharedComposables.ShambaTextField
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmPractice
 import dev.korryr.shambaguard.ui.features.farmer.presentation.MyFarmUiState
 import dev.korryr.shambaguard.ui.theme.Green10
 import dev.korryr.shambaguard.ui.theme.Green40
-import dev.korryr.shambaguard.ui.theme.Green90
 import dev.korryr.shambaguard.ui.theme.Green95
 import dev.korryr.shambaguard.ui.theme.ShambaAmber
 import dev.korryr.shambaguard.ui.theme.White
 
-private val SoilBrown     = Color(0xFF7B5800)
-private val SoilBrownBg   = Color(0xFFFFF0CC)
+private val SoilBrown = Color(0xFF7B5800)
+private val SoilBrownBg = Color(0xFFFFF0CC)
 private val CarbonBadgeBg = Color(0xFFFFF0CC)
 private val CarbonBadgeFg = Color(0xFF5C4000)
 
 @Composable
 fun MyFarmScreen(
-    uiState:       MyFarmUiState,
-    onBack:        () -> Unit,
+    uiState: MyFarmUiState,
+    onBack: () -> Unit,
     onAddPractice: () -> Unit,
-    onViewOnMap:   () -> Unit,
-    modifier:      Modifier = Modifier,
+    onSubmitPractice: (tillage: String, trees: String, irrigation: String) -> Unit,
+    onDismissDialog: () -> Unit,
+    onViewOnMap: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         Column(
@@ -77,7 +80,7 @@ fun MyFarmScreen(
 
         // Floating Action Button — dark green rounded square
         Box(
-            modifier         = Modifier
+            modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
                 .padding(end = 20.dp, bottom = 20.dp)
@@ -88,13 +91,21 @@ fun MyFarmScreen(
         ) {
             IconButton(onClick = onAddPractice) {
                 Icon(
-                    imageVector        = Icons.Filled.Add,
+                    imageVector = Icons.Filled.Add,
                     contentDescription = "Add Practice",
-                    tint               = White,
-                    modifier           = Modifier.size(28.dp),
+                    tint = White,
+                    modifier = Modifier.size(28.dp),
                 )
             }
         }
+    }
+
+    if (uiState.showAddPracticeDialog) {
+        AddPracticeDialog(
+            isSubmitting = uiState.isSubmittingPractice,
+            onSubmit = onSubmitPractice,
+            onDismiss = onDismissDialog,
+        )
     }
 }
 
@@ -121,17 +132,20 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
                     brush = Brush.linearGradient(
                         listOf(Color(0xFFE8EFD8), Color(0xFFD5E0C0), Color(0xFFE0E8C8)),
                         start = Offset.Zero,
-                        end   = Offset(size.width, size.height),
-                    )
+                        end = Offset(size.width, size.height),
+                    ),
                 )
 
                 // River / road line (blue-grey)
                 val roadPath = androidx.compose.ui.graphics.Path().apply {
                     moveTo(size.width * 0.55f, 0f)
                     cubicTo(
-                        size.width * 0.60f, size.height * 0.3f,
-                        size.width * 0.65f, size.height * 0.5f,
-                        size.width * 0.70f, size.height,
+                        size.width * 0.60f,
+                        size.height * 0.3f,
+                        size.width * 0.65f,
+                        size.height * 0.5f,
+                        size.width * 0.70f,
+                        size.height,
                     )
                 }
                 drawPath(roadPath, color = Color(0xFF90CAF9), style = Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round))
@@ -155,7 +169,7 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
 
             // "Plot Alpha" badge overlay bottom-left
             Row(
-                modifier          = Modifier
+                modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(10.dp)
                     .clip(RoundedCornerShape(8.dp))
@@ -164,16 +178,16 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.Terrain,
+                    imageVector = Icons.Filled.Terrain,
                     contentDescription = null,
-                    tint               = White,
-                    modifier           = Modifier.size(14.dp),
+                    tint = White,
+                    modifier = Modifier.size(14.dp),
                 )
                 Spacer(Modifier.width(5.dp))
                 Text(
-                    text  = uiState.plotName,
+                    text = uiState.plotName,
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color      = White,
+                        color = White,
                         fontWeight = FontWeight.SemiBold,
                     ),
                 )
@@ -182,21 +196,21 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
 
         // Plot info row
         Row(
-            modifier          = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text  = "${uiState.farmAcres} Acres",
+                    text = "${uiState.farmAcres} Acres",
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color      = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurface,
                     ),
                 )
                 Text(
-                    text  = uiState.activeCrop,
+                    text = uiState.activeCrop,
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -204,17 +218,17 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
             }
             // View on map icon button
             Box(
-                modifier         = Modifier
+                modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(Green95),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.Map,
+                    imageVector = Icons.Filled.Map,
                     contentDescription = "View on map",
-                    tint               = Green40,
-                    modifier           = Modifier.size(22.dp),
+                    tint = Green40,
+                    modifier = Modifier.size(22.dp),
                 )
             }
         }
@@ -226,34 +240,34 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
 private fun LandHealthSection(uiState: MyFarmUiState) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text  = "Land Health",
+            text = "Land Health",
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground,
             ),
         )
         // Two gauge cards side by side
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             // NDVI gauge
             GaugeCard(
-                modifier    = Modifier.weight(1f),
-                value       = uiState.ndviScore,
-                maxValue    = 1.0f,
+                modifier = Modifier.weight(1f),
+                value = uiState.ndviScore,
+                maxValue = 1.0f,
                 displayText = String.format("%.1f", uiState.ndviScore),
-                arcColor    = Green40,
-                label       = "NDVI Score",
-                status      = uiState.ndviStatus,
+                arcColor = Green40,
+                label = "NDVI Score",
+                status = uiState.ndviStatus,
                 statusColor = Green40,
             )
             // Veg Cover gauge
             GaugeCard(
-                modifier    = Modifier.weight(1f),
-                value       = uiState.vegCoverPercent / 100f,
-                maxValue    = 1.0f,
+                modifier = Modifier.weight(1f),
+                value = uiState.vegCoverPercent / 100f,
+                maxValue = 1.0f,
                 displayText = "${uiState.vegCoverPercent.toInt()}%",
-                arcColor    = Color(0xFFD32F2F),
-                label       = "Veg Cover",
-                status      = uiState.vegCoverStatus,
+                arcColor = Color(0xFFD32F2F),
+                label = "Veg Cover",
+                status = uiState.vegCoverStatus,
                 statusColor = MaterialTheme.colorScheme.onSurface,
             )
         }
@@ -265,19 +279,19 @@ private fun LandHealthSection(uiState: MyFarmUiState) {
 // Circular arc gauge card
 @Composable
 private fun GaugeCard(
-    modifier:    Modifier,
-    value:       Float,
-    maxValue:    Float,
+    modifier: Modifier,
+    value: Float,
+    maxValue: Float,
     displayText: String,
-    arcColor:    Color,
-    label:       String,
-    status:      String,
+    arcColor: Color,
+    label: String,
+    status: String,
     statusColor: Color,
 ) {
     val textMeasurer = rememberTextMeasurer()
 
     Column(
-        modifier            = modifier
+        modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface)
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
@@ -286,43 +300,43 @@ private fun GaugeCard(
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Canvas(modifier = Modifier.size(90.dp)) {
-            val stroke       = 10.dp.toPx()
-            val padding      = stroke / 2f
-            val arcSize      = Size(size.width - stroke, size.height - stroke)
-            val arcTopLeft   = Offset(padding, padding)
-            val startAngle   = 135f
-            val totalSweep   = 270f
-            val valueSweep   = totalSweep * (value / maxValue).coerceIn(0f, 1f)
+            val stroke = 10.dp.toPx()
+            val padding = stroke / 2f
+            val arcSize = Size(size.width - stroke, size.height - stroke)
+            val arcTopLeft = Offset(padding, padding)
+            val startAngle = 135f
+            val totalSweep = 270f
+            val valueSweep = totalSweep * (value / maxValue).coerceIn(0f, 1f)
 
             // Background track
             drawArc(
-                color      = Color.LightGray.copy(alpha = 0.3f),
+                color = Color.LightGray.copy(alpha = 0.3f),
                 startAngle = startAngle,
                 sweepAngle = totalSweep,
-                useCenter  = false,
-                topLeft    = arcTopLeft,
-                size       = arcSize,
-                style      = Stroke(width = stroke, cap = StrokeCap.Round),
+                useCenter = false,
+                topLeft = arcTopLeft,
+                size = arcSize,
+                style = Stroke(width = stroke, cap = StrokeCap.Round),
             )
             // Value arc
             if (valueSweep > 0f) {
                 drawArc(
-                    color      = arcColor,
+                    color = arcColor,
                     startAngle = startAngle,
                     sweepAngle = valueSweep,
-                    useCenter  = false,
-                    topLeft    = arcTopLeft,
-                    size       = arcSize,
-                    style      = Stroke(width = stroke, cap = StrokeCap.Round),
+                    useCenter = false,
+                    topLeft = arcTopLeft,
+                    size = arcSize,
+                    style = Stroke(width = stroke, cap = StrokeCap.Round),
                 )
             }
             // Center text
             val layout = textMeasurer.measure(
-                text  = displayText,
+                text = displayText,
                 style = TextStyle(
-                    fontSize   = 20.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color      = arcColor,
+                    color = arcColor,
                 ),
             )
             drawText(
@@ -334,16 +348,16 @@ private fun GaugeCard(
             )
         }
         Text(
-            text  = label,
+            text = label,
             style = MaterialTheme.typography.labelMedium.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
         )
         Text(
-            text  = status,
+            text = status,
             style = MaterialTheme.typography.labelMedium.copy(
                 fontWeight = FontWeight.Bold,
-                color      = statusColor,
+                color = statusColor,
             ),
         )
     }
@@ -362,37 +376,37 @@ private fun SoilCarbonCard(uiState: MyFarmUiState) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
-            modifier          = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier         = Modifier
+                modifier = Modifier
                     .size(36.dp)
                     .clip(CircleShape)
                     .background(SoilBrownBg),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.Eco,
+                    imageVector = Icons.Filled.Eco,
                     contentDescription = null,
-                    tint               = SoilBrown,
-                    modifier           = Modifier.size(20.dp),
+                    tint = SoilBrown,
+                    modifier = Modifier.size(20.dp),
                 )
             }
             Spacer(Modifier.width(12.dp))
             Text(
-                text     = "Soil Carbon Level",
+                text = "Soil Carbon Level",
                 modifier = Modifier.weight(1f),
-                style    = MaterialTheme.typography.bodyMedium.copy(
+                style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
-                    color      = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                 ),
             )
             Text(
-                text  = "${uiState.soilCarbonPercent}%",
+                text = "${uiState.soilCarbonPercent}%",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = SoilBrown,
+                    color = SoilBrown,
                 ),
             )
         }
@@ -413,9 +427,9 @@ private fun SoilCarbonCard(uiState: MyFarmUiState) {
             )
         }
         Text(
-            text  = uiState.soilCarbonChange,
+            text = uiState.soilCarbonChange,
             style = MaterialTheme.typography.bodySmall.copy(
-                color      = Green40,
+                color = Green40,
                 fontWeight = FontWeight.Medium,
             ),
         )
@@ -427,18 +441,18 @@ private fun SoilCarbonCard(uiState: MyFarmUiState) {
 private fun PracticeLogSection(practices: List<FarmPractice>) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text  = "Practice Log",
+            text = "Practice Log",
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground,
             ),
         )
         Column {
             practices.forEachIndexed { index, practice ->
                 PracticeRow(
                     practice = practice,
-                    isFirst  = index == 0,
-                    isLast   = index == practices.lastIndex,
+                    isFirst = index == 0,
+                    isLast = index == practices.lastIndex,
                 )
             }
         }
@@ -448,14 +462,14 @@ private fun PracticeLogSection(practices: List<FarmPractice>) {
 @Composable
 private fun PracticeRow(
     practice: FarmPractice,
-    isFirst:  Boolean,
-    isLast:   Boolean,
+    isFirst: Boolean,
+    isLast: Boolean,
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
         // Timeline column: dot + line
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier            = Modifier.width(24.dp),
+            modifier = Modifier.width(24.dp),
         ) {
             Spacer(Modifier.height(16.dp))
             Box(
@@ -478,7 +492,7 @@ private fun PracticeRow(
 
         // Practice card
         Row(
-            modifier          = Modifier
+            modifier = Modifier
                 .weight(1f)
                 .padding(bottom = if (isLast) 0.dp else 12.dp)
                 .clip(RoundedCornerShape(12.dp))
@@ -489,12 +503,15 @@ private fun PracticeRow(
         ) {
             // Thumbnail
             Box(
-                modifier         = Modifier
+                modifier = Modifier
                     .size(56.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(
-                        if (practice.hasImage) Color(0xFF2D1B00)
-                        else MaterialTheme.colorScheme.surfaceVariant
+                        if (practice.hasImage) {
+                            Color(0xFF2D1B00)
+                        } else {
+                            MaterialTheme.colorScheme.surfaceVariant
+                        },
                     ),
                 contentAlignment = Alignment.Center,
             ) {
@@ -506,17 +523,17 @@ private fun PracticeRow(
                         drawCircle(Color(0xFF5C3000).copy(alpha = 0.6f), radius = size.minDimension * 0.2f, center = Offset(size.width * 0.65f, size.height * 0.35f))
                     }
                     Icon(
-                        imageVector        = Icons.Filled.Compost,
+                        imageVector = Icons.Filled.Compost,
                         contentDescription = null,
-                        tint               = ShambaAmber.copy(alpha = 0.8f),
-                        modifier           = Modifier.size(24.dp),
+                        tint = ShambaAmber.copy(alpha = 0.8f),
+                        modifier = Modifier.size(24.dp),
                     )
                 } else {
                     Icon(
-                        imageVector        = Icons.Filled.Grass,
+                        imageVector = Icons.Filled.Grass,
                         contentDescription = null,
-                        tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier           = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(24.dp),
                     )
                 }
             }
@@ -525,15 +542,15 @@ private fun PracticeRow(
 
             Column {
                 Text(
-                    text  = practice.title,
+                    text = practice.title,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.SemiBold,
-                        color      = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurface,
                     ),
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    text  = practice.date,
+                    text = practice.date,
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -541,23 +558,23 @@ private fun PracticeRow(
                 Spacer(Modifier.height(6.dp))
                 // Carbon badge — amber/brown pill
                 Row(
-                    modifier          = Modifier
+                    modifier = Modifier
                         .clip(RoundedCornerShape(50))
                         .background(CarbonBadgeBg)
                         .padding(horizontal = 8.dp, vertical = 3.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
-                        imageVector        = Icons.Filled.Eco,
+                        imageVector = Icons.Filled.Eco,
                         contentDescription = null,
-                        tint               = CarbonBadgeFg,
-                        modifier           = Modifier.size(12.dp),
+                        tint = CarbonBadgeFg,
+                        modifier = Modifier.size(12.dp),
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text  = practice.carbonBadge,
+                        text = practice.carbonBadge,
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color      = CarbonBadgeFg,
+                            color = CarbonBadgeFg,
                             fontWeight = FontWeight.SemiBold,
                         ),
                     )
@@ -565,4 +582,64 @@ private fun PracticeRow(
             }
         }
     }
+}
+
+@Composable
+fun AddPracticeDialog(
+    isSubmitting: Boolean,
+    onSubmit: (tillage: String, trees: String, irrigation: String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var tillageMethod by remember { mutableStateOf("") }
+    var treeCount by remember { mutableStateOf("") }
+    var irrigationSource by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Log New Practice", fontWeight = FontWeight.Bold) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                ShambaTextField(
+                    value = tillageMethod,
+                    onValueChange = { tillageMethod = it },
+                    label = "Tillage Method (e.g. Minimum Tillage)",
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                ShambaTextField(
+                    value = treeCount,
+                    onValueChange = { treeCount = it },
+                    label = "Trees Planted",
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                ShambaTextField(
+                    value = irrigationSource,
+                    onValueChange = { irrigationSource = it },
+                    label = "Irrigation Source",
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        },
+        confirmButton = {
+            if (isSubmitting) {
+                CircularWavyProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.primary)
+            } else {
+                ShambaButton(
+                    text = "Submit",
+                    onClick = { onSubmit(tillageMethod, treeCount, irrigationSource) },
+                    enabled = tillageMethod.isNotBlank(),
+                )
+            }
+        },
+        dismissButton = {
+            ShambaButton(
+                text = "Cancel",
+                onClick = onDismiss,
+                enabled = !isSubmitting,
+                type = ShambaButtonType.Text,
+            )
+        },
+    )
 }

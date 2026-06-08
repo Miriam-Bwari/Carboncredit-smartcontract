@@ -7,12 +7,12 @@ data class AgentRecentRegistrationDto(
     @SerializedName("name") val name: String,
     @SerializedName("county") val county: String,
     @SerializedName("status") val status: String,
-    @SerializedName("syncText") val syncText: String
+    @SerializedName("syncText") val syncText: String,
 )
 
 data class AgentDashboardDto(
     @SerializedName("farmersRegistered") val farmersRegistered: Int,
     @SerializedName("pendingSyncs") val pendingSyncs: Int,
     @SerializedName("newThisMonth") val newThisMonth: Int,
-    @SerializedName("recentRegistrations") val recentRegistrations: List<AgentRecentRegistrationDto>
+    @SerializedName("recentRegistrations") val recentRegistrations: List<AgentRecentRegistrationDto>,
 )

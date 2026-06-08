@@ -124,14 +124,19 @@ fun FarmerDashboardScreen(
                     iconTint = Green40,
                     iconBgColor = Green95,
                     title = stringResource(R.string.dashboard_policy_status),
-                    valueLine1 = if (uiState.policyActive)
+                    valueLine1 = if (uiState.policyActive) {
                         stringResource(R.string.dashboard_policy_active)
-                    else stringResource(R.string.dashboard_policy_inactive),
-                    valueLine1Color = if (uiState.policyActive) Green40
-                    else MaterialTheme.colorScheme.error,
+                    } else {
+                        stringResource(R.string.dashboard_policy_inactive)
+                    },
+                    valueLine1Color = if (uiState.policyActive) {
+                        Green40
+                    } else {
+                        MaterialTheme.colorScheme.error
+                    },
                     valueLine2 = stringResource(
                         R.string.dashboard_policy_expiry,
-                        uiState.policyExpiry
+                        uiState.policyExpiry,
                     ),
                     onClick = onViewPolicy,
                     modifier = Modifier.weight(1f),
@@ -233,8 +238,8 @@ private fun SatelliteThumbnail(modifier: Modifier = Modifier) {
             .clip(RoundedCornerShape(10.dp))
             .background(
                 Brush.linearGradient(
-                    listOf(Green10, Green40)
-                )
+                    listOf(Green10, Green40),
+                ),
             ),
         contentAlignment = Alignment.Center,
     ) {
@@ -250,7 +255,7 @@ private fun SatelliteThumbnail(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
-                        .background(White.copy(alpha = 0.25f))
+                        .background(White.copy(alpha = 0.25f)),
                 )
             }
         }
@@ -386,13 +391,13 @@ private fun DroughtAlertCard(
                                 fontSize = 32.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = progressColor,
-                            )
+                            ),
                         ) { append(String.format("%.2f", ndviScore)) }
                         withStyle(
                             SpanStyle(
                                 fontSize = 14.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
+                            ),
                         ) { append(" / 1.0") }
                     },
                 )
@@ -413,7 +418,7 @@ private fun DroughtAlertCard(
                 modifier = Modifier
                     .width(1.dp)
                     .height(72.dp)
-                    .background(progressColor.copy(alpha = 0.2f))
+                    .background(progressColor.copy(alpha = 0.2f)),
             )
 
             // Rainfall
@@ -432,13 +437,13 @@ private fun DroughtAlertCard(
                                 fontSize = 32.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = MaterialTheme.colorScheme.onSurface,
-                            )
+                            ),
                         ) { append("$rainfallMm") }
                         withStyle(
                             SpanStyle(
                                 fontSize = 14.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
+                            ),
                         ) { append(" mm") }
                     },
                 )
@@ -560,7 +565,7 @@ private fun ActivityRow(
         ActivityType.DROUGHT_ALERT -> Triple(
             Icons.Filled.Warning,
             Color(0xFFB00020),
-            Color(0xFFFFDADB)
+            Color(0xFFFFDADB),
         )
 
         ActivityType.PAYOUT -> Triple(Icons.Filled.CheckCircle, Green40, Green95)
@@ -625,7 +630,7 @@ private fun ActivityRow(
                 .fillMaxWidth()
                 .height(1.dp)
                 .padding(start = 48.dp)
-                .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
         )
     }
 }

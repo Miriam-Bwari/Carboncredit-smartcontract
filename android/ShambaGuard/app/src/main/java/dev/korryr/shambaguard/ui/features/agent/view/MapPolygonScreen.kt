@@ -15,42 +15,42 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 @Composable
 fun MapPolygonScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToEvidence: () -> Unit
+    onNavigateToEvidence: () -> Unit,
 ) {
     // Default location (e.g., Nairobi/Meru area)
     val defaultLocation = LatLng(-0.0236, 37.9062) // Meru approx
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultLocation, 15f)
     }
-    
+
     val polygonPoints = remember { mutableStateListOf<LatLng>() }
 
     Scaffold(
         topBar = {
             ShambaTopBar(
                 title = "Draw Farm Boundary",
-                onBack = onNavigateBack
+                onBack = onNavigateBack,
             )
-        }
+        },
     ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
         ) {
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
                 onMapClick = { latLng ->
                     polygonPoints.add(latLng)
-                }
+                },
             ) {
                 if (polygonPoints.isNotEmpty()) {
                     Polygon(
                         points = polygonPoints.toList(),
                         fillColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                         strokeColor = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 5f
+                        strokeWidth = 5f,
                     )
                 }
             }
@@ -60,30 +60,30 @@ fun MapPolygonScreen(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Button(
                         onClick = { if (polygonPoints.isNotEmpty()) polygonPoints.removeLast() },
-                        enabled = polygonPoints.isNotEmpty()
+                        enabled = polygonPoints.isNotEmpty(),
                     ) {
                         Text("Undo Point")
                     }
                     Button(
                         onClick = { polygonPoints.clear() },
-                        enabled = polygonPoints.isNotEmpty()
+                        enabled = polygonPoints.isNotEmpty(),
                     ) {
                         Text("Clear All")
                     }
                 }
-                
+
                 ShambaButton(
                     text = "Save & Capture Evidence",
                     onClick = onNavigateToEvidence,
-                    enabled = polygonPoints.size >= 3 // At least a triangle
+                    enabled = polygonPoints.size >= 3, // At least a triangle
                 )
             }
         }

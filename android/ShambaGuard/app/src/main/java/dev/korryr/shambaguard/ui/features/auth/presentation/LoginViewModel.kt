@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+import dev.korryr.shambaguard.core.datastore.SessionManager
 // ---------------------------------------------------------------------------
 // LoginViewModel.kt
 // Handles login for both Farmers and Agents using phone + password.
@@ -20,21 +20,19 @@ import javax.inject.Inject
 // ---------------------------------------------------------------------------
 
 data class LoginUiState(
-    val phone:       String    = "",
-    val password:    String    = "",
-    val role:        UserRole  = UserRole.Farmer,   // which endpoint to call
+    val phone: String = "",
+    val password: String = "",
+    val role: UserRole = UserRole.Farmer, // which endpoint to call
     val passwordVisible: Boolean = false,
-    val isLoading:   Boolean   = false,
-    val error:       String?   = null,
-    val successRole: UserRole? = null,              // non-null on successful login
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val successRole: UserRole? = null, // non-null on successful login
 )
-
-import dev.korryr.shambaguard.core.datastore.SessionManager
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -74,9 +72,9 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
             authRepository.login(
-                phone    = state.phone.replace(" ", ""),
+                phone = state.phone.replace(" ", ""),
                 password = state.password,
-                role     = state.role,
+                role = state.role,
             ).fold(
                 onSuccess = { role ->
                     _uiState.update { it.copy(isLoading = false, successRole = role) }
@@ -85,14 +83,14 @@ class LoginViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error     = e.message ?: "Login failed. Check your details and try again.",
+                            error = e.message ?: "Login failed. Check your details and try again.",
                         )
                     }
                 },
             )
         }
     }
-    
+
     // Dev Bypass
     fun devBypass(role: UserRole) {
         viewModelScope.launch {
@@ -101,7 +99,7 @@ class LoginViewModel @Inject constructor(
             sessionManager.saveSession(
                 token = "dev_bypass_token",
                 role = role.name,
-                userId = "dev_bypass_user_id"
+                userId = "dev_bypass_user_id",
             )
             _uiState.update { it.copy(successRole = role) }
         }

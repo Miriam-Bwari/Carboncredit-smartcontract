@@ -95,7 +95,6 @@ fun SplashScreen(
         label = "Dashed Ring Rotation",
     )
 
-
     LaunchedEffect(Unit) {
         isVisible = true
         delay(2800)

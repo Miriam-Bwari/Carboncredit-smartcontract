@@ -18,14 +18,12 @@ abstract class AgentModule {
     @Binds
     @Singleton
     abstract fun bindAgentRepository(
-        agentRepositoryImpl: AgentRepositoryImpl
+        agentRepositoryImpl: AgentRepositoryImpl,
     ): AgentRepository
 
     companion object {
         @Provides
         @Singleton
-        fun provideAgentApi(retrofit: Retrofit): AgentApi {
-            return retrofit.create(AgentApi::class.java)
-        }
+        fun provideAgentApi(retrofit: Retrofit): AgentApi = retrofit.create(AgentApi::class.java)
     }
 }

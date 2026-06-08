@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -43,8 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -143,8 +140,11 @@ fun RegistrationStep1Screen(
                     // Role-aware heading
                     Text(
                         text = stringResource(
-                            if (role == AppUserRole.Farmer) R.string.reg_account_title_farmer
-                            else R.string.reg_account_title_agent,
+                            if (role == AppUserRole.Farmer) {
+                                R.string.reg_account_title_farmer
+                            } else {
+                                R.string.reg_account_title_agent
+                            },
                         ),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.ExtraBold,
@@ -239,8 +239,11 @@ fun RegistrationStep1Screen(
                         label = stringResource(R.string.reg_password_label),
                         isError = uiState.passwordError != null,
                         errorMessage = uiState.passwordError,
-                        visualTransformation = if (uiState.passwordVisible)
-                            VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (uiState.passwordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Next,
@@ -248,11 +251,17 @@ fun RegistrationStep1Screen(
                         trailingIcon = {
                             IconButton(onClick = onTogglePasswordVisibility) {
                                 Icon(
-                                    imageVector = if (uiState.passwordVisible)
-                                        Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                    imageVector = if (uiState.passwordVisible) {
+                                        Icons.Filled.VisibilityOff
+                                    } else {
+                                        Icons.Filled.Visibility
+                                    },
                                     contentDescription = stringResource(
-                                        if (uiState.passwordVisible) R.string.login_hide_password
-                                        else R.string.login_show_password,
+                                        if (uiState.passwordVisible) {
+                                            R.string.login_hide_password
+                                        } else {
+                                            R.string.login_show_password
+                                        },
                                     ),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -270,8 +279,11 @@ fun RegistrationStep1Screen(
                         label = stringResource(R.string.reg_confirm_password_label),
                         isError = uiState.confirmPasswordError != null,
                         errorMessage = uiState.confirmPasswordError,
-                        visualTransformation = if (uiState.confirmPasswordVisible)
-                            VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (uiState.confirmPasswordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done,
@@ -279,11 +291,17 @@ fun RegistrationStep1Screen(
                         trailingIcon = {
                             IconButton(onClick = onToggleConfirmPasswordVisibility) {
                                 Icon(
-                                    imageVector = if (uiState.confirmPasswordVisible)
-                                        Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                    imageVector = if (uiState.confirmPasswordVisible) {
+                                        Icons.Filled.VisibilityOff
+                                    } else {
+                                        Icons.Filled.Visibility
+                                    },
                                     contentDescription = stringResource(
-                                        if (uiState.confirmPasswordVisible) R.string.login_hide_password
-                                        else R.string.login_show_password,
+                                        if (uiState.confirmPasswordVisible) {
+                                            R.string.login_hide_password
+                                        } else {
+                                            R.string.login_show_password
+                                        },
                                     ),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )

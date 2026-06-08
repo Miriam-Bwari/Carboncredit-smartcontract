@@ -24,7 +24,7 @@ enum class ShambaButtonType {
     Filled,
     Text,
     Outlined,
-    Elevated
+    Elevated,
 }
 
 @Composable
@@ -38,10 +38,10 @@ fun ShambaButton(
     colors: ButtonColors? = null,
     elevation: ButtonElevation? = null,
     textStyle: TextStyle? = null,
-    textColor: Color = Color.Unspecified
+    textColor: Color = Color.Unspecified,
 ) {
     val defaultTextStyle = MaterialTheme.typography.labelLarge.copy(
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
     )
 
     when (type) {
@@ -50,12 +50,12 @@ fun ShambaButton(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
+                disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
             )
 
             val defaultElevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 0.dp,
-                pressedElevation = 4.dp
+                pressedElevation = 4.dp,
             )
 
             Button(
@@ -71,7 +71,7 @@ fun ShambaButton(
                 Text(
                     text = text,
                     style = textStyle ?: defaultTextStyle,
-                    color = textColor
+                    color = textColor,
                 )
             }
         }
@@ -80,8 +80,8 @@ fun ShambaButton(
             val defaultTextColors = ButtonDefaults.textButtonColors(
                 contentColor = if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary,
                 disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(
-                    alpha = 0.5f
-                )
+                    alpha = 0.5f,
+                ),
             )
 
             TextButton(
@@ -95,7 +95,7 @@ fun ShambaButton(
                 Text(
                     text = text,
                     style = textStyle ?: defaultTextStyle,
-                    color = textColor
+                    color = textColor,
                 )
             }
         }
@@ -104,8 +104,8 @@ fun ShambaButton(
             val defaultOutlinedColors = ButtonDefaults.outlinedButtonColors(
                 contentColor = if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary,
                 disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(
-                    alpha = 0.5f
-                )
+                    alpha = 0.5f,
+                ),
             )
 
             OutlinedButton(
@@ -121,7 +121,7 @@ fun ShambaButton(
                 Text(
                     text = text,
                     style = textStyle ?: defaultTextStyle,
-                    color = textColor
+                    color = textColor,
                 )
             }
         }
@@ -132,13 +132,13 @@ fun ShambaButton(
                 contentColor = if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary,
                 disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                 disabledContentColor = (if (textColor != Color.Unspecified) textColor else MaterialTheme.colorScheme.primary).copy(
-                    alpha = 0.5f
-                )
+                    alpha = 0.5f,
+                ),
             )
 
             val defaultElevatedElevation = ButtonDefaults.elevatedButtonElevation(
                 defaultElevation = 1.dp,
-                pressedElevation = 2.dp
+                pressedElevation = 2.dp,
             )
 
             ElevatedButton(
@@ -154,7 +154,7 @@ fun ShambaButton(
                 Text(
                     text = text,
                     style = textStyle ?: defaultTextStyle,
-                    color = textColor
+                    color = textColor,
                 )
             }
         }

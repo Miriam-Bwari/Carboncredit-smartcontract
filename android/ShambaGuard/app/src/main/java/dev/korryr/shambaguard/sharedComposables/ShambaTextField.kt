@@ -32,7 +32,7 @@ fun ShambaTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     shape: Shape = RoundedCornerShape(12.dp),
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
 ) {
     OutlinedTextField(
         value = value,
@@ -43,10 +43,12 @@ fun ShambaTextField(
             {
                 Text(
                     text = errorMessage,
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
-        } else null,
+        } else {
+            null
+        },
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         readOnly = readOnly,
@@ -57,6 +59,6 @@ fun ShambaTextField(
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         shape = shape,
-        colors = colors
+        colors = colors,
     )
 }

@@ -10,5 +10,5 @@ import com.google.gson.annotations.SerializedName
  */
 data class GeoJsonPolygonDto(
     @SerializedName("type") val type: String = "Polygon",
-    @SerializedName("coordinates") val coordinates: List<List<List<Double>>>
+    @SerializedName("coordinates") val coordinates: List<List<List<Double>>>,
 )

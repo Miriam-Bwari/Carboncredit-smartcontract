@@ -7,7 +7,6 @@ import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface FarmApi {
@@ -20,11 +19,16 @@ interface FarmApi {
     @GET("api/v1/farms/{farm_id}/report")
     suspend fun getFarmReport(@Path("farm_id") farmId: String): FarmReportDto
 
-    @PUT("api/v1/farms/{farm_id}/practices")
-    suspend fun updatePractices(
-        @Path("farm_id") farmId: String, 
-        @Body practices: PracticeLogDto
-    )
+    @POST("api/farms/{farm_id}/practices")
+    suspend fun addPractice(
+        @Path("farm_id") farmId: String,
+        @Body practice: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto,
+    ): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto
+
+    @GET("api/farms/{farm_id}/practices")
+    suspend fun getPractices(
+        @Path("farm_id") farmId: String,
+    ): List<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto>
 
     @GET("api/farmers/{farmer_id}")
     suspend fun getFarmer(@Path("farmer_id") farmerId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmerDetailsDto

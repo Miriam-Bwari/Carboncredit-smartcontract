@@ -23,8 +23,11 @@ class FarmBoundaryViewModel @Inject constructor() : ViewModel() {
 
     fun onUndoLastPoint() {
         _uiState.update { state ->
-            if (state.points.isEmpty()) state
-            else state.copy(points = state.points.dropLast(1))
+            if (state.points.isEmpty()) {
+                state
+            } else {
+                state.copy(points = state.points.dropLast(1))
+            }
         }
     }
 

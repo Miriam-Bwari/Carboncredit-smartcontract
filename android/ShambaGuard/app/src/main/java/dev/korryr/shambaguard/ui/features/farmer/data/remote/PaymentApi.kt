@@ -9,8 +9,11 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface PaymentApi {
-    @POST("api/v1/payments/stk-push")
+    @POST("api/payments/stk-push")
     suspend fun triggerStkPush(@Body request: StkPushRequestDto): StkPushResponseDto
+
+    @GET("api/payments/status/{checkout_id}")
+    suspend fun getPaymentStatus(@Path("checkout_id") checkoutId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PaymentStatusResponseDto
 }
 
 interface CarbonApi {

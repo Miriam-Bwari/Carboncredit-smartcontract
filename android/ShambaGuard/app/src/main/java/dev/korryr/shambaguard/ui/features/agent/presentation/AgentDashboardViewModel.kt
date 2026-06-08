@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class AgentDashboardViewModel @Inject constructor(
     private val agentRepository: AgentRepository,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AgentDashboardUiState(isLoading = true))
@@ -31,32 +31,36 @@ class AgentDashboardViewModel @Inject constructor(
     private fun loadDashboardData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            
+
             val agentId = sessionManager.userIdFlow.firstOrNull() ?: return@launch
-            
+
             val dashboardResult = agentRepository.getDashboardStats(agentId).getOrNull()
-            
+
             if (dashboardResult != null) {
                 val mappedRegistrations = dashboardResult.recentRegistrations.map { dto ->
                     RecentRegistration(
                         id = dto.id,
                         name = dto.name,
                         county = dto.county,
-                        status = try { RegistrationStatus.valueOf(dto.status) } catch(e: Exception) { RegistrationStatus.ACTIVE },
-                        syncText = dto.syncText
+                        status = try {
+                            RegistrationStatus.valueOf(dto.status)
+                        } catch (e: Exception) {
+                            RegistrationStatus.ACTIVE
+                        },
+                        syncText = dto.syncText,
                     )
                 }
-                
-                _uiState.update { 
+
+                _uiState.update {
                     it.copy(
                         farmersRegistered = dashboardResult.farmersRegistered,
                         pendingSyncs = dashboardResult.pendingSyncs,
                         newThisMonth = dashboardResult.newThisMonth,
-                        recentRegistrations = mappedRegistrations
-                    ) 
+                        recentRegistrations = mappedRegistrations,
+                    )
                 }
             }
-            
+
             _uiState.update { it.copy(isLoading = false) }
         }
     }

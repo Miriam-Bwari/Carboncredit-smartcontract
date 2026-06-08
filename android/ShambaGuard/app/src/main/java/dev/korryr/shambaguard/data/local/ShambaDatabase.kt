@@ -12,10 +12,10 @@ import dev.korryr.shambaguard.data.local.entity.*
         PolicyEntity::class,
         PayoutEntity::class,
         FarmReportEntity::class,
-        SyncQueueEntity::class
+        SyncQueueEntity::class,
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class ShambaDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

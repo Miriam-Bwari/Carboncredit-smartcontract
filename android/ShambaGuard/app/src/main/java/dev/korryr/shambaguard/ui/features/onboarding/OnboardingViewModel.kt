@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 // DataStore instance — one per app, created via extension
 private val Context.onboardingDataStore: DataStore<Preferences> by preferencesDataStore(
-    name = "shamba_onboarding"
+    name = "shamba_onboarding",
 )
 
 private val ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")

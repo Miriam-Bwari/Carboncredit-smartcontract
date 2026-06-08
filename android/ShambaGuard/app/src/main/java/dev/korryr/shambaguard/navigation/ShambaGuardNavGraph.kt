@@ -26,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -62,6 +61,7 @@ import dev.korryr.shambaguard.ui.features.farmer.presentation.MyFarmViewModel
 import dev.korryr.shambaguard.ui.features.farmer.presentation.PolicyViewModel
 import dev.korryr.shambaguard.ui.features.farmer.view.CarbonScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.CoverageStatusScreen
+import dev.korryr.shambaguard.ui.features.farmer.view.DroughtInsightsScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.EarlyWarningScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerProfileScreen
@@ -74,7 +74,10 @@ import dev.korryr.shambaguard.ui.features.splash.SplashScreen
 import kotlinx.coroutines.delay
 
 enum class UserRole {
-    Admin, Agent, Farmer, Unauthenticated
+    Admin,
+    Agent,
+    Farmer,
+    Unauthenticated,
 }
 
 @Composable
@@ -113,7 +116,7 @@ fun ShambaGuardNavGraph(
             backStack.add(key)
         } else {
             val size = backStack.size
-            backStack.add(key)          // add new root first
+            backStack.add(key) // add new root first
             repeat(size) { backStack.removeAt(0) } // then remove old entries from front
         }
     }
@@ -149,7 +152,6 @@ fun ShambaGuardNavGraph(
                 .padding(innerPadding),
             onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
-
                 // Splash screen
                 entry<SplashKey> {
                     val onboardingVm: OnboardingViewModel = hiltViewModel()
@@ -183,7 +185,6 @@ fun ShambaGuardNavGraph(
                             else -> navigateTo(OnboardingKey)
                         }
                     }
-
                 }
 
                 // Onboarding
@@ -340,11 +341,10 @@ fun ShambaGuardNavGraph(
                         DevBypassPanel(
                             onBypass = { selectedRole ->
                                 vm.devBypass(selectedRole)
-                            }
+                            },
                         )
                     }
                 }
-
 
                 // Admin screens
                 entry<AdminHomeKey> {
@@ -403,7 +403,11 @@ fun ShambaGuardNavGraph(
                     MyFarmScreen(
                         uiState = state,
                         onBack = { backStack.removeLastOrNull() },
-                        onAddPractice = {},
+                        onAddPractice = { vm.onShowAddPracticeDialog(true) },
+                        onSubmitPractice = { tillage, trees, irrigation ->
+                            vm.submitPractice(tillage, trees, irrigation)
+                        },
+                        onDismissDialog = { vm.onShowAddPracticeDialog(false) },
                         onViewOnMap = {},
                     )
                 }
@@ -437,6 +441,15 @@ fun ShambaGuardNavGraph(
                 // Non-tab screens — navigated from dashboard or tabs
                 entry<FarmerDroughtInsightsKey> {
                     val vm: DroughtViewModel = hiltViewModel()
+                    val state by vm.insightsState.collectAsStateWithLifecycle()
+
+                    DroughtInsightsScreen(
+                        uiState = state,
+                        onBack = { backStack.removeLastOrNull() },
+                    )
+                }
+                entry<FarmerCoverageKey> {
+                    val vm: DroughtViewModel = hiltViewModel()
                     val state by vm.coverageState.collectAsStateWithLifecycle()
 
                     CoverageStatusScreen(
@@ -461,7 +474,6 @@ fun ShambaGuardNavGraph(
     }
 }
 
-
 @Composable
 fun DevBypassPanel(onBypass: (UserRole) -> Unit) {
     val amber = Color(0xFFFFC107)
@@ -469,7 +481,7 @@ fun DevBypassPanel(onBypass: (UserRole) -> Unit) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
+        contentAlignment = Alignment.BottomCenter,
     ) {
         Card(
             modifier = Modifier
@@ -477,12 +489,12 @@ fun DevBypassPanel(onBypass: (UserRole) -> Unit) {
                 .padding(horizontal = 16.dp, vertical = 20.dp),
             colors = CardDefaults.cardColors(containerColor = bgColor),
             border = BorderStroke(1.dp, amber.copy(alpha = 0.6f)),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
         ) {
             Column(
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Text(
                     text = "⚠  DEV BYPASS — DEBUG ONLY",
@@ -496,15 +508,15 @@ fun DevBypassPanel(onBypass: (UserRole) -> Unit) {
                 ) {
                     listOf(
                         Triple("🌾", "Farmer", UserRole.Farmer),
-                        Triple("🛡", "Agent",  UserRole.Agent),
-                        Triple("🔑", "Admin",  UserRole.Admin),
+                        Triple("🛡", "Agent", UserRole.Agent),
+                        Triple("🔑", "Admin", UserRole.Admin),
                     ).forEach { (icon, label, role) ->
                         Button(
                             onClick = { onBypass(role) },
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = amber.copy(alpha = 0.15f),
-                                contentColor   = amber
+                                contentColor = amber,
                             ),
                             border = BorderStroke(1.dp, amber.copy(alpha = 0.4f)),
                         ) {
