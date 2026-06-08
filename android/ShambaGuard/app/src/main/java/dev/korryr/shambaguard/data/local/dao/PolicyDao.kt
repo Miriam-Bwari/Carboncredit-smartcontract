@@ -17,4 +17,7 @@ interface PolicyDao {
 
     @Query("SELECT * FROM policies WHERE farmerId = :farmerId")
     fun getPoliciesByFarmer(farmerId: String): Flow<List<PolicyEntity>>
+
+    @Query("SELECT * FROM policies WHERE farmId = :farmId")
+    suspend fun getPolicyByFarmSync(farmId: String): PolicyEntity?
 }

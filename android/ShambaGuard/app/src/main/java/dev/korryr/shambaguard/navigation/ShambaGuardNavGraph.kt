@@ -371,7 +371,18 @@ fun ShambaGuardNavGraph(
                         onFarmerClicked = { /* AgentFarmerDetailKey(it) — Week 5 */ },
                     )
                 }
-                entry<AgentFarmersKey> { PlaceholderScreen(role, "Agent Farmers Management") }
+                entry<AgentFarmersKey> { 
+                    val vm: dev.korryr.shambaguard.ui.features.agent.presentation.MyFarmersViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.agent.view.MyFarmersScreen(
+                        uiState = state,
+                        onRegisterNewFarmer = { backStack.add(RegistrationKey) },
+                        onLogPractices = { farmId -> backStack.add(FarmPracticesKey) }, // In reality would pass farmId to Nav arg
+                        onAddEvidence = { farmId -> /* Placeholder for EvidencePhotosKey */ },
+                        onRefresh = vm::loadFarmers
+                    )
+                }
                 entry<AgentSyncKey> { SyncStatusScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
 
                 // Farmer screens

@@ -23,4 +23,7 @@ interface FarmDao {
 
     @Query("SELECT * FROM farms")
     fun getAllFarms(): Flow<List<FarmEntity>>
+
+    @Query("SELECT * FROM farms WHERE agentId = :agentId")
+    suspend fun getFarmsByAgentSync(agentId: String): List<FarmEntity>
 }
