@@ -26,4 +26,10 @@ interface FarmDao {
 
     @Query("SELECT * FROM farms WHERE agentId = :agentId")
     suspend fun getFarmsByAgentSync(agentId: String): List<FarmEntity>
+
+    @Query("UPDATE farms SET syncStatus = :status, lastSyncedAt = :timestamp WHERE farmId = :farmId")
+    suspend fun updateSyncStatus(farmId: String, status: String, timestamp: Long)
+
+    @Query("SELECT * FROM farms WHERE syncStatus = 'PENDING_SYNC'")
+    suspend fun getPendingFarmsSync(): List<FarmEntity>
 }

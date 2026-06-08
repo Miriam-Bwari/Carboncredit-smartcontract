@@ -8,9 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.korryr.shambaguard.sharedComposables.ShambaButton
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.ui.features.agent.presentation.SyncStatusUiState
 
 @Composable
 fun SyncStatusScreen(
+    uiState: SyncStatusUiState,
+    onForceSync: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     Scaffold(
@@ -35,8 +38,8 @@ fun SyncStatusScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Pending Items", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("0 Farms Waiting", style = MaterialTheme.typography.bodyLarge)
-                    Text("0 Photos Waiting", style = MaterialTheme.typography.bodyLarge)
+                    Text("${uiState.pendingFarmsCount} Farms Waiting", style = MaterialTheme.typography.bodyLarge)
+                    Text("${uiState.pendingPhotosCount} Photos Waiting", style = MaterialTheme.typography.bodyLarge)
                 }
             }
 
@@ -52,7 +55,8 @@ fun SyncStatusScreen(
 
             ShambaButton(
                 text = "Force Sync Now",
-                onClick = { /* Trigger WorkManager manually */ },
+                onClick = onForceSync,
+                enabled = uiState.pendingFarmsCount > 0 || uiState.pendingPhotosCount > 0
             )
         }
     }

@@ -8,14 +8,16 @@ import androidx.compose.ui.unit.dp
 import dev.korryr.shambaguard.sharedComposables.ShambaButton
 import dev.korryr.shambaguard.sharedComposables.ShambaTextField
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.ui.features.agent.presentation.AgentOnboardingUiState
 
 @Composable
 fun FarmPracticesScreen(
+    uiState: AgentOnboardingUiState,
+    onUpdatePractices: (String, String, Int, String) -> Unit,
     onNavigateBack: () -> Unit,
     onFinishRegistration: () -> Unit,
 ) {
-    var cropType by remember { mutableStateOf("") }
-    var treeCount by remember { mutableStateOf("") }
+    var treeCountString by remember(uiState.treeCount) { mutableStateOf(uiState.treeCount.toString()) }
 
     Scaffold(
         topBar = {
@@ -35,14 +37,18 @@ fun FarmPracticesScreen(
             Text("Quarterly Practice Log", style = MaterialTheme.typography.titleMedium)
 
             ShambaTextField(
-                value = cropType,
-                onValueChange = { cropType = it },
+                value = uiState.cropType,
+                onValueChange = { onUpdatePractices(it, uiState.tillageMethod, uiState.treeCount, uiState.irrigationSource) },
                 label = "Primary Crop Type (e.g., Maize)",
             )
 
             ShambaTextField(
-                value = treeCount,
-                onValueChange = { treeCount = it },
+                value = treeCountString,
+                onValueChange = { 
+                    treeCountString = it
+                    val count = it.toIntOrNull() ?: 0
+                    onUpdatePractices(uiState.cropType, uiState.tillageMethod, count, uiState.irrigationSource) 
+                },
                 label = "Estimated Tree Count",
             )
 
@@ -52,9 +58,9 @@ fun FarmPracticesScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             ShambaButton(
-                text = "Complete Registration & Queue Sync",
+                text = if (uiState.isSaving) "Saving..." else "Save Farmer Profile Offline",
                 onClick = onFinishRegistration,
-                enabled = cropType.isNotBlank() && treeCount.isNotBlank(),
+                enabled = uiState.cropType.isNotBlank() && !uiState.isSaving,
             )
         }
     }

@@ -11,19 +11,20 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import dev.korryr.shambaguard.sharedComposables.ShambaButton
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.ui.features.agent.presentation.AgentOnboardingUiState
 
 @Composable
 fun MapPolygonScreen(
+    uiState: AgentOnboardingUiState,
+    onUpdatePolygon: (List<LatLng>) -> Unit,
     onNavigateBack: () -> Unit,
-    onNavigateToEvidence: () -> Unit,
+    onNavigateToPractices: () -> Unit,
 ) {
     // Default location (e.g., Nairobi/Meru area)
     val defaultLocation = LatLng(-0.0236, 37.9062) // Meru approx
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultLocation, 15f)
     }
-
-    val polygonPoints = remember { mutableStateListOf<LatLng>() }
 
     Scaffold(
         topBar = {
@@ -42,12 +43,12 @@ fun MapPolygonScreen(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
                 onMapClick = { latLng ->
-                    polygonPoints.add(latLng)
+                    onUpdatePolygon(uiState.polygonPoints + latLng)
                 },
             ) {
-                if (polygonPoints.isNotEmpty()) {
+                if (uiState.polygonPoints.isNotEmpty()) {
                     Polygon(
-                        points = polygonPoints.toList(),
+                        points = uiState.polygonPoints,
                         fillColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                         strokeColor = MaterialTheme.colorScheme.primary,
                         strokeWidth = 5f,
@@ -67,23 +68,27 @@ fun MapPolygonScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Button(
-                        onClick = { if (polygonPoints.isNotEmpty()) polygonPoints.removeLast() },
-                        enabled = polygonPoints.isNotEmpty(),
+                        onClick = { 
+                            if (uiState.polygonPoints.isNotEmpty()) {
+                                onUpdatePolygon(uiState.polygonPoints.dropLast(1))
+                            }
+                        },
+                        enabled = uiState.polygonPoints.isNotEmpty(),
                     ) {
                         Text("Undo Point")
                     }
                     Button(
-                        onClick = { polygonPoints.clear() },
-                        enabled = polygonPoints.isNotEmpty(),
+                        onClick = { onUpdatePolygon(emptyList()) },
+                        enabled = uiState.polygonPoints.isNotEmpty(),
                     ) {
                         Text("Clear All")
                     }
                 }
 
                 ShambaButton(
-                    text = "Save & Capture Evidence",
-                    onClick = onNavigateToEvidence,
-                    enabled = polygonPoints.size >= 3, // At least a triangle
+                    text = "Next: Farm Practices",
+                    onClick = onNavigateToPractices,
+                    enabled = uiState.polygonPoints.size >= 3, // At least a triangle
                 )
             }
         }

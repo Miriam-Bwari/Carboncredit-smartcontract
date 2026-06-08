@@ -3,6 +3,13 @@ package dev.korryr.shambaguard.ui.features.farmer.data.remote.dto
 import com.google.gson.annotations.SerializedName
 import dev.korryr.shambaguard.core.network.GeoJsonPolygonDto
 
+data class FarmerRegisterRequestDto(
+    @SerializedName("full_name") val fullName: String,
+    @SerializedName("phone_number") val phoneNumber: String,
+    @SerializedName("password") val password: String,
+    @SerializedName("county") val county: String,
+)
+
 data class FarmRegisterRequestDto(
     @SerializedName("farmer_id") val farmerId: String,
     @SerializedName("name") val name: String,

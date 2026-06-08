@@ -145,6 +145,9 @@ fun ShambaGuardNavGraph(
         },
     ) { innerPadding ->
 
+        // Hoisted ViewModels for sub-flows that cross multiple screens
+        val agentOnboardingVm: dev.korryr.shambaguard.ui.features.agent.presentation.AgentOnboardingViewModel = hiltViewModel()
+
         NavDisplay(
             backStack = backStack,
             modifier = Modifier
@@ -377,13 +380,65 @@ fun ShambaGuardNavGraph(
 
                     dev.korryr.shambaguard.ui.features.agent.view.MyFarmersScreen(
                         uiState = state,
-                        onRegisterNewFarmer = { backStack.add(RegistrationKey) },
+                        onRegisterNewFarmer = { 
+                            agentOnboardingVm.consumeNavEvent()
+                            backStack.add(AgentOnboardingDetailsKey) 
+                        },
                         onLogPractices = { farmId -> backStack.add(FarmPracticesKey) }, // In reality would pass farmId to Nav arg
                         onAddEvidence = { farmId -> /* Placeholder for EvidencePhotosKey */ },
                         onRefresh = vm::loadFarmers
                     )
                 }
-                entry<AgentSyncKey> { SyncStatusScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AgentSyncKey> { 
+                    val vm: dev.korryr.shambaguard.ui.features.agent.presentation.SyncStatusViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.agent.view.SyncStatusScreen(
+                        uiState = state,
+                        onForceSync = vm::forceSync,
+                        onNavigateBack = { backStack.removeLastOrNull() }
+                    ) 
+                }
+
+                // Agent Onboarding Flow
+                entry<AgentOnboardingDetailsKey> {
+                    val state by agentOnboardingVm.uiState.collectAsStateWithLifecycle()
+                    dev.korryr.shambaguard.ui.features.agent.view.FarmerRegistrationScreen(
+                        uiState = state,
+                        onUpdateDetails = agentOnboardingVm::updateDetails,
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                        onNavigateToMap = { backStack.add(AgentOnboardingMapKey) }
+                    )
+                }
+                entry<AgentOnboardingMapKey> {
+                    val state by agentOnboardingVm.uiState.collectAsStateWithLifecycle()
+                    dev.korryr.shambaguard.ui.features.agent.view.MapPolygonScreen(
+                        uiState = state,
+                        onUpdatePolygon = agentOnboardingVm::updatePolygon,
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                        onNavigateToPractices = { backStack.add(AgentOnboardingPracticesKey) }
+                    )
+                }
+                entry<AgentOnboardingPracticesKey> {
+                    val state by agentOnboardingVm.uiState.collectAsStateWithLifecycle()
+                    
+                    LaunchedEffect(state.saveSuccess) {
+                        if (state.saveSuccess) {
+                            agentOnboardingVm.consumeNavEvent()
+                            // Go back to Farmers list (pop off Practices, Map, Details)
+                            backStack.removeLastOrNull() // remove practices
+                            backStack.removeLastOrNull() // remove map
+                            backStack.removeLastOrNull() // remove details
+                        }
+                    }
+
+                    dev.korryr.shambaguard.ui.features.agent.view.FarmPracticesScreen(
+                        uiState = state,
+                        onUpdatePractices = agentOnboardingVm::updatePractices,
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                        onFinishRegistration = agentOnboardingVm::saveFarmerOffline
+                    )
+                }
 
                 // Farmer screens
                 entry<FarmerHomeKey> {

@@ -68,6 +68,19 @@ data object AgentFarmersKey
 @Serializable
 data object AgentSyncKey
 
+// Agent Onboarding Wizard (Offline flow)
+@Serializable
+data object AgentOnboardingDetailsKey
+
+@Serializable
+data object AgentOnboardingMapKey
+
+@Serializable
+data object AgentOnboardingPracticesKey
+
+@Serializable
+data object AgentOnboardingEvidenceKey
+
 // Farmer routes
 @Serializable
 data object FarmerHomeKey // Dashboard — HOME tab

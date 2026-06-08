@@ -10,6 +10,9 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface FarmApi {
+    @POST("api/farmers/register")
+    suspend fun registerFarmer(@Body farmer: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmerRegisterRequestDto)
+
     @POST("api/farms/register")
     suspend fun registerFarm(@Body farm: FarmRegisterRequestDto)
 
