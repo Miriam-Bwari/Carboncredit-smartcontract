@@ -18,14 +18,12 @@ abstract class FarmModule {
     @Binds
     @Singleton
     abstract fun bindFarmRepository(
-        farmRepositoryImpl: FarmRepositoryImpl
+        farmRepositoryImpl: FarmRepositoryImpl,
     ): FarmRepository
 
     companion object {
         @Provides
         @Singleton
-        fun provideFarmApi(retrofit: Retrofit): FarmApi {
-            return retrofit.create(FarmApi::class.java)
-        }
+        fun provideFarmApi(retrofit: Retrofit): FarmApi = retrofit.create(FarmApi::class.java)
     }
 }

@@ -48,37 +48,37 @@ import dev.korryr.shambaguard.ui.theme.ShambaAmber
 fun DroughtInsightsScreen(
     uiState: DroughtInsightsUiState,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
+                .statusBarsPadding(),
         ) {
             // Top Bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.onBackground
+                        tint = MaterialTheme.colorScheme.onBackground,
                     )
                 }
                 Text(
                     text = stringResource(R.string.insights_screen_title),
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                        color = MaterialTheme.colorScheme.onBackground,
+                    ),
                 )
             }
 
@@ -86,7 +86,7 @@ fun DroughtInsightsScreen(
                 modifier = Modifier
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -97,7 +97,7 @@ fun DroughtInsightsScreen(
                     subtitle = "${uiState.ndviTrend} / ${uiState.ndviTrendSwahili}",
                     icon = Icons.Filled.TrendingDown,
                     iconTint = Color(0xFFB00020),
-                    iconBg = Color(0xFFFFDADB)
+                    iconBg = Color(0xFFFFDADB),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -109,7 +109,7 @@ fun DroughtInsightsScreen(
                     subtitle = "${uiState.rainfallDelta}% from average",
                     icon = Icons.Filled.Info,
                     iconTint = ShambaAmber,
-                    iconBg = Color(0xFFFFFBF0)
+                    iconBg = Color(0xFFFFFBF0),
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -119,15 +119,15 @@ fun DroughtInsightsScreen(
                     text = stringResource(R.string.insights_payout_status),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                        color = MaterialTheme.colorScheme.onBackground,
+                    ),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PayoutStatusCard(
                     isMet = uiState.payoutThresholdMet,
                     triggerNdvi = uiState.payoutTriggerNdvi,
-                    triggerRain = uiState.payoutTriggerRain
+                    triggerRain = uiState.payoutTriggerRain,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -137,14 +137,14 @@ fun DroughtInsightsScreen(
                     text = stringResource(R.string.insights_satellite_data),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                        color = MaterialTheme.colorScheme.onBackground,
+                    ),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
                 SatelliteInfoCard(
                     source = uiState.satelliteSource,
-                    lastUpdated = uiState.lastUpdated
+                    lastUpdated = uiState.lastUpdated,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -160,7 +160,7 @@ private fun InsightCard(
     subtitle: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     iconTint: Color,
-    iconBg: Color
+    iconBg: Color,
 ) {
     Row(
         modifier = Modifier
@@ -169,20 +169,20 @@ private fun InsightCard(
             .background(MaterialTheme.colorScheme.surface)
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
                 .background(iconBg),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = iconTint,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
         }
 
@@ -192,8 +192,8 @@ private fun InsightCard(
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.Bottom) {
@@ -201,16 +201,16 @@ private fun InsightCard(
                     text = value,
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
                 )
             }
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
             )
         }
     }
@@ -220,7 +220,7 @@ private fun InsightCard(
 private fun PayoutStatusCard(
     isMet: Boolean,
     triggerNdvi: Float,
-    triggerRain: Int
+    triggerRain: Int,
 ) {
     val bgColor = if (isMet) Green99 else Color(0xFFFFF0F0)
     val borderColor = if (isMet) Green90 else Color(0xFFFFDADB)
@@ -235,22 +235,22 @@ private fun PayoutStatusCard(
             .clip(RoundedCornerShape(16.dp))
             .background(bgColor)
             .border(1.dp, borderColor, RoundedCornerShape(16.dp))
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = iconTint,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = statusText,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = iconTint
-                )
+                    color = iconTint,
+                ),
             )
         }
 
@@ -259,8 +259,8 @@ private fun PayoutStatusCard(
         Text(
             text = stringResource(R.string.insights_trigger_desc, triggerNdvi, triggerRain),
             style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            ),
         )
     }
 }
@@ -268,7 +268,7 @@ private fun PayoutStatusCard(
 @Composable
 private fun SatelliteInfoCard(
     source: String,
-    lastUpdated: String
+    lastUpdated: String,
 ) {
     Row(
         modifier = Modifier
@@ -277,20 +277,20 @@ private fun SatelliteInfoCard(
             .background(MaterialTheme.colorScheme.surface)
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = Icons.Filled.SatelliteAlt,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
         }
 
@@ -301,15 +301,15 @@ private fun SatelliteInfoCard(
                 text = stringResource(R.string.insights_source, source),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(R.string.insights_last_updated, lastUpdated),
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
             )
         }
     }

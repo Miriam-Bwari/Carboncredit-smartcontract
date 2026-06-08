@@ -9,8 +9,8 @@ data class PayoutEntity(
     val policyId: String,
     val farmId: String,
     val amountKes: Int,
-    val txHash: String,         // Polygon transaction hash
-    val ipfsCid: String,        // IPFS verification report link
+    val txHash: String, // Polygon transaction hash
+    val ipfsCid: String, // IPFS verification report link
     val triggeredAt: Long,
-    val mpesaRef: String?       // Daraja transaction reference
+    val mpesaRef: String?, // Daraja transaction reference
 )

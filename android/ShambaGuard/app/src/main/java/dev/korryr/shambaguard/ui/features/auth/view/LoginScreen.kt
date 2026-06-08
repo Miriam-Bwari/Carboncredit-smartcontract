@@ -147,7 +147,6 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(28.dp))
 
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-
                 ShambaTextField(
                     value = uiState.phone,
                     onValueChange = onPhoneChanged,
@@ -166,8 +165,11 @@ fun LoginScreen(
                     value = uiState.password,
                     onValueChange = onPasswordChanged,
                     label = stringResource(R.string.login_password_label),
-                    visualTransformation = if (uiState.passwordVisible)
-                        VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (uiState.passwordVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
@@ -175,11 +177,17 @@ fun LoginScreen(
                     trailingIcon = {
                         IconButton(onClick = onTogglePasswordVisibility) {
                             Icon(
-                                imageVector = if (uiState.passwordVisible)
-                                    Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                imageVector = if (uiState.passwordVisible) {
+                                    Icons.Filled.VisibilityOff
+                                } else {
+                                    Icons.Filled.Visibility
+                                },
                                 contentDescription = stringResource(
-                                    if (uiState.passwordVisible) R.string.login_hide_password
-                                    else R.string.login_show_password,
+                                    if (uiState.passwordVisible) {
+                                        R.string.login_hide_password
+                                    } else {
+                                        R.string.login_show_password
+                                    },
                                 ),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -280,8 +288,11 @@ private fun RoleToggle(
                 label = "RoleTabBg",
             )
             val textColor by animateColorAsState(
-                targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary
-                else MaterialTheme.colorScheme.onSurfaceVariant,
+                targetValue = if (isSelected) {
+                    MaterialTheme.colorScheme.onPrimary
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
                 animationSpec = tween(200),
                 label = "RoleTabText",
             )

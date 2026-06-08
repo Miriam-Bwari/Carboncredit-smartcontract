@@ -10,37 +10,37 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 
 @Composable
 fun AgentManagementScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             ShambaTopBar(
                 title = "Manage Agents",
-                onBack = onNavigateBack
+                onBack = onNavigateBack,
             )
-        }
+        },
     ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             item {
                 Text("Pending Approvals", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp))
             }
-            
+
             // Dummy List
             items(2) { index ->
                 AgentItemCard(name = "Agent $index", phone = "25471234567$index", status = "PENDING")
             }
-            
+
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Active Agents", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp))
             }
-            
+
             items(5) { index ->
                 AgentItemCard(name = "Active Agent $index", phone = "25479876543$index", status = "APPROVED")
             }
@@ -55,7 +55,7 @@ fun AgentItemCard(name: String, phone: String, status: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
                 Text(name, style = MaterialTheme.typography.titleMedium)

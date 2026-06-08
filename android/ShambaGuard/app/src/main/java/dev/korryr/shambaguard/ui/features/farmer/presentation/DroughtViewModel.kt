@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DroughtViewModel @Inject constructor(
     private val farmRepository: FarmRepository,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     private val _warningState = MutableStateFlow(EarlyWarningUiState(isLoading = true))
@@ -35,63 +35,63 @@ class DroughtViewModel @Inject constructor(
     private fun loadDroughtData() {
         viewModelScope.launch {
             val farmerId = sessionManager.userIdFlow.firstOrNull() ?: return@launch
-            
+
             val farmsResult = farmRepository.getFarmerFarms(farmerId).getOrNull()
             val firstFarm = farmsResult?.firstOrNull()
-            
+
             if (firstFarm != null) {
                 val farmId = firstFarm.id
-                
+
                 val weatherResult = farmRepository.getWeather(farmId).getOrNull()
                 if (weatherResult != null) {
                     val mm = weatherResult.rainfallMm.toInt()
                     val delta = weatherResult.rainfallDeltaPercent.toInt()
-                    
+
                     _insightsState.update { it.copy(rainfallMm = mm, rainfallDelta = delta) }
                     _coverageState.update { it.copy(rainfallMm = weatherResult.rainfallMm) }
                 }
-                
+
                 val adviceResult = farmRepository.getAdvice(farmId).getOrNull()
                 if (adviceResult != null) {
-                    val risk = when(adviceResult.farmHealth) {
+                    val risk = when (adviceResult.farmHealth) {
                         "LOW" -> DroughtRisk.CRITICAL
                         "MEDIUM" -> DroughtRisk.MODERATE
                         else -> DroughtRisk.LOW
                     }
                     val adviceRec = adviceResult.recommendations.joinToString(" ")
-                    
-                    _warningState.update { 
+
+                    _warningState.update {
                         it.copy(
                             currentRisk = risk,
                             alertTitleSwahili = "",
                             alertTitleEnglish = "Farm Health: ${adviceResult.farmHealth}",
                             alertBody = adviceRec,
                             aiCropTitle = "AI Strategy",
-                            aiCropBody = adviceRec
-                        ) 
+                            aiCropBody = adviceRec,
+                        )
                     }
-                    _insightsState.update { 
+                    _insightsState.update {
                         it.copy(
                             ndviScore = adviceResult.ndviScore,
                             ndviTrend = adviceResult.farmHealth,
-                            ndviTrendSwahili = ""
-                        ) 
+                            ndviTrendSwahili = "",
+                        )
                     }
                     _coverageState.update { it.copy(ndviValue = adviceResult.ndviScore) }
                 }
-                
+
                 val policyResult = farmRepository.getPolicy(farmerId).getOrNull()
                 if (policyResult != null) {
                     _warningState.update { it.copy(coverageActive = policyResult.isActive) }
-                    _coverageState.update { 
+                    _coverageState.update {
                         it.copy(
                             isActive = policyResult.isActive,
-                            validThrough = policyResult.expiryDate ?: "None"
-                        ) 
+                            validThrough = policyResult.expiryDate ?: "None",
+                        )
                     }
                 }
             }
-            
+
             _warningState.update { it.copy(isLoading = false) }
             _coverageState.update { it.copy(isLoading = false) }
             _insightsState.update { it.copy(isLoading = false) }

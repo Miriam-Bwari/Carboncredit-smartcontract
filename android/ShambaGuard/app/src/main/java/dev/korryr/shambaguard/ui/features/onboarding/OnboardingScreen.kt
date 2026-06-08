@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.sp
 import dev.korryr.shambaguard.ui.theme.Cream98
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
-import dev.korryr.shambaguard.ui.theme.ShambaRed
 import dev.korryr.shambaguard.ui.theme.Teal40
 import dev.korryr.shambaguard.sharedComposables.ShambaButton
 import dev.korryr.shambaguard.sharedComposables.ShambaButtonType
@@ -69,9 +68,8 @@ fun OnboardingScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Cream98)
+            .background(Cream98),
     ) {
-
         // Skip button
         ShambaButton(
             text = "Skip",
@@ -85,7 +83,7 @@ fun OnboardingScreen(
             textStyle = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
-            )
+            ),
         )
 
         // Page content
@@ -97,7 +95,6 @@ fun OnboardingScreen(
                 .padding(top = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
             // Swipeable pages
             HorizontalPager(
                 state = pagerState,
@@ -143,7 +140,7 @@ fun OnboardingScreen(
                 textStyle = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                )
+                ),
             )
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -171,7 +168,6 @@ private fun OnboardingPageContent(
             .scale(scale),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
         // Teal illustration card
         Box(
             modifier = Modifier
@@ -183,8 +179,8 @@ private fun OnboardingPageContent(
                         colors = listOf(
                             Teal40,
                             Color(0xFF245C57),
-                        )
-                    )
+                        ),
+                    ),
                 ),
             contentAlignment = Alignment.Center,
         ) {
@@ -210,7 +206,7 @@ private fun OnboardingPageContent(
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.5.sp,
-                    )
+                    ),
                 )
             }
         }
@@ -264,6 +260,6 @@ private fun PageDot(
             .height(8.dp)
             .width(width)
             .clip(CircleShape)
-            .background(color)
+            .background(color),
     )
 }

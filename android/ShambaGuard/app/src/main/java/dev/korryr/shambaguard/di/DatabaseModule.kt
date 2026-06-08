@@ -18,14 +18,12 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideShambaDatabase(
-        @ApplicationContext context: Context
-    ): ShambaDatabase {
-        return Room.databaseBuilder(
-            context,
-            ShambaDatabase::class.java,
-            "shamba_database"
-        ).build()
-    }
+        @ApplicationContext context: Context,
+    ): ShambaDatabase = Room.databaseBuilder(
+        context,
+        ShambaDatabase::class.java,
+        "shamba_database",
+    ).build()
 
     @Provides
     fun provideUserDao(database: ShambaDatabase): UserDao = database.userDao()

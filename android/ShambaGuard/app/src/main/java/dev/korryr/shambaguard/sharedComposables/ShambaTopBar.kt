@@ -26,12 +26,12 @@ import androidx.compose.ui.unit.dp
 // Pass onBack = null to hide the back arrow (e.g., on root tab screens).
 @Composable
 fun ShambaTopBar(
-    title:    String          = "Habari, Shamba Guard",
-    onBack:   (() -> Unit)?   = null,
-    modifier: Modifier        = Modifier,
+    title: String = "Habari, Shamba Guard",
+    onBack: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier          = modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -39,10 +39,10 @@ fun ShambaTopBar(
         // Back button — 36dp clickable icon, no minimum touch-target enforcement
         if (onBack != null) {
             Icon(
-                imageVector        = Icons.Filled.ArrowBack,
+                imageVector = Icons.Filled.ArrowBack,
                 contentDescription = "Back",
-                tint               = MaterialTheme.colorScheme.primary,
-                modifier           = Modifier
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
                     .size(36.dp)
                     .clip(CircleShape)
                     .clickable(onClick = onBack)
@@ -54,21 +54,21 @@ fun ShambaTopBar(
 
         // Centered title
         Text(
-            text      = title,
-            modifier  = Modifier.weight(1f),
+            text = title,
+            modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center,
-            style     = MaterialTheme.typography.titleMedium.copy(
+            style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
-                color      = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.primary,
             ),
         )
 
         // Location pin — always visible
         Icon(
-            imageVector        = Icons.Filled.LocationOn,
+            imageVector = Icons.Filled.LocationOn,
             contentDescription = "Location",
-            tint               = MaterialTheme.colorScheme.primary,
-            modifier           = Modifier
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
                 .clickable {}

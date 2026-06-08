@@ -123,7 +123,8 @@ fun FarmerProfileScreen(
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
                 border = androidx.compose.foundation.BorderStroke(
-                    1.5.dp, MaterialTheme.colorScheme.error
+                    1.5.dp,
+                    MaterialTheme.colorScheme.error,
                 ),
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = MaterialTheme.colorScheme.error,
@@ -295,8 +296,11 @@ private fun LanguageRow(selected: String, onSelect: (String) -> Unit) {
                         text = lang,
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            color = if (isSelected) MaterialTheme.colorScheme.onSurface
-                            else MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = if (isSelected) {
+                                MaterialTheme.colorScheme.onSurface
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
                         ),
                     )
                 }

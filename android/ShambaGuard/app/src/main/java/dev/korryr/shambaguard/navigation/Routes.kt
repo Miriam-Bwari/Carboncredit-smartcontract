@@ -31,16 +31,16 @@ data object OnboardingKey
 data object RoleSelectionKey
 
 @Serializable
-data object RegistrationKey   // Account creation: name, phone, county, password
+data object RegistrationKey // Account creation: name, phone, county, password
 
 @Serializable
-data object AgentPendingKey   // Shown after agent registers — awaiting admin approval
+data object AgentPendingKey // Shown after agent registers — awaiting admin approval
 
 @Serializable
-data object FarmBoundaryKey   // Farm setup Step 1: Draw farm polygon (Farmers only)
+data object FarmBoundaryKey // Farm setup Step 1: Draw farm polygon (Farmers only)
 
 @Serializable
-data object FarmPracticesKey  // Farm setup Step 2: Farm practices (Farmers only)
+data object FarmPracticesKey // Farm setup Step 2: Farm practices (Farmers only)
 
 @Serializable
 data object LoginKey
@@ -70,32 +70,32 @@ data object AgentSyncKey
 
 // Farmer routes
 @Serializable
-data object FarmerHomeKey      // Dashboard — HOME tab
+data object FarmerHomeKey // Dashboard — HOME tab
 
 @Serializable
-data object FarmerDroughtKey   // Early warning — DROUGHT tab
+data object FarmerDroughtKey // Early warning — DROUGHT tab
 
 @Serializable
-data object FarmerMyFarmKey    // Farm management — MY FARM tab
+data object FarmerMyFarmKey // Farm management — MY FARM tab
 
 @Serializable
-data object FarmerCarbonKey    // Carbon credits — CARBON tab
+data object FarmerCarbonKey // Carbon credits — CARBON tab
 
 @Serializable
-data object FarmerProfileKey   // Profile — PROFILE tab
+data object FarmerProfileKey // Profile — PROFILE tab
 
 // Still accessible (navigated from dashboard / policy card) but not a bottom tab:
 @Serializable
-data object FarmerPolicyKey    // Coverage selection / payment
+data object FarmerPolicyKey // Coverage selection / payment
 
 @Serializable
-data object FarmerPayoutsKey   // Payout history
+data object FarmerPayoutsKey // Payout history
 
 @Serializable
 data object FarmerDroughtInsightsKey // Drought Insights deep dive
 
 @Serializable
-data object FarmerCoverageKey        // Coverage Status details
+data object FarmerCoverageKey // Coverage Status details
 
 // Bottom-nav tab metadata
 sealed class BottomTab(

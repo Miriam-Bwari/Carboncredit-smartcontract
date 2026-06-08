@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MyFarmViewModel @Inject constructor(
     private val farmRepository: FarmRepository,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyFarmUiState())
@@ -29,50 +29,50 @@ class MyFarmViewModel @Inject constructor(
     private fun loadFarmData() {
         viewModelScope.launch {
             val farmerId = sessionManager.userIdFlow.firstOrNull() ?: return@launch
-            
+
             val farmsResult = farmRepository.getFarmerFarms(farmerId).getOrNull()
             val firstFarm = farmsResult?.firstOrNull()
-            
+
             if (firstFarm != null) {
                 val farmId = firstFarm.id
-                
+
                 // Format acres to 1 decimal place to look cleaner
                 val acres = Math.round((firstFarm.areaHectares * 2.47105) * 10.0) / 10.0
-                
-                _uiState.update { 
+
+                _uiState.update {
                     it.copy(
                         plotName = firstFarm.name,
                         farmAcres = acres.toFloat(),
-                        activeCrop = firstFarm.cropType
-                    ) 
+                        activeCrop = firstFarm.cropType,
+                    )
                 }
-                
+
                 val adviceResult = farmRepository.getAdvice(farmId).getOrNull()
                 if (adviceResult != null) {
-                    _uiState.update { 
+                    _uiState.update {
                         it.copy(
                             ndviScore = adviceResult.ndviScore,
                             ndviStatus = adviceResult.farmHealth,
                             vegCoverPercent = (adviceResult.ndviScore * 100).coerceIn(0f, 100f),
-                            vegCoverStatus = adviceResult.farmHealth
-                        ) 
+                            vegCoverStatus = adviceResult.farmHealth,
+                        )
                     }
                 }
-                
+
                 val carbonResult = farmRepository.getCarbonHistory(farmId).getOrNull()
                 if (carbonResult != null) {
                     _uiState.update {
                         it.copy(
                             soilCarbonPercent = (carbonResult.totalCarbonKg / 1000f).coerceIn(0f, 100f),
                             soilCarbonMax = 100f,
-                            soilCarbonChange = "Total: ${carbonResult.totalCarbonKg} kg"
+                            soilCarbonChange = "Total: ${carbonResult.totalCarbonKg} kg",
                         )
                     }
                 }
 
                 loadPractices(farmId)
             }
-            
+
             _uiState.update { it.copy(isLoading = false) }
         }
     }
@@ -86,13 +86,15 @@ class MyFarmViewModel @Inject constructor(
                 val dateStr = try {
                     val idx = log.createdAt.indexOf('T')
                     if (idx != -1) log.createdAt.substring(0, idx) else log.createdAt
-                } catch(e: Exception) { log.createdAt }
-                
+                } catch (e: Exception) {
+                    log.createdAt
+                }
+
                 FarmPractice(
                     title = log.tillageMethod.ifBlank { "Tillage Update" },
                     date = dateStr,
                     carbonBadge = "+0.1t CO2e", // Estimated impact
-                    hasImage = hasImage
+                    hasImage = hasImage,
                 )
             }
             _uiState.update { it.copy(practices = mapped) }
@@ -109,24 +111,24 @@ class MyFarmViewModel @Inject constructor(
             val farmerId = sessionManager.userIdFlow.firstOrNull() ?: return@launch
             val farmsResult = farmRepository.getFarmerFarms(farmerId).getOrNull()
             val firstFarm = farmsResult?.firstOrNull() ?: return@launch
-            
+
             val dto = dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto(
                 cropType = firstFarm.cropType,
                 tillageMethod = tillageMethod,
                 treeCount = treeCountStr.toIntOrNull() ?: 0,
-                irrigationSource = irrigationSource
+                irrigationSource = irrigationSource,
             )
-            
+
             val result = farmRepository.addPractice(firstFarm.id, dto)
             if (result.isSuccess) {
                 loadPractices(firstFarm.id)
             }
-            
-            _uiState.update { 
+
+            _uiState.update {
                 it.copy(
                     isSubmittingPractice = false,
-                    showAddPracticeDialog = false
-                ) 
+                    showAddPracticeDialog = false,
+                )
             }
         }
     }

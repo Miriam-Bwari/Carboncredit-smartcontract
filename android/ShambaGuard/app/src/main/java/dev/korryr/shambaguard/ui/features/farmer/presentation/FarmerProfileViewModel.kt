@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FarmerProfileViewModel @Inject constructor(
     private val farmRepository: FarmRepository,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FarmerProfileUiState(isLoading = true))
@@ -29,20 +29,20 @@ class FarmerProfileViewModel @Inject constructor(
     private fun loadProfileData() {
         viewModelScope.launch {
             val farmerId = sessionManager.userIdFlow.firstOrNull() ?: return@launch
-            
+
             val farmerResult = farmRepository.getFarmer(farmerId).getOrNull()
-            
+
             if (farmerResult != null) {
                 // Keep only the first 8 characters of ID if it's a UUID for display purposes
                 val displayId = if (farmerResult.id.length > 8) farmerResult.id.take(8).uppercase() else farmerResult.id
-                
-                _uiState.update { 
+
+                _uiState.update {
                     it.copy(
                         farmerName = farmerResult.fullName,
                         farmerId = displayId,
                         phone = farmerResult.phoneNumber,
-                        isLoading = false
-                    ) 
+                        isLoading = false,
+                    )
                 }
             } else {
                 _uiState.update { it.copy(isLoading = false) }

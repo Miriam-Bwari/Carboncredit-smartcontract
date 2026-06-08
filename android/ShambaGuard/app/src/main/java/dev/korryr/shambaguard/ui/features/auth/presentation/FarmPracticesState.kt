@@ -10,5 +10,4 @@ data class FarmPracticesUiState(
 )
 
 // Returns true when the minimum required fields are filled in
-fun FarmPracticesUiState.canComplete(): Boolean =
-    selectedCrops.isNotEmpty() && selectedMethod != null && selectedWater != null
+fun FarmPracticesUiState.canComplete(): Boolean = selectedCrops.isNotEmpty() && selectedMethod != null && selectedWater != null

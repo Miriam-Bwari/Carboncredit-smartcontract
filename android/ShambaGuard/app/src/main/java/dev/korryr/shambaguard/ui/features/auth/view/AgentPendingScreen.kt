@@ -42,7 +42,7 @@ fun AgentPendingScreen(
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
-        color    = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
             modifier = Modifier
@@ -55,27 +55,27 @@ fun AgentPendingScreen(
         ) {
             // Hourglass icon badge
             Box(
-                modifier         = Modifier
+                modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.HourglassTop,
+                    imageVector = Icons.Filled.HourglassTop,
                     contentDescription = null,
-                    tint               = MaterialTheme.colorScheme.primary,
-                    modifier           = Modifier.size(40.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(40.dp),
                 )
             }
 
             Spacer(modifier = Modifier.height(28.dp))
 
             Text(
-                text      = stringResource(R.string.agent_pending_title),
-                style     = MaterialTheme.typography.headlineSmall.copy(
+                text = stringResource(R.string.agent_pending_title),
+                style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = MaterialTheme.colorScheme.onBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                 ),
                 textAlign = TextAlign.Center,
             )
@@ -83,10 +83,10 @@ fun AgentPendingScreen(
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text      = stringResource(R.string.agent_pending_subtitle),
-                style     = MaterialTheme.typography.titleMedium.copy(
+                text = stringResource(R.string.agent_pending_subtitle),
+                style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.SemiBold,
-                    color      = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.secondary,
                 ),
                 textAlign = TextAlign.Center,
             )
@@ -94,9 +94,9 @@ fun AgentPendingScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text      = stringResource(R.string.agent_pending_body),
-                style     = MaterialTheme.typography.bodyMedium.copy(
-                    color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = stringResource(R.string.agent_pending_body),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 24.sp,
                 ),
                 textAlign = TextAlign.Center,
@@ -105,8 +105,8 @@ fun AgentPendingScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text      = stringResource(R.string.agent_pending_contact_hint),
-                style     = MaterialTheme.typography.bodySmall.copy(
+                text = stringResource(R.string.agent_pending_contact_hint),
+                style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.primary,
                 ),
                 textAlign = TextAlign.Center,
@@ -115,13 +115,13 @@ fun AgentPendingScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             ShambaButton(
-                text     = stringResource(R.string.agent_pending_go_to_login),
-                onClick  = onGoToLogin,
-                type     = ShambaButtonType.Outlined,
+                text = stringResource(R.string.agent_pending_go_to_login),
+                onClick = onGoToLogin,
+                type = ShambaButtonType.Outlined,
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize   = 16.sp,
+                    fontSize = 16.sp,
                 ),
             )
         }

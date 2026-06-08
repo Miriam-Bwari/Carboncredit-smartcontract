@@ -9,7 +9,7 @@ data class FarmRegisterRequestDto(
     @SerializedName("boundary_coords") val boundaryCoords: GeoJsonPolygonDto,
     @SerializedName("soil_type") val soilType: String,
     @SerializedName("crop_type") val cropType: String,
-    @SerializedName("county") val county: String
+    @SerializedName("county") val county: String,
 )
 
 // Matches backend FarmResponse schema
@@ -21,14 +21,14 @@ data class FarmDto(
     @SerializedName("area_hectares") val areaHectares: Double,
     @SerializedName("soil_type") val soilType: String,
     @SerializedName("crop_type") val cropType: String,
-    @SerializedName("county") val county: String
+    @SerializedName("county") val county: String,
 )
 
 data class PracticeLogDto(
     @SerializedName("crop_type") val cropType: String,
     @SerializedName("tillage_method") val tillageMethod: String,
     @SerializedName("tree_count") val treeCount: Int,
-    @SerializedName("irrigation_source") val irrigationSource: String
+    @SerializedName("irrigation_source") val irrigationSource: String,
 )
 
 data class PracticeLogResponseDto(
@@ -38,7 +38,7 @@ data class PracticeLogResponseDto(
     @SerializedName("tillage_method") val tillageMethod: String,
     @SerializedName("tree_count") val treeCount: Int,
     @SerializedName("irrigation_source") val irrigationSource: String,
-    @SerializedName("created_at") val createdAt: String
+    @SerializedName("created_at") val createdAt: String,
 )
 
 data class FarmReportDto(
@@ -46,32 +46,32 @@ data class FarmReportDto(
     @SerializedName("ndvi_mean") val ndviMean: Double,
     @SerializedName("drought_score") val droughtScore: Double,
     @SerializedName("rainfall_mm") val rainfallMm: Double,
-    @SerializedName("forecast_drought_prob") val forecastDroughtProb: Double
+    @SerializedName("forecast_drought_prob") val forecastDroughtProb: Double,
 )
 
 data class FarmSummaryDto(
     @SerializedName("id") val id: String,
     @SerializedName("name") val name: String,
     @SerializedName("area_hectares") val areaHectares: Double,
-    @SerializedName("crop_type") val cropType: String
+    @SerializedName("crop_type") val cropType: String,
 )
 
 data class WeatherDto(
     @SerializedName("farm_id") val farmId: String,
     @SerializedName("rainfall_mm") val rainfallMm: Float,
-    @SerializedName("rainfall_delta_percent") val rainfallDeltaPercent: Float
+    @SerializedName("rainfall_delta_percent") val rainfallDeltaPercent: Float,
 )
 
 data class PolicyDto(
     @SerializedName("farmer_id") val farmerId: String,
     @SerializedName("is_active") val isActive: Boolean,
-    @SerializedName("expiry_date") val expiryDate: String?
+    @SerializedName("expiry_date") val expiryDate: String?,
 )
 
 data class AdviceDto(
     @SerializedName("ndvi_score") val ndviScore: Float,
     @SerializedName("farm_health") val farmHealth: String,
-    @SerializedName("recommendations") val recommendations: List<String>
+    @SerializedName("recommendations") val recommendations: List<String>,
 )
 
 data class CarbonRecordDto(
@@ -79,7 +79,7 @@ data class CarbonRecordDto(
     @SerializedName("ndvi") val ndvi: Float,
     @SerializedName("carbon_kg") val carbonKg: Float,
     @SerializedName("credits") val credits: Float,
-    @SerializedName("verified") val verified: Boolean
+    @SerializedName("verified") val verified: Boolean,
 )
 
 data class CarbonHistoryDto(
@@ -87,12 +87,32 @@ data class CarbonHistoryDto(
     @SerializedName("total_credits") val totalCredits: Float,
     @SerializedName("total_carbon_kg") val totalCarbonKg: Float,
     @SerializedName("scans") val scans: Int,
-    @SerializedName("records") val records: List<CarbonRecordDto>
+    @SerializedName("records") val records: List<CarbonRecordDto>,
 )
 
 data class FarmerDetailsDto(
     @SerializedName("id") val id: String,
     @SerializedName("full_name") val fullName: String,
     @SerializedName("phone_number") val phoneNumber: String,
-    @SerializedName("county") val county: String
+    @SerializedName("county") val county: String,
+)
+
+data class StkPushRequestDto(
+    @SerializedName("farmer_id") val farmerId: String,
+    @SerializedName("phone_number") val phoneNumber: String,
+    @SerializedName("amount_kes") val amountKes: Int,
+)
+
+data class StkPushResponseDto(
+    @SerializedName("success") val success: Boolean,
+    @SerializedName("message") val message: String,
+    @SerializedName("checkout_id") val checkoutId: String?,
+    @SerializedName("merchant_id") val merchantId: String?,
+)
+
+data class PaymentStatusResponseDto(
+    @SerializedName("checkout_id") val checkoutId: String,
+    @SerializedName("status") val status: String,
+    @SerializedName("amount_kes") val amountKes: Int,
+    @SerializedName("mpesa_reference") val mpesaReference: String?,
 )

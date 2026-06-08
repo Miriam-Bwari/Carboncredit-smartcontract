@@ -8,7 +8,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
-class ShambaGuardApplication : Application(), Configuration.Provider {
+class ShambaGuardApplication :
+    Application(),
+    Configuration.Provider {
 
     @Inject lateinit var workerFactory: HiltWorkerFactory
 

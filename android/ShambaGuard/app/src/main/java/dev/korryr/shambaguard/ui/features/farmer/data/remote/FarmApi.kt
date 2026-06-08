@@ -7,7 +7,6 @@ import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface FarmApi {
@@ -22,13 +21,13 @@ interface FarmApi {
 
     @POST("api/farms/{farm_id}/practices")
     suspend fun addPractice(
-        @Path("farm_id") farmId: String, 
-        @Body practice: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto
+        @Path("farm_id") farmId: String,
+        @Body practice: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto,
     ): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto
 
     @GET("api/farms/{farm_id}/practices")
     suspend fun getPractices(
-        @Path("farm_id") farmId: String
+        @Path("farm_id") farmId: String,
     ): List<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto>
 
     @GET("api/farmers/{farmer_id}")
@@ -48,4 +47,10 @@ interface FarmApi {
 
     @GET("api/payments/policy/{farmer_id}")
     suspend fun getPolicy(@Path("farmer_id") farmerId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PolicyDto
+
+    @POST("api/payments/stk-push")
+    suspend fun triggerStkPush(@Body request: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.StkPushRequestDto): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.StkPushResponseDto
+
+    @GET("api/payments/status/{checkout_id}")
+    suspend fun getPaymentStatus(@Path("checkout_id") checkoutId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PaymentStatusResponseDto
 }

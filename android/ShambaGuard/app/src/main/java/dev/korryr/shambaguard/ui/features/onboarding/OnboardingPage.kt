@@ -8,7 +8,7 @@ data class OnboardingPage(
     val title: String,
     val description: String,
     @DrawableRes val illustrationRes: Int,
-    val cardLabel: String,     // small all-caps label inside the teal card
+    val cardLabel: String, // small all-caps label inside the teal card
 )
 
 val onboardingPages = listOf(

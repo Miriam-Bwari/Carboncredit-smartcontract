@@ -72,7 +72,7 @@ fun PolicyScreen(
     uiState: PolicyUiState,
     onTierSelected: (PolicyTier) -> Unit,
     onPayWithMpesa: () -> Unit,
-    onPaymentDone: () -> Unit,       // Called when success state is acknowledged
+    onPaymentDone: () -> Unit, // Called when success state is acknowledged
     modifier: Modifier = Modifier,
 ) {
     // Animate screen entrance
@@ -92,13 +92,16 @@ fun PolicyScreen(
         val activity = context as? FragmentActivity
         if (activity != null) {
             val executor = ContextCompat.getMainExecutor(activity)
-            val biometricPrompt = BiometricPrompt(activity, executor,
+            val biometricPrompt = BiometricPrompt(
+                activity,
+                executor,
                 object : BiometricPrompt.AuthenticationCallback() {
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                         super.onAuthenticationSucceeded(result)
                         onPayWithMpesa()
                     }
-                })
+                },
+            )
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Verify Payment")
                 .setSubtitle("Confirm M-Pesa STK Push with biometrics")
@@ -222,7 +225,6 @@ private fun TierCard(
     )
 
     Box(modifier = modifier.fillMaxWidth()) {
-
         // Card body
         Column(
             modifier = Modifier
@@ -281,10 +283,16 @@ private fun TierNameRow(
     isSelected: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val nameColor = if (tier.isPremiumDark) White
-    else MaterialTheme.colorScheme.onSurface
-    val subColor = if (tier.isPremiumDark) White.copy(alpha = 0.7f)
-    else MaterialTheme.colorScheme.onSurfaceVariant
+    val nameColor = if (tier.isPremiumDark) {
+        White
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+    val subColor = if (tier.isPremiumDark) {
+        White.copy(alpha = 0.7f)
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -322,15 +330,18 @@ private fun PremiumAmountText(
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 32.sp,
                     color = textColor,
-                )
+                ),
             ) { append("KES ${tier.premiumKes}") }
             withStyle(
                 SpanStyle(
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
-                    color = if (tier.isPremiumDark) White.copy(0.7f)
-                    else MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                    color = if (tier.isPremiumDark) {
+                        White.copy(0.7f)
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+                ),
             ) { append(" /mo") }
         },
         modifier = modifier,
@@ -345,8 +356,11 @@ private fun FeatureRow(
     modifier: Modifier = Modifier,
 ) {
     val iconTint = if (isDarkCard) Green90 else Green40
-    val textColor = if (isDarkCard) White.copy(alpha = 0.9f)
-    else MaterialTheme.colorScheme.onSurface
+    val textColor = if (isDarkCard) {
+        White.copy(alpha = 0.9f)
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -418,8 +432,11 @@ private fun TierSelectButton(
             Spacer(modifier = Modifier.width(6.dp))
         }
         Text(
-            text = if (isSelected) stringResource(R.string.policy_tier_selected)
-            else stringResource(R.string.policy_tier_select),
+            text = if (isSelected) {
+                stringResource(R.string.policy_tier_selected)
+            } else {
+                stringResource(R.string.policy_tier_select)
+            },
             style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.Bold,
                 color = textColor,
@@ -521,7 +538,7 @@ private fun MpesaButton(
 ) {
     val bgColor by animateColorAsState(
         targetValue = when {
-            isSuccess -> Color(0xFF2E9447)  // Brighter success green
+            isSuccess -> Color(0xFF2E9447) // Brighter success green
             !isEnabled -> MaterialTheme.colorScheme.surfaceVariant
             else -> Green40
         },
@@ -536,8 +553,11 @@ private fun MpesaButton(
             .clip(RoundedCornerShape(14.dp))
             .background(bgColor)
             .then(
-                if (isEnabled && !isLoading) Modifier.clickable(onClick = onClick)
-                else Modifier
+                if (isEnabled && !isLoading) {
+                    Modifier.clickable(onClick = onClick)
+                } else {
+                    Modifier
+                },
             ),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -597,8 +617,11 @@ private fun MpesaButton(
                 Text(
                     text = stringResource(R.string.policy_mpesa_cta),
                     style = MaterialTheme.typography.labelLarge.copy(
-                        color = if (isEnabled) White
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = if (isEnabled) {
+                            White
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
                     ),

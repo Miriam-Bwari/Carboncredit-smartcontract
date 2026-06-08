@@ -3,7 +3,6 @@ package dev.korryr.shambaguard.ui.features.auth.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.korryr.shambaguard.navigation.UserRole
 import dev.korryr.shambaguard.ui.features.auth.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -72,32 +71,47 @@ class RegistrationViewModel @Inject constructor(
         var isValid = true
 
         val nameError = if (state.fullName.isBlank()) {
-            isValid = false; errorNameEmpty
-        } else null
+            isValid = false
+            errorNameEmpty
+        } else {
+            null
+        }
 
         val normPhone = state.phone.replace(" ", "")
         val phoneError = if (!normPhone.matches(Regex("^\\+2547\\d{8}$"))) {
-            isValid = false; errorPhoneInvalid
-        } else null
+            isValid = false
+            errorPhoneInvalid
+        } else {
+            null
+        }
 
         val countyError = if (state.county.isBlank()) {
-            isValid = false; errorCountyEmpty
-        } else null
+            isValid = false
+            errorCountyEmpty
+        } else {
+            null
+        }
 
         val passwordError = if (state.password.length < 8) {
-            isValid = false; errorPasswordShort
-        } else null
+            isValid = false
+            errorPasswordShort
+        } else {
+            null
+        }
 
         val confirmError = if (state.password != state.confirmPassword) {
-            isValid = false; errorPasswordMismatch
-        } else null
+            isValid = false
+            errorPasswordMismatch
+        } else {
+            null
+        }
 
         _uiState.update {
             it.copy(
-                fullNameError        = nameError,
-                phoneError           = phoneError,
-                countyError          = countyError,
-                passwordError        = passwordError,
+                fullNameError = nameError,
+                phoneError = phoneError,
+                countyError = countyError,
+                passwordError = passwordError,
                 confirmPasswordError = confirmError,
             )
         }
@@ -127,7 +141,9 @@ class RegistrationViewModel @Inject constructor(
                 errorPasswordShort,
                 errorPasswordMismatch,
             )
-        ) return
+        ) {
+            return
+        }
 
         val state = _uiState.value
         _uiState.update { it.copy(isLoading = true, networkError = null) }
@@ -136,14 +152,14 @@ class RegistrationViewModel @Inject constructor(
             val result = when (role) {
                 AppUserRole.Farmer -> authRepository.registerFarmer(
                     fullName = state.fullName,
-                    phone    = state.phone.replace(" ", ""),
-                    county   = state.county,
+                    phone = state.phone.replace(" ", ""),
+                    county = state.county,
                     password = state.password,
                 )
                 AppUserRole.Agent -> authRepository.registerAgent(
                     fullName = state.fullName,
-                    phone    = state.phone.replace(" ", ""),
-                    county   = state.county,
+                    phone = state.phone.replace(" ", ""),
+                    county = state.county,
                     password = state.password,
                 )
             }
@@ -155,7 +171,7 @@ class RegistrationViewModel @Inject constructor(
                 onFailure = { e ->
                     _uiState.update {
                         it.copy(
-                            isLoading    = false,
+                            isLoading = false,
                             networkError = e.message ?: "Registration failed. Please try again.",
                         )
                     }

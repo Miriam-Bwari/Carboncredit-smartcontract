@@ -79,7 +79,6 @@ fun RoleSelectionScreen(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
             Spacer(modifier = Modifier.height(32.dp))
 
             // — Leaf icon badge —
@@ -243,7 +242,7 @@ private fun RoleCard(
                         .fillMaxSize()
                         .padding(2.dp),
 
-                    )
+                )
 
                 // Selected checkmark badge
                 if (isSelected) {

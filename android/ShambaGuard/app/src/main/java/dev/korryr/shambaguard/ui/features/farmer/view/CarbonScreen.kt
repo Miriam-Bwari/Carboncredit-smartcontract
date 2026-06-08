@@ -33,21 +33,21 @@ import dev.korryr.shambaguard.ui.theme.Green95
 import dev.korryr.shambaguard.ui.theme.ShambaAmber
 import dev.korryr.shambaguard.ui.theme.White
 
-private val SellButtonBg  = Color(0xFFFDF0D5)
-private val ImpactTreeBg  = Color(0xFFE8F5EA)
-private val ImpactCarBg   = Color(0xFFFFEBEE)
-private val ImpactCarRed  = Color(0xFFD32F2F)
+private val SellButtonBg = Color(0xFFFDF0D5)
+private val ImpactTreeBg = Color(0xFFE8F5EA)
+private val ImpactCarBg = Color(0xFFFFEBEE)
+private val ImpactCarRed = Color(0xFFD32F2F)
 private val EarningCircle = Color(0xFFE0E0E0)
-private val CompletedBg   = Color(0xFFE8F5EA)
+private val CompletedBg = Color(0xFFE8F5EA)
 private val CompletedText = Color(0xFF2E7D32)
 
 @Composable
 fun CarbonScreen(
-    uiState:           CarbonUiState,
-    onBack:            () -> Unit,
-    onSellCredits:     () -> Unit,
+    uiState: CarbonUiState,
+    onBack: () -> Unit,
+    onSellCredits: () -> Unit,
     onViewAllEarnings: () -> Unit,
-    modifier:          Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -83,15 +83,15 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(
-                Brush.linearGradient(listOf(Color(0xFF0A2E14), Green10))
+                Brush.linearGradient(listOf(Color(0xFF0A2E14), Green10)),
             ),
     ) {
         // Decorative large leaf in top-right corner
         Icon(
-            imageVector        = Icons.Filled.Eco,
+            imageVector = Icons.Filled.Eco,
             contentDescription = null,
-            tint               = White.copy(alpha = 0.06f),
-            modifier           = Modifier
+            tint = White.copy(alpha = 0.06f),
+            modifier = Modifier
                 .size(130.dp)
                 .align(Alignment.TopEnd)
                 .offset(x = 20.dp, y = (-10).dp),
@@ -101,36 +101,36 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
         ) {
             Text(
-                text  = "AVAILABLE CARBON CREDITS",
+                text = "AVAILABLE CARBON CREDITS",
                 style = MaterialTheme.typography.labelSmall.copy(
-                    color         = Green90,
+                    color = Green90,
                     letterSpacing = 1.sp,
-                    fontWeight    = FontWeight.SemiBold,
+                    fontWeight = FontWeight.SemiBold,
                 ),
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text  = "${uiState.carbonTonnes} tonnes CO2e",
+                text = "${uiState.carbonTonnes} tonnes CO2e",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = White,
-                    fontSize   = 32.sp,
+                    color = White,
+                    fontSize = 32.sp,
                 ),
             )
             Spacer(Modifier.height(6.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector        = Icons.Filled.AccountBalanceWallet,
+                    imageVector = Icons.Filled.AccountBalanceWallet,
                     contentDescription = null,
-                    tint               = ShambaAmber,
-                    modifier           = Modifier.size(18.dp),
+                    tint = ShambaAmber,
+                    modifier = Modifier.size(18.dp),
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text  = "≈ KES %,d".format(uiState.kesEquivalent),
+                    text = "≈ KES %,d".format(uiState.kesEquivalent),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color      = ShambaAmber,
+                        color = ShambaAmber,
                     ),
                 )
             }
@@ -146,10 +146,10 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text  = "Sell Credits Now",
+                    text = "Sell Credits Now",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.SemiBold,
-                        color      = Color(0xFF3D2E00),
+                        color = Color(0xFF3D2E00),
                     ),
                 )
             }
@@ -162,10 +162,10 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
 private fun MintingPipelineSection(steps: List<PipelineStep>) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text  = "Minting Pipeline",
+            text = "Minting Pipeline",
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground,
             ),
         )
         Column(
@@ -189,40 +189,40 @@ private fun PipelineRow(step: PipelineStep, isLast: Boolean) {
         // Left column: icon + connecting line
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier            = Modifier.width(40.dp),
+            modifier = Modifier.width(40.dp),
         ) {
             Spacer(Modifier.height(14.dp))
             // Status indicator
             when (step.status) {
                 PipelineStatus.DONE -> {
                     Box(
-                        modifier         = Modifier
+                        modifier = Modifier
                             .size(28.dp)
                             .clip(CircleShape)
                             .background(Green40),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
-                            imageVector        = Icons.Filled.Check,
+                            imageVector = Icons.Filled.Check,
                             contentDescription = null,
-                            tint               = White,
-                            modifier           = Modifier.size(16.dp),
+                            tint = White,
+                            modifier = Modifier.size(16.dp),
                         )
                     }
                 }
                 PipelineStatus.ACTIVE -> {
                     Box(
-                        modifier         = Modifier
+                        modifier = Modifier
                             .size(28.dp)
                             .clip(CircleShape)
                             .background(ShambaAmber),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
-                            imageVector        = Icons.Filled.AutoAwesome,
+                            imageVector = Icons.Filled.AutoAwesome,
                             contentDescription = null,
-                            tint               = White,
-                            modifier           = Modifier.size(16.dp),
+                            tint = White,
+                            modifier = Modifier.size(16.dp),
                         )
                     }
                 }
@@ -244,10 +244,10 @@ private fun PipelineRow(step: PipelineStep, isLast: Boolean) {
                         .height(24.dp)
                         .background(
                             when (step.status) {
-                                PipelineStatus.DONE   -> Green40.copy(alpha = 0.4f)
-                                else                  -> MaterialTheme.colorScheme.outlineVariant
-                            }
-                        )
+                                PipelineStatus.DONE -> Green40.copy(alpha = 0.4f)
+                                else -> MaterialTheme.colorScheme.outlineVariant
+                            },
+                        ),
                 )
             }
         }
@@ -261,17 +261,17 @@ private fun PipelineRow(step: PipelineStep, isLast: Boolean) {
                 .padding(top = 12.dp, bottom = if (isLast) 12.dp else 4.dp),
         ) {
             Text(
-                text  = step.title,
+                text = step.title,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
-                    color      = when (step.status) {
+                    color = when (step.status) {
                         PipelineStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
-                        else                   -> MaterialTheme.colorScheme.onSurface
+                        else -> MaterialTheme.colorScheme.onSurface
                     },
                 ),
             )
             Text(
-                text  = step.subtitle,
+                text = step.subtitle,
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
@@ -285,34 +285,34 @@ private fun PipelineRow(step: PipelineStep, isLast: Boolean) {
 private fun RealImpactSection(uiState: CarbonUiState) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text  = "Your Real Impact",
+            text = "Your Real Impact",
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground,
             ),
         )
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             // Trees card
             ImpactCard(
-                modifier  = Modifier.weight(1f),
-                bgColor   = ImpactTreeBg,
-                iconBg    = Green95,
-                icon      = Icons.Filled.Park,
-                iconTint  = Green40,
-                value     = "${uiState.treesEquivalent}",
+                modifier = Modifier.weight(1f),
+                bgColor = ImpactTreeBg,
+                iconBg = Green95,
+                icon = Icons.Filled.Park,
+                iconTint = Green40,
+                value = "${uiState.treesEquivalent}",
                 valueColor = Green40,
-                label     = "Trees planted\nequivalent",
+                label = "Trees planted\nequivalent",
             )
             // Cars / km card
             ImpactCard(
-                modifier  = Modifier.weight(1f),
-                bgColor   = ImpactCarBg,
-                iconBg    = Color(0xFFFFCDD2),
-                icon      = Icons.Filled.DirectionsCar,
-                iconTint  = ImpactCarRed,
-                value     = "${uiState.kmNotDriven}",
+                modifier = Modifier.weight(1f),
+                bgColor = ImpactCarBg,
+                iconBg = Color(0xFFFFCDD2),
+                icon = Icons.Filled.DirectionsCar,
+                iconTint = ImpactCarRed,
+                value = "${uiState.kmNotDriven}",
                 valueColor = ImpactCarRed,
-                label     = "Km not driven",
+                label = "Km not driven",
             )
         }
     }
@@ -320,17 +320,17 @@ private fun RealImpactSection(uiState: CarbonUiState) {
 
 @Composable
 private fun ImpactCard(
-    modifier:   Modifier,
-    bgColor:    Color,
-    iconBg:     Color,
-    icon:       androidx.compose.ui.graphics.vector.ImageVector,
-    iconTint:   Color,
-    value:      String,
+    modifier: Modifier,
+    bgColor: Color,
+    iconBg: Color,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    iconTint: Color,
+    value: String,
     valueColor: Color,
-    label:      String,
+    label: String,
 ) {
     Column(
-        modifier            = modifier
+        modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .background(bgColor)
             .padding(16.dp),
@@ -338,31 +338,31 @@ private fun ImpactCard(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box(
-            modifier         = Modifier
+            modifier = Modifier
                 .size(52.dp)
                 .clip(CircleShape)
                 .background(iconBg),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector        = icon,
+                imageVector = icon,
                 contentDescription = null,
-                tint               = iconTint,
-                modifier           = Modifier.size(28.dp),
+                tint = iconTint,
+                modifier = Modifier.size(28.dp),
             )
         }
         Text(
-            text  = value,
+            text = value,
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = valueColor,
+                color = valueColor,
             ),
         )
         Text(
-            text      = label,
+            text = label,
             textAlign = TextAlign.Center,
-            style     = MaterialTheme.typography.bodySmall.copy(
-                color      = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 16.sp,
             ),
         )
@@ -372,27 +372,27 @@ private fun ImpactCard(
 // Earnings history
 @Composable
 private fun EarningsHistorySection(
-    earnings:       List<CarbonEarning>,
-    onViewAll:      () -> Unit,
+    earnings: List<CarbonEarning>,
+    onViewAll: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(
-            modifier          = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text     = "Earnings History",
+                text = "Earnings History",
                 modifier = Modifier.weight(1f),
-                style    = MaterialTheme.typography.titleLarge.copy(
+                style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = MaterialTheme.colorScheme.onBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                 ),
             )
             Text(
-                text     = "View All",
+                text = "View All",
                 modifier = Modifier.clickable(onClick = onViewAll),
-                style    = MaterialTheme.typography.labelMedium.copy(
-                    color      = Green40,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = Green40,
                     fontWeight = FontWeight.SemiBold,
                 ),
             )
@@ -409,9 +409,9 @@ private fun EarningsHistorySection(
                 EarningRow(earning)
                 if (index < earnings.lastIndex) {
                     HorizontalDivider(
-                        modifier  = Modifier.padding(start = 64.dp),
+                        modifier = Modifier.padding(start = 64.dp),
                         thickness = 0.5.dp,
-                        color     = MaterialTheme.colorScheme.outlineVariant,
+                        color = MaterialTheme.colorScheme.outlineVariant,
                     )
                 }
             }
@@ -422,24 +422,24 @@ private fun EarningsHistorySection(
 @Composable
 private fun EarningRow(earning: CarbonEarning) {
     Row(
-        modifier          = Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // M-Pesa "M" circle
         Box(
-            modifier         = Modifier
+            modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
                 .background(EarningCircle),
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text  = "M",
+                text = "M",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
             )
         }
@@ -448,14 +448,14 @@ private fun EarningRow(earning: CarbonEarning) {
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text  = earning.title,
+                text = earning.title,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
-                    color      = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                 ),
             )
             Text(
-                text  = earning.date,
+                text = earning.date,
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
@@ -464,10 +464,10 @@ private fun EarningRow(earning: CarbonEarning) {
 
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text  = "+ KES %,d".format(earning.amountKes),
+                text = "+ KES %,d".format(earning.amountKes),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color      = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                 ),
             )
             Spacer(Modifier.height(4.dp))
@@ -479,9 +479,9 @@ private fun EarningRow(earning: CarbonEarning) {
                         .padding(horizontal = 10.dp, vertical = 3.dp),
                 ) {
                     Text(
-                        text  = "Completed",
+                        text = "Completed",
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color      = CompletedText,
+                            color = CompletedText,
                             fontWeight = FontWeight.SemiBold,
                         ),
                     )

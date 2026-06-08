@@ -12,16 +12,16 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 @Composable
 fun EvidencePhotosScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToPractices: () -> Unit
+    onNavigateToPractices: () -> Unit,
 ) {
     // Placeholder for CameraX Preview
     Scaffold(
         topBar = {
             ShambaTopBar(
                 title = "Capture Evidence",
-                onBack = onNavigateBack
+                onBack = onNavigateBack,
             )
-        }
+        },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -29,25 +29,25 @@ fun EvidencePhotosScreen(
                 .padding(padding)
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "CameraX Preview Area",
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 text = "Requires physical device to capture photos and embed EXIF GPS data.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp),
             )
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             ShambaButton(
                 text = "Next: Farm Practices",
-                onClick = onNavigateToPractices
+                onClick = onNavigateToPractices,
             )
         }
     }

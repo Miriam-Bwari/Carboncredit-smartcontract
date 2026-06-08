@@ -30,26 +30,25 @@ import dev.korryr.shambaguard.ui.features.farmer.presentation.EarlyWarningUiStat
 import dev.korryr.shambaguard.ui.features.farmer.presentation.RainfallDay
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
-import dev.korryr.shambaguard.ui.theme.Green95
 import dev.korryr.shambaguard.ui.theme.ShambaAmber
 import dev.korryr.shambaguard.ui.theme.White
 
 // Specific colors for this screen
-private val AlertRedStart   = Color(0xFFB5182A)
-private val AlertRedEnd     = Color(0xFFCC3045)
-private val AiCardBg        = Color(0xFF3D2D05)
+private val AlertRedStart = Color(0xFFB5182A)
+private val AlertRedEnd = Color(0xFFCC3045)
+private val AiCardBg = Color(0xFF3D2D05)
 private val ConfidenceBadge = Color(0xFF1A3A12)
-private val HeatGreen       = Color(0xFF1C3A1A)
-private val HeatYellow      = Color(0xFFFFAA00)
-private val HeatOrange      = Color(0xFFFF6600)
-private val HeatRed         = Color(0xFFCC1100)
+private val HeatGreen = Color(0xFF1C3A1A)
+private val HeatYellow = Color(0xFFFFAA00)
+private val HeatOrange = Color(0xFFFF6600)
+private val HeatRed = Color(0xFFCC1100)
 
 @Composable
 fun EarlyWarningScreen(
-    uiState:       EarlyWarningUiState,
-    onBack:        () -> Unit,
+    uiState: EarlyWarningUiState,
+    onBack: () -> Unit,
     onFullAnalysis: () -> Unit,
-    modifier:      Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -86,57 +85,57 @@ private fun DroughtAlertBanner(uiState: EarlyWarningUiState) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(
-                Brush.horizontalGradient(listOf(AlertRedStart, AlertRedEnd))
+                Brush.horizontalGradient(listOf(AlertRedStart, AlertRedEnd)),
             )
             .padding(horizontal = 18.dp, vertical = 18.dp),
     ) {
         Column {
             // Warning icon
             Icon(
-                imageVector        = Icons.Filled.Warning,
+                imageVector = Icons.Filled.Warning,
                 contentDescription = null,
-                tint               = ShambaAmber,
-                modifier           = Modifier.size(28.dp),
+                tint = ShambaAmber,
+                modifier = Modifier.size(28.dp),
             )
             Spacer(Modifier.height(8.dp))
             // Bilingual title
             Text(
-                text  = "${uiState.alertTitleSwahili}\n${uiState.alertTitleEnglish}",
+                text = "${uiState.alertTitleSwahili}\n${uiState.alertTitleEnglish}",
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = White,
+                    color = White,
                     lineHeight = 32.sp,
                 ),
             )
             Spacer(Modifier.height(8.dp))
             // Body
             Text(
-                text  = uiState.alertBody,
+                text = uiState.alertBody,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color      = White.copy(alpha = 0.9f),
+                    color = White.copy(alpha = 0.9f),
                     lineHeight = 20.sp,
                 ),
             )
             Spacer(Modifier.height(14.dp))
             // Confidence badge
             Row(
-                modifier          = Modifier
+                modifier = Modifier
                     .clip(RoundedCornerShape(50))
                     .background(ConfidenceBadge)
                     .padding(horizontal = 12.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    imageVector        = Icons.Filled.LocationOn,
+                    imageVector = Icons.Filled.LocationOn,
                     contentDescription = null,
-                    tint               = White,
-                    modifier           = Modifier.size(12.dp),
+                    tint = White,
+                    modifier = Modifier.size(12.dp),
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text  = "MVUA AI: ${uiState.aiConfidence}% confident",
+                    text = "MVUA AI: ${uiState.aiConfidence}% confident",
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color      = White,
+                        color = White,
                         fontWeight = FontWeight.SemiBold,
                     ),
                 )
@@ -157,23 +156,23 @@ private fun FarmStressMapCard(lastUpdated: String) {
     ) {
         // Header row
         Row(
-            modifier          = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 14.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector        = Icons.Filled.Satellite,
+                imageVector = Icons.Filled.Satellite,
                 contentDescription = null,
-                tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier           = Modifier.size(18.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp),
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text     = "Farm Stress\nMap",
-                style    = MaterialTheme.typography.titleSmall.copy(
+                text = "Farm Stress\nMap",
+                style = MaterialTheme.typography.titleSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    color      = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     lineHeight = 18.sp,
                 ),
                 modifier = Modifier.weight(1f),
@@ -186,9 +185,9 @@ private fun FarmStressMapCard(lastUpdated: String) {
                     .padding(horizontal = 10.dp, vertical = 6.dp),
             ) {
                 Text(
-                    text  = "Updated\n$lastUpdated",
+                    text = "Updated\n$lastUpdated",
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color     = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                         lineHeight = 14.sp,
                     ),
@@ -209,42 +208,48 @@ private fun FarmStressMapCard(lastUpdated: String) {
                 brush = Brush.linearGradient(
                     listOf(Color(0xFF1E4020), Color(0xFF264A25), Color(0xFF1C3A1A)),
                     start = Offset.Zero,
-                    end   = Offset(size.width, size.height),
-                )
+                    end = Offset(size.width, size.height),
+                ),
             )
 
             // Stressed blob 1 — yellow-orange (left side, matches mockup)
             val b1 = Offset(size.width * 0.22f, size.height * 0.52f)
             drawCircle(
-                brush  = Brush.radialGradient(
+                brush = Brush.radialGradient(
                     colors = listOf(HeatYellow.copy(alpha = 0.85f), HeatOrange.copy(alpha = 0.5f), Color.Transparent),
-                    center = b1, radius = size.minDimension * 0.38f,
+                    center = b1,
+                    radius = size.minDimension * 0.38f,
                 ),
-                radius = size.minDimension * 0.38f, center = b1,
+                radius = size.minDimension * 0.38f,
+                center = b1,
             )
 
             // Critical blob — red (center, matching mockup)
             val b2 = Offset(size.width * 0.46f, size.height * 0.46f)
             drawCircle(
-                brush  = Brush.radialGradient(
+                brush = Brush.radialGradient(
                     colors = listOf(HeatRed.copy(alpha = 0.9f), HeatOrange.copy(alpha = 0.4f), Color.Transparent),
-                    center = b2, radius = size.minDimension * 0.28f,
+                    center = b2,
+                    radius = size.minDimension * 0.28f,
                 ),
-                radius = size.minDimension * 0.28f, center = b2,
+                radius = size.minDimension * 0.28f,
+                center = b2,
             )
 
             // Smaller stressed blob — upper right area
             val b3 = Offset(size.width * 0.72f, size.height * 0.28f)
             drawCircle(
-                brush  = Brush.radialGradient(
+                brush = Brush.radialGradient(
                     colors = listOf(HeatYellow.copy(alpha = 0.6f), Color.Transparent),
-                    center = b3, radius = size.minDimension * 0.18f,
+                    center = b3,
+                    radius = size.minDimension * 0.18f,
                 ),
-                radius = size.minDimension * 0.18f, center = b3,
+                radius = size.minDimension * 0.18f,
+                center = b3,
             )
 
             // Grid lines
-            val gridColor  = White.copy(alpha = 0.12f)
+            val gridColor = White.copy(alpha = 0.12f)
             val gridStroke = 1f
             for (i in 0..5) {
                 val x = size.width * i / 5f
@@ -265,15 +270,15 @@ private fun FarmStressMapCard(lastUpdated: String) {
 
         // Legend row
         Row(
-            modifier              = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 10.dp),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
-            verticalAlignment     = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             LegendDot(color = Color(0xFF2E9447), label = "Healthy")
-            LegendDot(color = HeatYellow,        label = "Stressed")
-            LegendDot(color = HeatRed,           label = "Critical")
+            LegendDot(color = HeatYellow, label = "Stressed")
+            LegendDot(color = HeatRed, label = "Critical")
         }
     }
 }
@@ -285,11 +290,11 @@ private fun LegendDot(color: Color, label: String) {
             modifier = Modifier
                 .size(10.dp)
                 .clip(CircleShape)
-                .background(color)
+                .background(color),
         )
         Spacer(Modifier.width(5.dp))
         Text(
-            text  = label,
+            text = label,
             style = MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
@@ -302,10 +307,10 @@ private fun LegendDot(color: Color, label: String) {
 private fun RainfallForecastSection(forecast: List<RainfallDay>) {
     Column {
         Text(
-            text  = "7-Day Rainfall Forecast",
+            text = "7-Day Rainfall Forecast",
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground,
             ),
         )
         Spacer(Modifier.height(12.dp))
@@ -318,7 +323,7 @@ private fun RainfallForecastSection(forecast: List<RainfallDay>) {
 @Composable
 private fun RainfallDayCard(day: RainfallDay) {
     Column(
-        modifier            = Modifier
+        modifier = Modifier
             .width(64.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
@@ -327,26 +332,26 @@ private fun RainfallDayCard(day: RainfallDay) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text  = day.day,
+            text = day.day,
             style = MaterialTheme.typography.labelSmall.copy(
-                color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Medium,
             ),
         )
         Spacer(Modifier.height(6.dp))
         Icon(
-            imageVector        = if (day.hasRain) Icons.Filled.WaterDrop else Icons.Filled.WbSunny,
+            imageVector = if (day.hasRain) Icons.Filled.WaterDrop else Icons.Filled.WbSunny,
             contentDescription = null,
-            tint               = if (day.hasRain) Color(0xFF3A7BD5) else ShambaAmber,
-            modifier           = Modifier.size(22.dp),
+            tint = if (day.hasRain) Color(0xFF3A7BD5) else ShambaAmber,
+            modifier = Modifier.size(22.dp),
         )
         Spacer(Modifier.height(6.dp))
         Text(
-            text  = "${day.rainfallMm}mm",
+            text = "${day.rainfallMm}mm",
             style = MaterialTheme.typography.labelSmall.copy(
-                color      = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
-                fontSize   = 11.sp,
+                fontSize = 11.sp,
             ),
         )
     }
@@ -365,17 +370,17 @@ private fun AIRecommendationCard(uiState: EarlyWarningUiState) {
         // "AI RECOMMENDATION" label
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                imageVector        = Icons.Filled.TipsAndUpdates,
+                imageVector = Icons.Filled.TipsAndUpdates,
                 contentDescription = null,
-                tint               = ShambaAmber,
-                modifier           = Modifier.size(16.dp),
+                tint = ShambaAmber,
+                modifier = Modifier.size(16.dp),
             )
             Spacer(Modifier.width(6.dp))
             Text(
-                text  = "AI RECOMMENDATION",
+                text = "AI RECOMMENDATION",
                 style = MaterialTheme.typography.labelSmall.copy(
-                    color         = ShambaAmber,
-                    fontWeight    = FontWeight.Bold,
+                    color = ShambaAmber,
+                    fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp,
                 ),
             )
@@ -383,19 +388,19 @@ private fun AIRecommendationCard(uiState: EarlyWarningUiState) {
         Spacer(Modifier.height(10.dp))
         // Crop title
         Text(
-            text  = uiState.aiCropTitle,
+            text = uiState.aiCropTitle,
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = White,
+                color = White,
                 lineHeight = 32.sp,
             ),
         )
         Spacer(Modifier.height(10.dp))
         // Body
         Text(
-            text  = uiState.aiCropBody,
+            text = uiState.aiCropBody,
             style = MaterialTheme.typography.bodyMedium.copy(
-                color      = White.copy(alpha = 0.85f),
+                color = White.copy(alpha = 0.85f),
                 lineHeight = 22.sp,
             ),
         )
@@ -406,7 +411,7 @@ private fun AIRecommendationCard(uiState: EarlyWarningUiState) {
 @Composable
 private fun CoverageCard(uiState: EarlyWarningUiState) {
     Column(
-        modifier            = Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface)
@@ -416,32 +421,32 @@ private fun CoverageCard(uiState: EarlyWarningUiState) {
     ) {
         // Green shield icon in green circle
         Box(
-            modifier         = Modifier
+            modifier = Modifier
                 .size(56.dp)
                 .clip(CircleShape)
                 .background(Green90),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector        = Icons.Filled.Security,
+                imageVector = Icons.Filled.Security,
                 contentDescription = null,
-                tint               = Green40,
-                modifier           = Modifier.size(28.dp),
+                tint = Green40,
+                modifier = Modifier.size(28.dp),
             )
         }
         Spacer(Modifier.height(12.dp))
         // "COVERAGE ACTIVE"
         Text(
-            text  = "COVERAGE ACTIVE",
+            text = "COVERAGE ACTIVE",
             style = MaterialTheme.typography.labelSmall.copy(
-                color         = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight    = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp,
             ),
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text  = "Your policy will pay",
+            text = "Your policy will pay",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
@@ -449,18 +454,18 @@ private fun CoverageCard(uiState: EarlyWarningUiState) {
         Spacer(Modifier.height(6.dp))
         // KES amount
         Text(
-            text  = "KES ${"%,d".format(uiState.payoutKes)}",
+            text = "KES ${"%,d".format(uiState.payoutKes)}",
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color      = Green40,
+                color = Green40,
             ),
         )
         Spacer(Modifier.height(6.dp))
         Text(
-            text      = uiState.payoutCondition,
+            text = uiState.payoutCondition,
             textAlign = TextAlign.Center,
-            style     = MaterialTheme.typography.bodySmall.copy(
-                color      = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 18.sp,
             ),
         )

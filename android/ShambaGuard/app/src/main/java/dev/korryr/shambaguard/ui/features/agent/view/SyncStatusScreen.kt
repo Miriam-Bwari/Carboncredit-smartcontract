@@ -11,26 +11,26 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 
 @Composable
 fun SyncStatusScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             ShambaTopBar(
                 title = "Sync Status",
-                onBack = onNavigateBack
+                onBack = onNavigateBack,
             )
-        }
+        },
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Pending Items", style = MaterialTheme.typography.titleMedium)
@@ -39,20 +39,20 @@ fun SyncStatusScreen(
                     Text("0 Photos Waiting", style = MaterialTheme.typography.bodyLarge)
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             Text(
                 "Sync automatically runs via WorkManager when connected to a network.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            
+
             Spacer(modifier = Modifier.weight(1f))
-            
+
             ShambaButton(
                 text = "Force Sync Now",
-                onClick = { /* Trigger WorkManager manually */ }
+                onClick = { /* Trigger WorkManager manually */ },
             )
         }
     }

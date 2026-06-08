@@ -10,39 +10,39 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 
 @Composable
 fun PayoutHistoryScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             ShambaTopBar(
                 title = "Payout History",
-                onBack = onNavigateBack
+                onBack = onNavigateBack,
             )
-        }
+        },
     ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 Text(
                     text = "Automated payouts are verified via satellite and logged immutably on the Polygon blockchain.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 8.dp),
                 )
             }
-            
+
             // Dummy List
             items(3) { index ->
                 PayoutItemCard(
                     amount = "KES 8,000",
                     date = "2026-04-1${index}T06:14:00Z",
                     txHash = "0x7a2...${index}f3",
-                    ipfsCid = "QmXyZ...${index}a1"
+                    ipfsCid = "QmXyZ...${index}a1",
                 )
             }
         }

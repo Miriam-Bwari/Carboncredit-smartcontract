@@ -30,6 +30,10 @@ ktlint_standard_import-ordering = disabled
 # Max line length applies to code — long Composable lambda chains are fine
 ktlint_standard_max-line-length = disabled
 
+# Disable filename and function-naming to avoid Compose @Composable casing issues
+ktlint_standard_filename = disabled
+ktlint_standard_function-naming = disabled
+
 [*.kts]
 indent_size = 4
 

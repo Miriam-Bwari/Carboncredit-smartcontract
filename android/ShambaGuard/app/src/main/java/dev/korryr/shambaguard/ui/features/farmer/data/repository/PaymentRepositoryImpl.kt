@@ -9,27 +9,23 @@ import dev.korryr.shambaguard.ui.features.farmer.domain.repository.PaymentReposi
 import javax.inject.Inject
 
 class PaymentRepositoryImpl @Inject constructor(
-    private val paymentApi: PaymentApi
+    private val paymentApi: PaymentApi,
 ) : PaymentRepository {
-    override suspend fun payPremium(phone: String, amount: Int, farmId: String, tier: Int): Result<String> {
-        return try {
-            val response = paymentApi.triggerStkPush(StkPushRequestDto(phone, amount, farmId, tier))
-            Result.success(response.customerMessage)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun payPremium(phone: String, amount: Int, farmId: String, tier: Int): Result<String> = try {
+        val response = paymentApi.triggerStkPush(StkPushRequestDto(phone, amount, farmId, tier))
+        Result.success(response.customerMessage)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 }
 
 class CarbonRepositoryImpl @Inject constructor(
-    private val carbonApi: CarbonApi
+    private val carbonApi: CarbonApi,
 ) : CarbonRepository {
-    override suspend fun getCarbonCredits(farmId: String): Result<List<CarbonCreditDto>> {
-        return try {
-            val response = carbonApi.getCarbonCredits(farmId)
-            Result.success(response)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun getCarbonCredits(farmId: String): Result<List<CarbonCreditDto>> = try {
+        val response = carbonApi.getCarbonCredits(farmId)
+        Result.success(response)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 }
