@@ -1,7 +1,7 @@
 # All primary keys are UUID strings for offline-first sync compatibility.
 # MIGRATION NOTE: Drop and recreate all tables when deploying this version.
 
-from sqlalchemy import Column, String, Float, Boolean, DateTime, JSON, ForeignKey
+from sqlalchemy import Column, String, Float, Boolean, DateTime, JSON, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from database.connection import Base
 from datetime import datetime
@@ -54,6 +54,21 @@ class Farm(Base):
 
     farmer         = relationship('Farmer', back_populates='farms')
     carbon_records = relationship('CarbonRecord', back_populates='farm', cascade='all, delete-orphan')
+    practice_logs  = relationship('PracticeLog', back_populates='farm', cascade='all, delete-orphan')
+
+
+class PracticeLog(Base):
+    __tablename__ = 'practice_logs'
+
+    id                = Column(String(36), primary_key=True, default=new_uuid, index=True)
+    farm_id           = Column(String(36), ForeignKey('farms.id', ondelete="CASCADE"), nullable=False, index=True)
+    crop_type         = Column(String(50))
+    tillage_method    = Column(String(50))
+    tree_count        = Column(Integer)
+    irrigation_source = Column(String(50))
+    created_at        = Column(DateTime, default=datetime.utcnow, index=True)
+
+    farm = relationship('Farm', back_populates='practice_logs')
 
 
 class CarbonRecord(Base):

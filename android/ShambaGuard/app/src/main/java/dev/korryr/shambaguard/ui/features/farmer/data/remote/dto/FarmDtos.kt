@@ -31,6 +31,16 @@ data class PracticeLogDto(
     @SerializedName("irrigation_source") val irrigationSource: String
 )
 
+data class PracticeLogResponseDto(
+    @SerializedName("id") val id: String,
+    @SerializedName("farm_id") val farmId: String,
+    @SerializedName("crop_type") val cropType: String,
+    @SerializedName("tillage_method") val tillageMethod: String,
+    @SerializedName("tree_count") val treeCount: Int,
+    @SerializedName("irrigation_source") val irrigationSource: String,
+    @SerializedName("created_at") val createdAt: String
+)
+
 data class FarmReportDto(
     @SerializedName("farm_id") val farmId: String,
     @SerializedName("ndvi_mean") val ndviMean: Double,

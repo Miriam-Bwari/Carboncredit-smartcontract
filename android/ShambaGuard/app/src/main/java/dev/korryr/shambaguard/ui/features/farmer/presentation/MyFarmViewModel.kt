@@ -69,9 +69,65 @@ class MyFarmViewModel @Inject constructor(
                         )
                     }
                 }
+
+                loadPractices(farmId)
             }
             
             _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    private suspend fun loadPractices(farmId: String) {
+        val practicesResult = farmRepository.getPractices(farmId).getOrNull()
+        if (practicesResult != null) {
+            val mapped = practicesResult.map { log ->
+                val hasImage = log.tillageMethod.contains("compost", ignoreCase = true) || log.tillageMethod.contains("minimum", ignoreCase = true)
+                // parse date "2026-06-08T05:26:40" to "2026-06-08"
+                val dateStr = try {
+                    val idx = log.createdAt.indexOf('T')
+                    if (idx != -1) log.createdAt.substring(0, idx) else log.createdAt
+                } catch(e: Exception) { log.createdAt }
+                
+                FarmPractice(
+                    title = log.tillageMethod.ifBlank { "Tillage Update" },
+                    date = dateStr,
+                    carbonBadge = "+0.1t CO2e", // Estimated impact
+                    hasImage = hasImage
+                )
+            }
+            _uiState.update { it.copy(practices = mapped) }
+        }
+    }
+
+    fun onShowAddPracticeDialog(show: Boolean) {
+        _uiState.update { it.copy(showAddPracticeDialog = show) }
+    }
+
+    fun submitPractice(tillageMethod: String, treeCountStr: String, irrigationSource: String) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSubmittingPractice = true) }
+            val farmerId = sessionManager.userIdFlow.firstOrNull() ?: return@launch
+            val farmsResult = farmRepository.getFarmerFarms(farmerId).getOrNull()
+            val firstFarm = farmsResult?.firstOrNull() ?: return@launch
+            
+            val dto = dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto(
+                cropType = firstFarm.cropType,
+                tillageMethod = tillageMethod,
+                treeCount = treeCountStr.toIntOrNull() ?: 0,
+                irrigationSource = irrigationSource
+            )
+            
+            val result = farmRepository.addPractice(firstFarm.id, dto)
+            if (result.isSuccess) {
+                loadPractices(firstFarm.id)
+            }
+            
+            _uiState.update { 
+                it.copy(
+                    isSubmittingPractice = false,
+                    showAddPracticeDialog = false
+                ) 
+            }
         }
     }
 }

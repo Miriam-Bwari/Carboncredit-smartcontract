@@ -169,4 +169,23 @@ class FarmRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun addPractice(
+        farmId: String,
+        practice: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto
+    ): Result<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto> {
+        return try {
+            Result.success(farmApi.addPractice(farmId, practice))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPractices(farmId: String): Result<List<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto>> {
+        return try {
+            Result.success(farmApi.getPractices(farmId))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

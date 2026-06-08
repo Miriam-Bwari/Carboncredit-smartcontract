@@ -404,7 +404,11 @@ fun ShambaGuardNavGraph(
                     MyFarmScreen(
                         uiState = state,
                         onBack = { backStack.removeLastOrNull() },
-                        onAddPractice = {},
+                        onAddPractice = { vm.onShowAddPracticeDialog(true) },
+                        onSubmitPractice = { tillage, trees, irrigation -> 
+                            vm.submitPractice(tillage, trees, irrigation) 
+                        },
+                        onDismissDialog = { vm.onShowAddPracticeDialog(false) },
                         onViewOnMap = {},
                     )
                 }

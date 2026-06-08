@@ -11,7 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +29,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.sharedComposables.ShambaButton
+import dev.korryr.shambaguard.sharedComposables.ShambaButtonType
+import dev.korryr.shambaguard.sharedComposables.ShambaTextField
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmPractice
 import dev.korryr.shambaguard.ui.features.farmer.presentation.MyFarmUiState
 import dev.korryr.shambaguard.ui.theme.Green10
@@ -48,6 +51,8 @@ fun MyFarmScreen(
     uiState:       MyFarmUiState,
     onBack:        () -> Unit,
     onAddPractice: () -> Unit,
+    onSubmitPractice: (tillage: String, trees: String, irrigation: String) -> Unit,
+    onDismissDialog: () -> Unit,
     onViewOnMap:   () -> Unit,
     modifier:      Modifier = Modifier,
 ) {
@@ -95,6 +100,14 @@ fun MyFarmScreen(
                 )
             }
         }
+    }
+
+    if (uiState.showAddPracticeDialog) {
+        AddPracticeDialog(
+            isSubmitting = uiState.isSubmittingPractice,
+            onSubmit = onSubmitPractice,
+            onDismiss = onDismissDialog
+        )
     }
 }
 
@@ -565,4 +578,64 @@ private fun PracticeRow(
             }
         }
     }
+}
+
+@Composable
+fun AddPracticeDialog(
+    isSubmitting: Boolean,
+    onSubmit: (tillage: String, trees: String, irrigation: String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var tillageMethod by remember { mutableStateOf("") }
+    var treeCount by remember { mutableStateOf("") }
+    var irrigationSource by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Log New Practice", fontWeight = FontWeight.Bold) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                ShambaTextField(
+                    value = tillageMethod,
+                    onValueChange = { tillageMethod = it },
+                    label = "Tillage Method (e.g. Minimum Tillage)",
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                ShambaTextField(
+                    value = treeCount,
+                    onValueChange = { treeCount = it },
+                    label = "Trees Planted",
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                ShambaTextField(
+                    value = irrigationSource,
+                    onValueChange = { irrigationSource = it },
+                    label = "Irrigation Source",
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            if (isSubmitting) {
+                CircularWavyProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.primary)
+            } else {
+                ShambaButton(
+                    text = "Submit",
+                    onClick = { onSubmit(tillageMethod, treeCount, irrigationSource) },
+                    enabled = tillageMethod.isNotBlank()
+                )
+            }
+        },
+        dismissButton = {
+            ShambaButton(
+                text = "Cancel",
+                onClick = onDismiss,
+                enabled = !isSubmitting,
+                type = ShambaButtonType.Text
+            )
+        }
+    )
 }

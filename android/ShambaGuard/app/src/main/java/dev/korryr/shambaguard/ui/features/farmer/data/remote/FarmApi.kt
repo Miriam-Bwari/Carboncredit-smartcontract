@@ -20,11 +20,16 @@ interface FarmApi {
     @GET("api/v1/farms/{farm_id}/report")
     suspend fun getFarmReport(@Path("farm_id") farmId: String): FarmReportDto
 
-    @PUT("api/v1/farms/{farm_id}/practices")
-    suspend fun updatePractices(
+    @POST("api/farms/{farm_id}/practices")
+    suspend fun addPractice(
         @Path("farm_id") farmId: String, 
-        @Body practices: PracticeLogDto
-    )
+        @Body practice: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto
+    ): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto
+
+    @GET("api/farms/{farm_id}/practices")
+    suspend fun getPractices(
+        @Path("farm_id") farmId: String
+    ): List<dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogResponseDto>
 
     @GET("api/farmers/{farmer_id}")
     suspend fun getFarmer(@Path("farmer_id") farmerId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmerDetailsDto

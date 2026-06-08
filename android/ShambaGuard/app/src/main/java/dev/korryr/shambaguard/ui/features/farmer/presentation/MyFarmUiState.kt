@@ -25,5 +25,9 @@ data class MyFarmUiState(
     // Practice log
     val practices: List<FarmPractice> = emptyList(),
 
+    // Dialog state
+    val showAddPracticeDialog: Boolean = false,
+    val isSubmittingPractice: Boolean = false,
+
     val isLoading: Boolean = true,
 )
