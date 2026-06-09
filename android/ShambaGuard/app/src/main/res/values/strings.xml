@@ -166,7 +166,7 @@
     <!-- New validation errors -->
     <string name="reg_error_phone_empty">Phone number is required</string>
     <string name="reg_error_county_empty">County is required</string>
-    <string name="reg_error_password_short">Password must be at least 8 characters</string>
+    <string name="reg_error_password_short">Password must be exactly 4 characters</string>
     <string name="reg_error_password_mismatch">Passwords do not match</string>
 
     <!-- Agent Pending Screen -->

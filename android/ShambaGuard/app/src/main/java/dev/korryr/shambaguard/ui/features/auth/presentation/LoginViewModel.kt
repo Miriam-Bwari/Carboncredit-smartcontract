@@ -45,7 +45,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onPasswordChanged(password: String) {
-        _uiState.update { it.copy(password = password, error = null) }
+        if (password.length <= 4) {
+            _uiState.update { it.copy(password = password, error = null) }
+        }
     }
 
     fun onRoleToggled(role: UserRole) {

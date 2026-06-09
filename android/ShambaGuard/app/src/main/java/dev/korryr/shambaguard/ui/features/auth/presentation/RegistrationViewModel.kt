@@ -39,11 +39,15 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun onPasswordChanged(value: String) {
-        _uiState.update { it.copy(password = value, passwordError = null, confirmPasswordError = null) }
+        if (value.length <= 4) {
+            _uiState.update { it.copy(password = value, passwordError = null, confirmPasswordError = null) }
+        }
     }
 
     fun onConfirmPasswordChanged(value: String) {
-        _uiState.update { it.copy(confirmPassword = value, confirmPasswordError = null) }
+        if (value.length <= 4) {
+            _uiState.update { it.copy(confirmPassword = value, confirmPasswordError = null) }
+        }
     }
 
     fun onTogglePasswordVisibility() {
@@ -92,7 +96,7 @@ class RegistrationViewModel @Inject constructor(
             null
         }
 
-        val passwordError = if (state.password.length < 8) {
+        val passwordError = if (state.password.length < 4) {
             isValid = false
             errorPasswordShort
         } else {
@@ -166,6 +170,10 @@ class RegistrationViewModel @Inject constructor(
 
             result.fold(
                 onSuccess = { id ->
+                    // Auto-login to obtain and save the access token!
+                    val loginRole = if (role == AppUserRole.Farmer) dev.korryr.shambaguard.navigation.UserRole.Farmer else dev.korryr.shambaguard.navigation.UserRole.Agent
+                    authRepository.login(state.phone.replace(" ", ""), state.password, loginRole)
+                    
                     _uiState.update { it.copy(isLoading = false, successId = id) }
                 },
                 onFailure = { e ->

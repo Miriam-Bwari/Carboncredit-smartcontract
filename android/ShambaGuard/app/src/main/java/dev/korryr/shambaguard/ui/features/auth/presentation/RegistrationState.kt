@@ -37,5 +37,5 @@ data class AccountRegistrationUiState(
 fun AccountRegistrationUiState.isFormValid(): Boolean = fullName.isNotBlank() &&
     phone.matches(Regex("^\\+2547\\d{8}$")) &&
     county.isNotBlank() &&
-    password.length >= 8 &&
+    password.length == 4 &&
     confirmPassword == password

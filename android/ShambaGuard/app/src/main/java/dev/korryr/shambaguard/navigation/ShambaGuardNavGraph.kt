@@ -158,32 +158,19 @@ fun ShambaGuardNavGraph(
                 // Splash screen
                 entry<SplashKey> {
                     val onboardingVm: OnboardingViewModel = hiltViewModel()
+                    val onboardingDone by onboardingVm.onboardingCompleted.collectAsStateWithLifecycle()
 
                     SplashScreen(
                         onSplashComplete = {}, // Navigation is driven by the LaunchedEffect below
                     )
 
-                    // Single authoritative navigator: wait for DataStore AND the splash
-                    // animation (2800 ms). Whichever finishes last wins.
-                    // Hard timeout at 3500 ms guards against a frozen DataStore.
-                    LaunchedEffect(Unit) {
-                        val splashMs = 2800L
-                        val timeoutMs = 3500L
-                        val start = System.currentTimeMillis()
+                    LaunchedEffect(onboardingDone) {
+                        if (onboardingDone == null) return@LaunchedEffect // Still loading from DataStore
 
-                        // Wait until onboardingDone resolves OR timeout
-                        var elapsed = 0L
-                        while (onboardingVm.onboardingCompleted.value == null && elapsed < timeoutMs) {
-                            delay(50)
-                            elapsed = System.currentTimeMillis() - start
-                        }
+                        // Ensure splash animation gets at least 2.8 seconds
+                        delay(2800)
 
-                        // Ensure splash animation had its full time
-                        val remaining = splashMs - elapsed
-                        if (remaining > 0) delay(remaining)
-
-                        // onboardingDone: null (timed out) → treat as first-launch
-                        when (onboardingVm.onboardingCompleted.value) {
+                        when (onboardingDone) {
                             true -> navigateTo(initialKey)
                             else -> navigateTo(OnboardingKey)
                         }
@@ -462,6 +449,12 @@ fun ShambaGuardNavGraph(
                 entry<FarmerHomeKey> {
                     val vm: FarmerDashboardViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    androidx.compose.runtime.LaunchedEffect(backStack.lastOrNull()) {
+                        if (backStack.lastOrNull() == FarmerHomeKey) {
+                            vm.refresh()
+                        }
+                    }
 
                     FarmerDashboardScreen(
                         uiState = state,

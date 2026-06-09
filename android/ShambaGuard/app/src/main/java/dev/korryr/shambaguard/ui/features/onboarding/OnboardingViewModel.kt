@@ -34,7 +34,7 @@ class OnboardingViewModel @Inject constructor(
         .map { prefs -> prefs[ONBOARDING_COMPLETED] ?: false }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.Eagerly,
             initialValue = null, // null = loading, not yet read from disk
         )
 

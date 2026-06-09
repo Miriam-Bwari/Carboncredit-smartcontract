@@ -66,6 +66,7 @@ class FarmRepositoryImpl @Inject constructor(
         )
 
         val dto = FarmRegisterRequestDto(
+            id = farmEntity.farmId,
             farmerId = farmEntity.farmerId,
             name = "Farm ${farmEntity.farmId.take(4)}", // Mock name
             boundaryCoords = geoJsonPolygon,
