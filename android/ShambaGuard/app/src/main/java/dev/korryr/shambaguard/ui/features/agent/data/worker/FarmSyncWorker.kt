@@ -39,23 +39,17 @@ class FarmSyncWorker @AssistedInject constructor(
                 // 1. Register the Farmer (creates account on backend)
                 // We use a dummy password as discussed because the backend schema requires it.
                 val farmerDto = FarmerRegisterRequestDto(
+                    id = farm.farmerId,
                     fullName = user.name,
                     phoneNumber = user.phone,
                     password = "TempPassword123!",
                     county = "Meru" // Placeholder, should be derived from region
                 )
 
-                var backendFarmerId = farm.farmerId
-
                 try {
-                    val response = farmApi.registerFarmer(farmerDto)
-                    backendFarmerId = response.farmerId
-                    // Update the local farm to point to the real backend UUID
-                    farmDao.updateFarmerId(farm.farmId, backendFarmerId)
+                    farmApi.registerFarmer(farmerDto)
                 } catch (e: Exception) {
                     Timber.e(e, "Failed to register farmer, might already exist or network error")
-                    // If it already exists, we might need a way to fetch the ID. 
-                    // For now, we continue with the local one, which will fail if strict FK is on.
                 }
 
                 // 2. Register the Farm
@@ -65,7 +59,8 @@ class FarmSyncWorker @AssistedInject constructor(
                 )
 
                 val farmDto = FarmRegisterRequestDto(
-                    farmerId = backendFarmerId, 
+                    id = farm.farmId,
+                    farmerId = farm.farmerId, 
                     name = "${user.name}'s Farm",
                     boundaryCoords = boundaryDto,
                     soilType = "Unknown",

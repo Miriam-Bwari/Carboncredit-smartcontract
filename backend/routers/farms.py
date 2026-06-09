@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from database.connection import get_db
 from database.models import Farm, PracticeLog
 from core.security import get_current_user, require_agent
@@ -12,6 +12,7 @@ router = APIRouter()
 
 
 class FarmRegister(BaseModel):
+    id: Optional[str] = None
     farmer_id: str
     name: str
     boundary_coords: GeoJsonPolygon
@@ -57,6 +58,10 @@ def register_farm(data: FarmRegister, db: Session = Depends(get_db), current_use
         crop_type=data.crop_type,
         county=data.county
     )
+    
+    if data.id:
+        farm.id = data.id
+        
     db.add(farm)
     db.commit()
     db.refresh(farm)
