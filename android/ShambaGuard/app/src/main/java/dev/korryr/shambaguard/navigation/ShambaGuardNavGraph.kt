@@ -237,7 +237,7 @@ fun ShambaGuardNavGraph(
                             backStack.removeLastOrNull()
                             when (selectedAppRole) {
                                 dev.korryr.shambaguard.ui.features.auth.presentation.AppUserRole.Farmer ->
-                                    backStack.add(FarmBoundaryKey)
+                                    navigateTo(FarmerHomeKey)
 
                                 dev.korryr.shambaguard.ui.features.auth.presentation.AppUserRole.Agent ->
                                     backStack.add(AgentPendingKey)
@@ -447,9 +447,10 @@ fun ShambaGuardNavGraph(
 
                     FarmerDashboardScreen(
                         uiState = state,
-                        onSeeInsights = { backStack.add(FarmerDroughtKey) },
-                        onViewPolicy = { backStack.add(FarmerPolicyKey) },
-                        onViewCarbon = { backStack.add(FarmerCarbonKey) },
+                        onSeeInsights = { navigateTo(FarmerDroughtInsightsKey) },
+                        onViewPolicy = { navigateTo(FarmerPolicyKey) },
+                        onViewCarbon = { navigateTo(FarmerCarbonKey) },
+                        onRegisterFarm = { backStack.add(FarmBoundaryKey) }
                     )
                 }
                 entry<FarmerDroughtKey> {

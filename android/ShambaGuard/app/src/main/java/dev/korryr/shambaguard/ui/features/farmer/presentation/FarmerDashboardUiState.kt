@@ -14,6 +14,7 @@ data class ActivityItem(
 enum class ActivityType { DROUGHT_ALERT, PAYOUT, CARBON }
 
 data class FarmerDashboardUiState(
+    val hasFarm: Boolean = false,
     val farmerName: String = "",
     val farmName: String = "",
     val farmRegion: String = "",

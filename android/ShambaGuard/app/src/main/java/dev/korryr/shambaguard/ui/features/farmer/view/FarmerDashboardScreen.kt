@@ -72,6 +72,7 @@ fun FarmerDashboardScreen(
     onSeeInsights: () -> Unit,
     onViewPolicy: () -> Unit,
     onViewCarbon: () -> Unit,
+    onRegisterFarm: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var visible by remember { mutableStateOf(false) }
@@ -94,87 +95,141 @@ fun FarmerDashboardScreen(
                 farmRegion = uiState.farmRegion,
             )
 
-            // 2. Drought alert card (main risk indicator)
-            Spacer(modifier = Modifier.height(4.dp))
-            DroughtAlertCard(
-                risk = uiState.droughtRisk,
-                ndviScore = uiState.ndviScore,
-                rainfallMm = uiState.rainfallMm,
-                rainfallDelta = uiState.rainfallDelta,
-                onSeeInsights = onSeeInsights,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // 3. At a Glance — two side-by-side cards
-            SectionHeading(
-                text = stringResource(R.string.dashboard_at_a_glance),
-                modifier = Modifier.padding(horizontal = 20.dp),
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                GlanceCard(
-                    icon = Icons.Filled.CheckCircle,
-                    iconTint = Green40,
-                    iconBgColor = Green95,
-                    title = stringResource(R.string.dashboard_policy_status),
-                    valueLine1 = if (uiState.policyActive) {
-                        stringResource(R.string.dashboard_policy_active)
-                    } else {
-                        stringResource(R.string.dashboard_policy_inactive)
-                    },
-                    valueLine1Color = if (uiState.policyActive) {
-                        Green40
-                    } else {
-                        MaterialTheme.colorScheme.error
-                    },
-                    valueLine2 = stringResource(
-                        R.string.dashboard_policy_expiry,
-                        uiState.policyExpiry,
-                    ),
-                    onClick = onViewPolicy,
-                    modifier = Modifier.weight(1f),
+            if (uiState.hasFarm) {
+                // 2. Drought alert card (main risk indicator)
+                Spacer(modifier = Modifier.height(4.dp))
+                DroughtAlertCard(
+                    risk = uiState.droughtRisk,
+                    ndviScore = uiState.ndviScore,
+                    rainfallMm = uiState.rainfallMm,
+                    rainfallDelta = uiState.rainfallDelta,
+                    onSeeInsights = onSeeInsights,
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
-                GlanceCard(
-                    icon = Icons.Filled.Eco,
-                    iconTint = Green40,
-                    iconBgColor = Green95,
-                    title = stringResource(R.string.dashboard_carbon),
-                    valueLine1 = "${uiState.carbonTonnes} tonnes",
-                    valueLine1Color = Green40,
-                    valueLine2 = stringResource(R.string.dashboard_carbon_claim),
-                    onClick = onViewCarbon,
-                    modifier = Modifier.weight(1f),
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // 3. At a Glance — two side-by-side cards
+                SectionHeading(
+                    text = stringResource(R.string.dashboard_at_a_glance),
+                    modifier = Modifier.padding(horizontal = 20.dp),
                 )
-            }
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    GlanceCard(
+                        icon = Icons.Filled.CheckCircle,
+                        iconTint = Green40,
+                        iconBgColor = Green95,
+                        title = stringResource(R.string.dashboard_policy_status),
+                        valueLine1 = if (uiState.policyActive) {
+                            stringResource(R.string.dashboard_policy_active)
+                        } else {
+                            stringResource(R.string.dashboard_policy_inactive)
+                        },
+                        valueLine1Color = if (uiState.policyActive) {
+                            Green40
+                        } else {
+                            MaterialTheme.colorScheme.error
+                        },
+                        valueLine2 = stringResource(
+                            R.string.dashboard_policy_expiry,
+                            uiState.policyExpiry,
+                        ),
+                        onClick = onViewPolicy,
+                        modifier = Modifier.weight(1f),
+                    )
+                    GlanceCard(
+                        icon = Icons.Filled.Eco,
+                        iconTint = Green40,
+                        iconBgColor = Green95,
+                        title = stringResource(R.string.dashboard_carbon),
+                        valueLine1 = "${uiState.carbonTonnes} tonnes",
+                        valueLine1Color = Green40,
+                        valueLine2 = stringResource(R.string.dashboard_carbon_claim),
+                        onClick = onViewCarbon,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
-            // 4. Recent Activity
-            SectionHeading(
-                text = stringResource(R.string.dashboard_recent_activity),
-                modifier = Modifier.padding(horizontal = 20.dp),
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(0.dp),
-            ) {
-                uiState.recentActivity.forEachIndexed { index, item ->
-                    ActivityRow(
-                        item = item,
-                        isLast = index == uiState.recentActivity.lastIndex,
+                // 4. Recent Activity
+                SectionHeading(
+                    text = stringResource(R.string.dashboard_recent_activity),
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                ) {
+                    uiState.recentActivity.forEachIndexed { index, item ->
+                        ActivityRow(
+                            item = item,
+                            isLast = index == uiState.recentActivity.lastIndex,
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            } else {
+                // Empty State
+                Spacer(modifier = Modifier.height(32.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .background(Green95),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.LocationOn,
+                            contentDescription = null,
+                            tint = Green40,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    Text(
+                        text = "Welcome to Shamba Guard!",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    )
+                    
+                    Spacer(modifier = Modifier.height(12.dp))
+                    
+                    Text(
+                        text = "To unlock satellite drought monitoring, carbon tracking, and insurance policies, we need to know where your farm is located.",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                    
+                    Spacer(modifier = Modifier.height(32.dp))
+                    
+                    dev.korryr.shambaguard.sharedComposables.ShambaButton(
+                        text = "Register My Farm",
+                        onClick = onRegisterFarm,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
