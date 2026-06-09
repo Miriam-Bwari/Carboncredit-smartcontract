@@ -21,6 +21,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Polygon
+import com.google.maps.android.compose.rememberCameraPositionState
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
@@ -119,52 +127,52 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
             .background(MaterialTheme.colorScheme.surface)
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)),
     ) {
-        // Terrain map placeholder with farm polygon
+        // Map with farm polygon
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(180.dp)
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
         ) {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                // Terrain background — olive/tan gradient
-                drawRect(
-                    brush = Brush.linearGradient(
-                        listOf(Color(0xFFE8EFD8), Color(0xFFD5E0C0), Color(0xFFE0E8C8)),
-                        start = Offset.Zero,
-                        end = Offset(size.width, size.height),
-                    ),
-                )
+            val cameraPositionState = rememberCameraPositionState()
+            var mapLoaded by remember { mutableStateOf(false) }
 
-                // River / road line (blue-grey)
-                val roadPath = androidx.compose.ui.graphics.Path().apply {
-                    moveTo(size.width * 0.55f, 0f)
-                    cubicTo(
-                        size.width * 0.60f,
-                        size.height * 0.3f,
-                        size.width * 0.65f,
-                        size.height * 0.5f,
-                        size.width * 0.70f,
-                        size.height,
+            // Automatically frame the polygon when the coords are loaded
+            LaunchedEffect(uiState.polygonCoords, mapLoaded) {
+                if (uiState.polygonCoords.isNotEmpty() && mapLoaded) {
+                    val boundsBuilder = LatLngBounds.Builder()
+                    uiState.polygonCoords.forEach { boundsBuilder.include(it) }
+                    try {
+                        val bounds = boundsBuilder.build()
+                        // 50px padding around the bounding box
+                        cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(bounds, 50))
+                    } catch (e: Exception) {
+                        // ignore if building bounds fails (e.g. less than 2 points)
+                    }
+                }
+            }
+
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                properties = MapProperties(mapType = MapType.SATELLITE),
+                uiSettings = MapUiSettings(
+                    zoomControlsEnabled = false,
+                    scrollGesturesEnabled = false, // Static preview map
+                    zoomGesturesEnabled = false,
+                    tiltGesturesEnabled = false,
+                    rotationGesturesEnabled = false
+                ),
+                onMapLoaded = { mapLoaded = true }
+            ) {
+                if (uiState.polygonCoords.isNotEmpty()) {
+                    Polygon(
+                        points = uiState.polygonCoords,
+                        fillColor = Color(0xFF4CAF50).copy(alpha = 0.4f),
+                        strokeColor = Color(0xFF4CAF50),
+                        strokeWidth = 5f
                     )
                 }
-                drawPath(roadPath, color = Color(0xFF90CAF9), style = Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round))
-
-                // Farm polygon (green fill)
-                val farmPath = androidx.compose.ui.graphics.Path().apply {
-                    moveTo(size.width * 0.08f, size.height * 0.15f)
-                    lineTo(size.width * 0.45f, size.height * 0.05f)
-                    lineTo(size.width * 0.52f, size.height * 0.40f)
-                    lineTo(size.width * 0.38f, size.height * 0.75f)
-                    lineTo(size.width * 0.10f, size.height * 0.70f)
-                    close()
-                }
-                drawPath(farmPath, color = Color(0xFF4CAF50).copy(alpha = 0.65f))
-                drawPath(farmPath, color = Color(0xFF2E7D32), style = Stroke(width = 2.dp.toPx()))
-
-                // Surrounding terrain patches
-                drawCircle(color = Color(0xFFA5D6A7).copy(alpha = 0.4f), radius = size.width * 0.12f, center = Offset(size.width * 0.75f, size.height * 0.25f))
-                drawCircle(color = Color(0xFFCDDCA8).copy(alpha = 0.5f), radius = size.width * 0.10f, center = Offset(size.width * 0.85f, size.height * 0.70f))
             }
 
             // "Plot Alpha" badge overlay bottom-left

@@ -47,6 +47,27 @@ class MyFarmViewModel @Inject constructor(
                     )
                 }
 
+                // Fetch local FarmEntity to get the polygon JSON
+                viewModelScope.launch {
+                    farmRepository.getFarm(farmId).collect { farmEntity ->
+                        if (farmEntity != null && farmEntity.polygonJson.isNotBlank()) {
+                            val coordsList = mutableListOf<com.google.android.gms.maps.model.LatLng>()
+                            try {
+                                val jsonArray = org.json.JSONArray(farmEntity.polygonJson)
+                                for (i in 0 until jsonArray.length()) {
+                                    val point = jsonArray.getJSONObject(i)
+                                    val lat = point.getDouble("lat")
+                                    val lng = point.getDouble("lng")
+                                    coordsList.add(com.google.android.gms.maps.model.LatLng(lat, lng))
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                            _uiState.update { it.copy(polygonCoords = coordsList) }
+                        }
+                    }
+                }
+
                 val adviceResult = farmRepository.getAdvice(farmId).getOrNull()
                 if (adviceResult != null) {
                     _uiState.update {
