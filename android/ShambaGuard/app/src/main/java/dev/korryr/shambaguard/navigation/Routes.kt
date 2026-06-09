@@ -40,7 +40,7 @@ data object AgentPendingKey // Shown after agent registers — awaiting admin ap
 data object FarmBoundaryKey // Farm setup Step 1: Draw farm polygon (Farmers only)
 
 @Serializable
-data object FarmPracticesKey // Farm setup Step 2: Farm practices (Farmers only)
+data class FarmPracticesKey(val polygonJson: String) // Farm setup Step 2: Farm practices (Farmers only)
 
 @Serializable
 data object LoginKey

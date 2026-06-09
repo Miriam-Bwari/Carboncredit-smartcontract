@@ -44,4 +44,16 @@ class FarmBoundaryViewModel @Inject constructor() : ViewModel() {
 
     // Returns true when there are enough points to form a valid polygon
     fun canSave(): Boolean = _uiState.value.points.size >= 3
+
+    fun getPolygonJson(): String {
+        val points = _uiState.value.points
+        val jsonArray = org.json.JSONArray()
+        points.forEach { point ->
+            val jsonObject = org.json.JSONObject()
+            jsonObject.put("lat", point.latitude)
+            jsonObject.put("lng", point.longitude)
+            jsonArray.put(jsonObject)
+        }
+        return jsonArray.toString()
+    }
 }

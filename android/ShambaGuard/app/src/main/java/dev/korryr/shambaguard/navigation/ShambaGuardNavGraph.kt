@@ -288,15 +288,33 @@ fun ShambaGuardNavGraph(
                         onMapTapped = vm::onMapTapped,
                         onUndo = vm::onUndoLastPoint,
                         onToggleLayer = vm::onToggleMapType,
-                        onSave = { backStack.add(FarmPracticesKey) },
+                        onSave = { 
+                            val polygonJson = vm.getPolygonJson()
+                            backStack.add(FarmPracticesKey(polygonJson = polygonJson)) 
+                        },
                         onBack = { backStack.removeLastOrNull() },
                     )
                 }
 
                 // Farm setup Step 2: Farm practices (Farmers only)
-                entry<FarmPracticesKey> {
+                entry<FarmPracticesKey> { key ->
                     val vm: FarmPracticesViewModel = hiltViewModel()
+                    
+                    // Initialize the VM with the polygon JSON
+                    LaunchedEffect(key.polygonJson) {
+                        vm.setPolygonJson(key.polygonJson)
+                    }
+
                     val state by vm.uiState.collectAsStateWithLifecycle()
+                    
+                    // Navigate when submission is successful
+                    LaunchedEffect(state.submissionSuccess) {
+                        if (state.submissionSuccess) {
+                            vm.onNavigationConsumed()
+                            backStack.removeLastOrNull() // remove practices
+                            backStack.removeLastOrNull() // remove boundary
+                        }
+                    }
 
                     FarmPracticesScreen(
                         uiState = state,
@@ -306,7 +324,7 @@ fun ShambaGuardNavGraph(
                         onWaterSelected = vm::onWaterSelected,
                         onIncrementTrees = vm::onIncrementTrees,
                         onDecrementTrees = vm::onDecrementTrees,
-                        onComplete = { backStack.add(FarmerPolicyKey) },
+                        onComplete = vm::submitFarmDetails,
                         onBack = { backStack.removeLastOrNull() },
                     )
                 }
