@@ -11,7 +11,6 @@ import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import dev.korryr.shambaguard.core.datastore.SessionManager
 import dev.korryr.shambaguard.ui.features.farmer.domain.repository.FarmRepository
-import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmRegisterRequestDto
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PracticeLogDto
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -103,13 +102,13 @@ class FarmPracticesViewModel @Inject constructor(
             // Step 1: Push Farm
             val farmId = java.util.UUID.randomUUID().toString()
             val state = _uiState.value
-            
+
             // Note: Since this is the frontend logic for a Farmer, we directly call the API.
             // But wait, the farmApi.registerFarm is not directly available here, we need it exposed in FarmRepository.
             // Let's use the local Room database to save it, then trigger sync, OR update FarmRepository.
             // Wait, FarmRepositoryImpl already has `pushPendingFarm`! But it expects a FarmEntity.
             // We can just construct a FarmEntity and call pushPendingFarm!
-            
+
             val farmEntity = dev.korryr.shambaguard.data.local.entity.FarmEntity(
                 farmId = farmId,
                 farmerId = farmerId,
@@ -125,7 +124,7 @@ class FarmPracticesViewModel @Inject constructor(
                 lastSyncedAt = System.currentTimeMillis(),
                 createdAt = System.currentTimeMillis(),
             )
-            
+
             val pushResult = farmRepository.pushPendingFarm(farmEntity)
 
             if (pushResult.isFailure) {
@@ -138,7 +137,7 @@ class FarmPracticesViewModel @Inject constructor(
                 cropType = state.selectedCrops.joinToString(", "),
                 tillageMethod = state.selectedMethod ?: "",
                 treeCount = state.treeCount,
-                irrigationSource = state.selectedWater ?: ""
+                irrigationSource = state.selectedWater ?: "",
             )
 
             farmRepository.addPractice(farmId, practiceDto)

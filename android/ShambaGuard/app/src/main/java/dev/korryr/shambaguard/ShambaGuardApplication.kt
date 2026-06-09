@@ -44,7 +44,7 @@ class ShambaGuardApplication :
         androidx.work.WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "FarmSyncWorker",
             androidx.work.ExistingPeriodicWorkPolicy.KEEP,
-            syncWorkRequest
+            syncWorkRequest,
         )
     }
 }

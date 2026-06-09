@@ -20,7 +20,7 @@ class FarmSyncWorker @AssistedInject constructor(
     @Assisted params: WorkerParameters,
     private val farmDao: FarmDao,
     private val userDao: UserDao,
-    private val farmApi: FarmApi
+    private val farmApi: FarmApi,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -43,7 +43,7 @@ class FarmSyncWorker @AssistedInject constructor(
                     fullName = user.name,
                     phoneNumber = user.phone,
                     password = "TempPassword123!",
-                    county = "Meru" // Placeholder, should be derived from region
+                    county = "Meru", // Placeholder, should be derived from region
                 )
 
                 try {
@@ -55,17 +55,17 @@ class FarmSyncWorker @AssistedInject constructor(
                 // 2. Register the Farm
                 val boundaryDto = GeoJsonPolygonDto(
                     type = "Polygon",
-                    coordinates = parsePolygonJson(farm.polygonJson)
+                    coordinates = parsePolygonJson(farm.polygonJson),
                 )
 
                 val farmDto = FarmRegisterRequestDto(
                     id = farm.farmId,
-                    farmerId = farm.farmerId, 
+                    farmerId = farm.farmerId,
                     name = "${user.name}'s Farm",
                     boundaryCoords = boundaryDto,
                     soilType = "Unknown",
                     cropType = farm.cropType,
-                    county = "Meru"
+                    county = "Meru",
                 )
 
                 farmApi.registerFarm(farmDto)
@@ -74,7 +74,7 @@ class FarmSyncWorker @AssistedInject constructor(
                 farmDao.updateSyncStatus(
                     farmId = farm.farmId,
                     status = "SYNCED",
-                    timestamp = System.currentTimeMillis()
+                    timestamp = System.currentTimeMillis(),
                 )
             }
 

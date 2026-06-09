@@ -22,7 +22,7 @@ import javax.inject.Inject
 class AgentOnboardingViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userDao: UserDao,
-    private val farmDao: FarmDao
+    private val farmDao: FarmDao,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AgentOnboardingUiState())
@@ -37,22 +37,22 @@ class AgentOnboardingViewModel @Inject constructor(
     }
 
     fun updatePractices(cropType: String, tillageMethod: String, treeCount: Int, irrigationSource: String) {
-        _uiState.update { 
+        _uiState.update {
             it.copy(
-                cropType = cropType, 
-                tillageMethod = tillageMethod, 
-                treeCount = treeCount, 
-                irrigationSource = irrigationSource 
-            ) 
+                cropType = cropType,
+                tillageMethod = tillageMethod,
+                treeCount = treeCount,
+                irrigationSource = irrigationSource,
+            )
         }
     }
 
     fun saveFarmerOffline() {
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true, errorMessage = null) }
-            
+
             try {
-                val agentId = sessionManager.userIdFlow.firstOrNull() 
+                val agentId = sessionManager.userIdFlow.firstOrNull()
                     ?: throw Exception("Agent not logged in")
 
                 val state = _uiState.value
@@ -68,12 +68,12 @@ class AgentOnboardingViewModel @Inject constructor(
                     nationalId = state.nationalId,
                     region = "Pending Sync", // Could be reverse geocoded later
                     isApproved = true,
-                    createdAt = now
+                    createdAt = now,
                 )
 
                 // Simple JSON array structure for geojson placeholder
-                val polygonJson = "[" + state.polygonPoints.joinToString(",") { 
-                    "[${it.longitude},${it.latitude}]" 
+                val polygonJson = "[" + state.polygonPoints.joinToString(",") {
+                    "[${it.longitude},${it.latitude}]"
                 } + "]"
 
                 val farm = FarmEntity(
@@ -89,7 +89,7 @@ class AgentOnboardingViewModel @Inject constructor(
                     carbonStatus = "PENDING",
                     syncStatus = "PENDING_SYNC",
                     lastSyncedAt = null,
-                    createdAt = now
+                    createdAt = now,
                 )
 
                 userDao.insertUser(user)
@@ -110,6 +110,6 @@ class AgentOnboardingViewModel @Inject constructor(
     private fun calculateEstimatedArea(points: List<LatLng>): Double {
         if (points.size < 3) return 0.0
         // Placeholder area calculation. In production, use SphericalUtil.computeArea
-        return 1.5 
+        return 1.5
     }
 }

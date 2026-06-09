@@ -68,7 +68,7 @@ fun MapPolygonScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             if (uiState.polygonPoints.isNotEmpty()) {
                                 onUpdatePolygon(uiState.polygonPoints.dropLast(1))
                             }

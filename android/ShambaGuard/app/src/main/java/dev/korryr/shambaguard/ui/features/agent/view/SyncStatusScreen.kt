@@ -56,7 +56,7 @@ fun SyncStatusScreen(
             ShambaButton(
                 text = "Force Sync Now",
                 onClick = onForceSync,
-                enabled = uiState.pendingFarmsCount > 0 || uiState.pendingPhotosCount > 0
+                enabled = uiState.pendingFarmsCount > 0 || uiState.pendingPhotosCount > 0,
             )
         }
     }

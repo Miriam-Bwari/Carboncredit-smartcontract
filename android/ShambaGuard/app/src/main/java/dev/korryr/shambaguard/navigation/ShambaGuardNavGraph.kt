@@ -288,9 +288,9 @@ fun ShambaGuardNavGraph(
                         onMapTapped = vm::onMapTapped,
                         onUndo = vm::onUndoLastPoint,
                         onToggleLayer = vm::onToggleMapType,
-                        onSave = { 
+                        onSave = {
                             val polygonJson = vm.getPolygonJson()
-                            backStack.add(FarmPracticesKey(polygonJson = polygonJson)) 
+                            backStack.add(FarmPracticesKey(polygonJson = polygonJson))
                         },
                         onBack = { backStack.removeLastOrNull() },
                     )
@@ -299,14 +299,14 @@ fun ShambaGuardNavGraph(
                 // Farm setup Step 2: Farm practices (Farmers only)
                 entry<FarmPracticesKey> { key ->
                     val vm: FarmPracticesViewModel = hiltViewModel()
-                    
+
                     // Initialize the VM with the polygon JSON
                     LaunchedEffect(key.polygonJson) {
                         vm.setPolygonJson(key.polygonJson)
                     }
 
                     val state by vm.uiState.collectAsStateWithLifecycle()
-                    
+
                     // Navigate when submission is successful
                     LaunchedEffect(state.submissionSuccess) {
                         if (state.submissionSuccess) {
@@ -392,30 +392,30 @@ fun ShambaGuardNavGraph(
                         onFarmerClicked = { /* AgentFarmerDetailKey(it) — Week 5 */ },
                     )
                 }
-                entry<AgentFarmersKey> { 
+                entry<AgentFarmersKey> {
                     val vm: dev.korryr.shambaguard.ui.features.agent.presentation.MyFarmersViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     dev.korryr.shambaguard.ui.features.agent.view.MyFarmersScreen(
                         uiState = state,
-                        onRegisterNewFarmer = { 
+                        onRegisterNewFarmer = {
                             agentOnboardingVm.consumeNavEvent()
-                            backStack.add(AgentOnboardingDetailsKey) 
+                            backStack.add(AgentOnboardingDetailsKey)
                         },
                         onLogPractices = { farmId -> backStack.add(FarmPracticesKey) }, // In reality would pass farmId to Nav arg
-                        onAddEvidence = { farmId -> /* Placeholder for EvidencePhotosKey */ },
-                        onRefresh = vm::loadFarmers
+                        onAddEvidence = { farmId -> },
+                        onRefresh = vm::loadFarmers,
                     )
                 }
-                entry<AgentSyncKey> { 
+                entry<AgentSyncKey> {
                     val vm: dev.korryr.shambaguard.ui.features.agent.presentation.SyncStatusViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
                     dev.korryr.shambaguard.ui.features.agent.view.SyncStatusScreen(
                         uiState = state,
                         onForceSync = vm::forceSync,
-                        onNavigateBack = { backStack.removeLastOrNull() }
-                    ) 
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                    )
                 }
 
                 // Agent Onboarding Flow
@@ -425,7 +425,7 @@ fun ShambaGuardNavGraph(
                         uiState = state,
                         onUpdateDetails = agentOnboardingVm::updateDetails,
                         onNavigateBack = { backStack.removeLastOrNull() },
-                        onNavigateToMap = { backStack.add(AgentOnboardingMapKey) }
+                        onNavigateToMap = { backStack.add(AgentOnboardingMapKey) },
                     )
                 }
                 entry<AgentOnboardingMapKey> {
@@ -434,12 +434,12 @@ fun ShambaGuardNavGraph(
                         uiState = state,
                         onUpdatePolygon = agentOnboardingVm::updatePolygon,
                         onNavigateBack = { backStack.removeLastOrNull() },
-                        onNavigateToPractices = { backStack.add(AgentOnboardingPracticesKey) }
+                        onNavigateToPractices = { backStack.add(AgentOnboardingPracticesKey) },
                     )
                 }
                 entry<AgentOnboardingPracticesKey> {
                     val state by agentOnboardingVm.uiState.collectAsStateWithLifecycle()
-                    
+
                     LaunchedEffect(state.saveSuccess) {
                         if (state.saveSuccess) {
                             agentOnboardingVm.consumeNavEvent()
@@ -454,7 +454,7 @@ fun ShambaGuardNavGraph(
                         uiState = state,
                         onUpdatePractices = agentOnboardingVm::updatePractices,
                         onNavigateBack = { backStack.removeLastOrNull() },
-                        onFinishRegistration = agentOnboardingVm::saveFarmerOffline
+                        onFinishRegistration = agentOnboardingVm::saveFarmerOffline,
                     )
                 }
 
@@ -468,7 +468,7 @@ fun ShambaGuardNavGraph(
                         onSeeInsights = { navigateTo(FarmerDroughtInsightsKey) },
                         onViewPolicy = { navigateTo(FarmerPolicyKey) },
                         onViewCarbon = { navigateTo(FarmerCarbonKey) },
-                        onRegisterFarm = { backStack.add(FarmBoundaryKey) }
+                        onRegisterFarm = { backStack.add(FarmBoundaryKey) },
                     )
                 }
                 entry<FarmerDroughtKey> {

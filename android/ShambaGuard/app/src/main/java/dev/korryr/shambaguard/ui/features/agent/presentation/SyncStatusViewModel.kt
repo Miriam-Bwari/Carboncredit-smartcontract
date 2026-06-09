@@ -12,13 +12,13 @@ import javax.inject.Inject
 
 data class SyncStatusUiState(
     val pendingFarmsCount: Int = 0,
-    val pendingPhotosCount: Int = 0
+    val pendingPhotosCount: Int = 0,
 )
 
 @HiltViewModel
 class SyncStatusViewModel @Inject constructor(
     private val farmDao: FarmDao,
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
+    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
 ) : ViewModel() {
 
     // Observe the database reactively. Whenever a farm is added or updated, this recalculates.
@@ -27,13 +27,13 @@ class SyncStatusViewModel @Inject constructor(
             val pendingFarms = farms.count { it.syncStatus == "PENDING_SYNC" }
             SyncStatusUiState(
                 pendingFarmsCount = pendingFarms,
-                pendingPhotosCount = 0 // Photos placeholder for now
+                pendingPhotosCount = 0, // Photos placeholder for now
             )
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = SyncStatusUiState()
+            initialValue = SyncStatusUiState(),
         )
 
     fun forceSync() {
