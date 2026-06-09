@@ -17,4 +17,7 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE role = 'AGENT' AND isApproved = 0")
     fun getPendingAgents(): Flow<List<UserEntity>>
+
+    @Query("SELECT * FROM users WHERE userId = :userId")
+    suspend fun getUserByIdSync(userId: String): UserEntity?
 }

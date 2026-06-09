@@ -6,6 +6,7 @@ from database.models import Farmer
 from core.security import create_access_token, get_current_user
 from schemas.responses import LoginResponse, FarmerRegisterResponse, FarmerResponse
 from pydantic import BaseModel
+from typing import Optional
 
 router = APIRouter()
 
@@ -13,6 +14,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class FarmerRegister(BaseModel):
+    id: Optional[str] = None
     full_name: str
     phone_number: str
     password: str
@@ -36,6 +38,10 @@ def register_farmer(data: FarmerRegister, db: Session = Depends(get_db)):
         password_hash=pwd_context.hash(data.password),
         county=data.county
     )
+    
+    if data.id:
+        farmer.id = data.id
+        
     db.add(farmer)
     db.commit()
     db.refresh(farmer)

@@ -8,20 +8,19 @@ import androidx.compose.ui.unit.dp
 import dev.korryr.shambaguard.sharedComposables.ShambaButton
 import dev.korryr.shambaguard.sharedComposables.ShambaTextField
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.ui.features.agent.presentation.AgentOnboardingUiState
 
 @Composable
 fun FarmerRegistrationScreen(
+    uiState: AgentOnboardingUiState,
+    onUpdateDetails: (String, String, String) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToMap: () -> Unit,
 ) {
-    var name by remember { mutableStateOf("") }
-    var nationalId by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-
     Scaffold(
         topBar = {
             ShambaTopBar(
-                title = "Register Farmer",
+                title = "Farmer Details",
                 onBack = onNavigateBack,
             )
         },
@@ -34,20 +33,20 @@ fun FarmerRegistrationScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             ShambaTextField(
-                value = name,
-                onValueChange = { name = it },
+                value = uiState.name,
+                onValueChange = { onUpdateDetails(it, uiState.nationalId, uiState.phone) },
                 label = "Full Name",
             )
 
             ShambaTextField(
-                value = nationalId,
-                onValueChange = { nationalId = it },
+                value = uiState.nationalId,
+                onValueChange = { onUpdateDetails(uiState.name, it, uiState.phone) },
                 label = "National ID",
             )
 
             ShambaTextField(
-                value = phone,
-                onValueChange = { phone = it },
+                value = uiState.phone,
+                onValueChange = { onUpdateDetails(uiState.name, uiState.nationalId, it) },
                 label = "Phone Number (e.g., 2547...)",
             )
 
@@ -56,7 +55,7 @@ fun FarmerRegistrationScreen(
             ShambaButton(
                 text = "Next: Map Farm Polygon",
                 onClick = onNavigateToMap,
-                enabled = name.isNotBlank() && nationalId.isNotBlank() && phone.isNotBlank(),
+                enabled = uiState.name.isNotBlank() && uiState.nationalId.isNotBlank() && uiState.phone.isNotBlank(),
             )
         }
     }

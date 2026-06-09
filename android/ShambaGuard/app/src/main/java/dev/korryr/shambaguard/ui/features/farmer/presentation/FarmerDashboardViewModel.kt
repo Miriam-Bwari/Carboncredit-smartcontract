@@ -45,6 +45,7 @@ class FarmerDashboardViewModel @Inject constructor(
             if (firstFarm != null) {
                 _uiState.update {
                     it.copy(
+                        hasFarm = true,
                         farmName = firstFarm.name,
                         farmRegion = farmerResult?.county ?: "Unknown Region",
                     )

@@ -7,6 +7,8 @@ data class FarmPracticesUiState(
     val selectedWater: String? = null,
     val treeCount: Int = 0,
     val isSubmitting: Boolean = false,
+    val submissionSuccess: Boolean = false,
+    val submissionError: String? = null,
 )
 
 // Returns true when the minimum required fields are filled in

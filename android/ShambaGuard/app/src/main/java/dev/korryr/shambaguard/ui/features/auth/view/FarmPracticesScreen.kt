@@ -211,16 +211,34 @@ fun FarmPracticesScreen(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(horizontal = 24.dp, vertical = 16.dp),
             ) {
-                ShambaButton(
-                    text = stringResource(R.string.practices_complete_cta),
-                    onClick = onComplete,
-                    enabled = canComplete && !uiState.isSubmitting,
-                    modifier = Modifier.fillMaxWidth(),
-                    textStyle = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                    ),
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (uiState.submissionError != null) {
+                        Text(
+                            text = uiState.submissionError,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    
+                    if (uiState.isSubmitting) {
+                        androidx.compose.material3.CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        ShambaButton(
+                            text = stringResource(R.string.practices_complete_cta),
+                            onClick = onComplete,
+                            enabled = canComplete,
+                            modifier = Modifier.fillMaxWidth(),
+                            textStyle = MaterialTheme.typography.labelLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                            ),
+                        )
+                    }
+                }
             }
         }
     }
