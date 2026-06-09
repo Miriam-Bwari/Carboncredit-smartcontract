@@ -217,14 +217,14 @@ fun FarmPracticesScreen(
                             text = uiState.submissionError,
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(bottom = 8.dp),
                         )
                     }
-                    
+
                     if (uiState.isSubmitting) {
                         androidx.compose.material3.CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
                         )
                     } else {
                         ShambaButton(

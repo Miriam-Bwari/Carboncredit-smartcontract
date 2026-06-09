@@ -8,11 +8,11 @@ data class FarmerListItem(
     val syncStatus: String, // e.g. "SYNCED", "PENDING_SYNC"
     val createdAt: Long,
     val cropType: String,
-    val areaHectares: Double
+    val areaHectares: Double,
 )
 
 data class MyFarmersUiState(
     val isLoading: Boolean = false,
     val farmers: List<FarmerListItem> = emptyList(),
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )

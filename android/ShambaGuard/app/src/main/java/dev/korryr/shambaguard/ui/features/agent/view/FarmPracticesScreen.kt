@@ -44,10 +44,10 @@ fun FarmPracticesScreen(
 
             ShambaTextField(
                 value = treeCountString,
-                onValueChange = { 
+                onValueChange = {
                     treeCountString = it
                     val count = it.toIntOrNull() ?: 0
-                    onUpdatePractices(uiState.cropType, uiState.tillageMethod, count, uiState.irrigationSource) 
+                    onUpdatePractices(uiState.cropType, uiState.tillageMethod, count, uiState.irrigationSource)
                 },
                 label = "Estimated Tree Count",
             )

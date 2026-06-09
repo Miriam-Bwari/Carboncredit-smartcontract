@@ -20,7 +20,7 @@ class MyFarmersViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val farmDao: FarmDao,
     private val userDao: UserDao,
-    private val policyDao: PolicyDao
+    private val policyDao: PolicyDao,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyFarmersUiState(isLoading = true))
@@ -35,7 +35,7 @@ class MyFarmersViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             try {
                 val agentId = sessionManager.userIdFlow.firstOrNull() ?: return@launch
-                
+
                 val farms = farmDao.getFarmsByAgentSync(agentId)
                 val farmerList = mutableListOf<FarmerListItem>()
 
@@ -52,23 +52,23 @@ class MyFarmersViewModel @Inject constructor(
                             syncStatus = farm.syncStatus,
                             createdAt = farm.createdAt,
                             cropType = farm.cropType,
-                            areaHectares = farm.areaHectares
-                        )
+                            areaHectares = farm.areaHectares,
+                        ),
                     )
                 }
 
-                _uiState.update { 
+                _uiState.update {
                     it.copy(
                         isLoading = false,
-                        farmers = farmerList.sortedByDescending { f -> f.createdAt }
-                    ) 
+                        farmers = farmerList.sortedByDescending { f -> f.createdAt },
+                    )
                 }
             } catch (e: Exception) {
-                _uiState.update { 
+                _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = e.message ?: "Failed to load farmers."
-                    ) 
+                        errorMessage = e.message ?: "Failed to load farmers.",
+                    )
                 }
             }
         }

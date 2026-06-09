@@ -191,42 +191,42 @@ fun FarmerDashboardScreen(
                             .size(100.dp)
                             .clip(CircleShape)
                             .background(Green95),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             imageVector = Icons.Filled.LocationOn,
                             contentDescription = null,
                             tint = Green40,
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier.size(48.dp),
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     Text(
                         text = "Welcome to Shamba Guard!",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+                            color = MaterialTheme.colorScheme.onBackground,
+                        ),
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "To unlock satellite drought monitoring, carbon tracking, and insurance policies, we need to know where your farm is located.",
                         style = MaterialTheme.typography.bodyLarge.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     )
-                    
+
                     Spacer(modifier = Modifier.height(32.dp))
-                    
+
                     dev.korryr.shambaguard.sharedComposables.ShambaButton(
                         text = "Register My Farm",
                         onClick = onRegisterFarm,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
