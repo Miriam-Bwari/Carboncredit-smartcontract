@@ -300,6 +300,7 @@ fun ShambaGuardNavGraph(
                             vm.onNavigationConsumed()
                             backStack.removeLastOrNull() // remove practices
                             backStack.removeLastOrNull() // remove boundary
+                            backStack.add(FarmerPolicyKey) // Route to M-Pesa payment
                         }
                     }
 
