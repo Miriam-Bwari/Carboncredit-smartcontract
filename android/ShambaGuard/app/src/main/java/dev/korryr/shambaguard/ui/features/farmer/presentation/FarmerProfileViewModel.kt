@@ -65,4 +65,10 @@ class FarmerProfileViewModel @Inject constructor(
     fun onBiometricToggled() {
         _uiState.update { it.copy(biometricEnabled = !it.biometricEnabled) }
     }
+
+    fun logout() {
+        viewModelScope.launch {
+            sessionManager.clearSession()
+        }
+    }
 }

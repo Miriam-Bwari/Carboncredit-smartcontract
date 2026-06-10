@@ -514,7 +514,10 @@ fun ShambaGuardNavGraph(
                         onChangePinClicked = {},
                         onPolicyDocsClicked = {},
                         onPrivacyPolicyClicked = {},
-                        onSignOut = { navigateTo(LoginKey) },
+                        onSignOut = {
+                            vm.logout()
+                            navigateTo(LoginKey)
+                        },
                     )
                 }
                 // Non-tab screens — navigated from dashboard or tabs
