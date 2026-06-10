@@ -23,10 +23,10 @@ class FarmerDashboardViewModel @Inject constructor(
     val uiState: StateFlow<FarmerDashboardUiState> = _uiState.asStateFlow()
 
     init {
-        loadDashboardData()
+        refresh()
     }
 
-    private fun loadDashboardData() {
+    fun refresh() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 

@@ -45,7 +45,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onPasswordChanged(password: String) {
-        _uiState.update { it.copy(password = password, error = null) }
+        if (password.length <= 4) {
+            _uiState.update { it.copy(password = password, error = null) }
+        }
     }
 
     fun onRoleToggled(role: UserRole) {
@@ -80,10 +82,18 @@ class LoginViewModel @Inject constructor(
                     _uiState.update { it.copy(isLoading = false, successRole = role) }
                 },
                 onFailure = { e ->
+                    val isAuthError = e.message?.contains("401", ignoreCase = true) == true
+                    val msg = if (isAuthError && state.role == UserRole.Agent) {
+                        "Invalid credentials or account awaiting admin approval."
+                    } else if (isAuthError) {
+                        "Invalid phone number or password."
+                    } else {
+                        e.message ?: "Login failed. Check your details and try again."
+                    }
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = e.message ?: "Login failed. Check your details and try again.",
+                            error = msg,
                         )
                     }
                 },

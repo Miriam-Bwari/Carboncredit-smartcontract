@@ -186,21 +186,21 @@ Shamba Guard has **three distinct user roles** accessed through a **single Andro
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     ANDROID APPLICATION                          │
-│   ┌──────────┐      ┌──────────────┐      ┌───────────────┐    │
-│   │  Admin   │      │ Field Agent  │      │    Farmer     │    │
-│   │  Screens │      │   Screens    │      │   Screens     │    │
-│   └────┬─────┘      └──────┬───────┘      └──────┬────────┘    │
+│                     ANDROID APPLICATION                         │
+│   ┌──────────┐      ┌──────────────┐      ┌───────────────┐     │
+│   │  Admin   │      │ Field Agent  │      │    Farmer     │     │
+│   │  Screens │      │   Screens    │      │   Screens     │     │
+│   └────┬─────┘      └──────┬───────┘      └──────┬────────┘     │
 └────────┼────────────────────┼─────────────────────┼─────────────┘
          │                    │                      │
          └────────────────────┼──────────────────────┘
                               │ HTTPS + JWT + Certificate Pinning
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                     FASTAPI BACKEND                              │
-│   Auth Service │ Farm Service │ Oracle Service │ Carbon Service  │
-│                       MySQL + Spatial Extensions                         │
-│                    Celery + Redis (async jobs)                   │
+│                     FASTAPI BACKEND                             │
+│   Auth Service │ Farm Service │ Oracle Service │ Carbon Service │
+│                       MySQL + Spatial Extensions                │
+│                    Celery + Redis (async jobs)                  │
 └──────────────────────────┬──────────────────────────────────────┘
               ┌────────────┼─────────────────┐
               ▼            ▼                 ▼
@@ -319,12 +319,12 @@ Agent Registration:
 
 #### Requirements
 
-- `POST /api/v1/farms` — Register new farm (polygon GeoJSON, farmer ID, practice data)
-- `GET /api/v1/farms/{farm_id}` — Get farm details + latest carbon/NDVI report
-- `GET /api/v1/farms/agent/{agent_id}` — Get all farms registered by a specific agent
-- `PUT /api/v1/farms/{farm_id}/practices` — Update quarterly farm practice log
-- `POST /api/v1/farms/{farm_id}/evidence` — Upload geo-tagged evidence photo (S3 or Supabase storage)
-- `GET /api/v1/farms/admin/all` — Admin only — all farms with filters (region, status, risk level)
+- `POST /api/farms` — Register new farm (polygon GeoJSON, farmer ID, practice data)
+- `GET /api/farms/{farm_id}` — Get farm details + latest carbon/NDVI report
+- `GET /api/farms/agent/{agent_id}` — Get all farms registered by a specific agent
+- `PUT /api/farms/{farm_id}/practices` — Update quarterly farm practice log
+- `POST /api/farms/{farm_id}/evidence` — Upload geo-tagged evidence photo (S3 or Supabase storage)
+- `GET /api/farms/admin/all` — Admin only — all farms with filters (region, status, risk level)
 
 #### Data Model — Farm
 
@@ -477,9 +477,9 @@ The oracle service is the bridge between the Python AI engine and the blockchain
 
 #### Requirements
 
-- `GET /api/v1/carbon/{farm_id}/report` — Returns 12-month NDVI trend + estimated carbon tonnes
-- `POST /api/v1/carbon/{farm_id}/mint` — Initiates carbon credit minting pipeline (called internally by Celery after 90-day NDVI threshold met)
-- `GET /api/v1/carbon/{farm_id}/credits` — Returns all minted credits, status, and M-Pesa payout history
+- `GET /api/carbon/{farm_id}/report` — Returns 12-month NDVI trend + estimated carbon tonnes
+- `POST /api/carbon/{farm_id}/mint` — Initiates carbon credit minting pipeline (called internally by Celery after 90-day NDVI threshold met)
+- `GET /api/carbon/{farm_id}/credits` — Returns all minted credits, status, and M-Pesa payout history
 
 #### Carbon Estimation Model
 
@@ -509,7 +509,7 @@ Training data sources:
 #### Premium Collection (Farmer → Platform)
 
 - Use **Daraja STK Push (Lipa Na M-Pesa Online)** for farmer premium payments
-- Android app calls backend `/api/v1/payments/stk-push` with farmer phone + amount
+- Android app calls backend `/api/payments/stk-push` with farmer phone + amount
 - Backend calls Daraja API → pushes STK prompt to farmer's phone
 - Daraja callback updates payment status in database
 - On successful payment → activate/renew policy in smart contract
@@ -1063,7 +1063,7 @@ fun captureEvidencePhoto(
 ```kotlin
 // Farmer selects coverage tier → taps "Pay with M-Pesa"
 // Flow:
-// 1. Android calls backend POST /api/v1/payments/stk-push
+// 1. Android calls backend POST /api/payments/stk-push
 // 2. Backend calls Daraja STK Push API
 // 3. Farmer receives M-Pesa prompt on phone
 // 4. Farmer enters PIN
@@ -1105,7 +1105,7 @@ Week 2:
 [ ] Android Keystore setup for request signing
 
 Week 5 (Integration):
-[ ] FarmerDashboardScreen — consumes GET /api/v1/farms/{farm_id}/carbon-report
+[ ] FarmerDashboardScreen — consumes GET /api/farms/{farm_id}/carbon-report
 [ ] EarlyWarningScreen — displays forecast data from backend
 [ ] PayoutHistoryScreen — shows tx_hash + IPFS link
 [ ] Admin: FarmMapScreen — polygon overlay + NDVI heatmap
@@ -1324,7 +1324,7 @@ Note: Returns 401 if agent account is not yet approved by admin (is_active = fal
 ### Farms
 
 ```
-POST /api/v1/farms
+POST /api/farms
 Auth: Bearer token (Agent only)
 Body: {
   "farmer_id": "uuid",
@@ -1333,7 +1333,7 @@ Body: {
 }
 Response: { "farm_id": "uuid", "area_hectares": 1.8, "analysis_queued": true }
 
-GET /api/v1/farms/{farm_id}/report
+GET /api/farms/{farm_id}/report
 Auth: Bearer token
 Response: {
   "ndvi_mean": 0.52,
@@ -1353,12 +1353,12 @@ Response: {
 ### Insurance
 
 ```
-POST /api/v1/policies/purchase
+POST /api/policies/purchase
 Auth: Bearer token (Farmer)
 Body: { "farm_id": "uuid", "tier": 2 }
 Response: { "stk_push_initiated": true, "checkout_request_id": "ws_CO_..." }
 
-GET /api/v1/policies/{farm_id}
+GET /api/policies/{farm_id}
 Auth: Bearer token
 Response: {
   "policy_id": "uuid",
@@ -1369,7 +1369,7 @@ Response: {
   "expires_at": "2026-05-15"
 }
 
-GET /api/v1/payouts/{farmer_id}
+GET /api/payouts/{farmer_id}
 Auth: Bearer token
 Response: [ {
   "payout_id": "uuid",
@@ -1385,7 +1385,7 @@ Response: [ {
 ### Carbon Credits
 
 ```
-GET /api/v1/carbon/{farm_id}/credits
+GET /api/carbon/{farm_id}/credits
 Auth: Bearer token
 Response: [ {
   "token_id": 1,
@@ -1403,15 +1403,15 @@ Response: [ {
 ### Admin
 
 ```
-GET /api/v1/admin/pool/health
+GET /api/admin/pool/health
 Auth: Admin token
 Response: { "pool_balance_kes": 450000, "total_coverage_kes": 280000, "ratio": 1.6, "status": "HEALTHY" }
 
-GET /api/v1/admin/agents/pending
+GET /api/admin/agents/pending
 Auth: Admin token
 Response: [ { "agent_id": "uuid", "name": "...", "phone": "...", "registered_at": "..." } ]
 
-PUT /api/v1/admin/agents/{agent_id}/approve
+PUT /api/admin/agents/{agent_id}/approve
 Auth: Admin token
 Response: { "approved": true }
 ```

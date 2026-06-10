@@ -17,8 +17,7 @@ class AuthInterceptor @Inject constructor(
 
         // Endpoints that don't need auth token
         if (originalRequest.url.encodedPath.contains("/api/farmers/login") ||
-            originalRequest.url.encodedPath.contains("/api/farmers/register") ||
-            originalRequest.url.encodedPath.contains("/api/farms/register")
+            originalRequest.url.encodedPath.contains("/api/farmers/register")
         ) {
             return chain.proceed(originalRequest)
         }
