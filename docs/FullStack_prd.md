@@ -186,21 +186,21 @@ Shamba Guard has **three distinct user roles** accessed through a **single Andro
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     ANDROID APPLICATION                          │
-│   ┌──────────┐      ┌──────────────┐      ┌───────────────┐    │
-│   │  Admin   │      │ Field Agent  │      │    Farmer     │    │
-│   │  Screens │      │   Screens    │      │   Screens     │    │
-│   └────┬─────┘      └──────┬───────┘      └──────┬────────┘    │
+│                     ANDROID APPLICATION                         │
+│   ┌──────────┐      ┌──────────────┐      ┌───────────────┐     │
+│   │  Admin   │      │ Field Agent  │      │    Farmer     │     │
+│   │  Screens │      │   Screens    │      │   Screens     │     │
+│   └────┬─────┘      └──────┬───────┘      └──────┬────────┘     │
 └────────┼────────────────────┼─────────────────────┼─────────────┘
          │                    │                      │
          └────────────────────┼──────────────────────┘
                               │ HTTPS + JWT + Certificate Pinning
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                     FASTAPI BACKEND                              │
-│   Auth Service │ Farm Service │ Oracle Service │ Carbon Service  │
-│                    PostgreSQL + PostGIS                          │
-│                    Celery + Redis (async jobs)                   │
+│                     FASTAPI BACKEND                             │
+│   Auth Service │ Farm Service │ Oracle Service │ Carbon Service │
+│                       MySQL + Spatial Extensions                │
+│                    Celery + Redis (async jobs)                  │
 └──────────────────────────┬──────────────────────────────────────┘
               ┌────────────┼─────────────────┐
               ▼            ▼                 ▼
@@ -227,7 +227,7 @@ Shamba Guard has **three distinct user roles** accessed through a **single Andro
 ## 5. Backend & ML Requirements
 
 > **Owner:** Backend/ML Engineer  
-> **Stack:** Python, FastAPI, PostgreSQL + PostGIS, Celery, Redis, Google Earth Engine, Sentinel-2, CHIRPS, scikit-learn, Web3.py  
+> **Stack:** Python, FastAPI, MySQL, Celery, Redis, Google Earth Engine, Sentinel-2, CHIRPS, scikit-learn, Web3.py  
 > **Hosting:** Railway.app free tier → Hetzner CX11 VPS (~$6/month)
 
 ---
@@ -456,7 +456,7 @@ The oracle service is the bridge between the Python AI engine and the blockchain
     2. Upload report to IPFS via Pinata → receive `ipfs_cid`
     3. Sign the trigger data with the oracle private key (ECDSA)
     4. Submit signed trigger to `ShambaPool.sol` via Web3.py
-    5. Store `tx_hash` + `ipfs_cid` in PostgreSQL against the farm record
+    5. Store `tx_hash` + `ipfs_cid` in MySQL against the farm record
     6. Send M-Pesa payout confirmation SMS to farmer
 
 - Oracle private key must **never** appear in code — stored in environment secret / HSM
@@ -1428,7 +1428,7 @@ Response: { "approved": true }
 | Android app cold start | < 3 seconds on mid-range device (Tecno, Infinix) | Android |
 | Offline functionality | All agent data entry works with zero connectivity | Android |
 | Sync reliability | Zero data loss on WorkManager queue — idempotent POST endpoints | Android + Backend |
-| Database uptime | 99.9% via Supabase managed PostgreSQL | Backend |
+| Database uptime | 99.9% via managed MySQL | Backend |
 | Smart contract test coverage | > 90% line coverage before mainnet deployment | Blockchain |
 | API test coverage | > 80% critical path coverage | Backend |
 | Minimum Android version | API 26 (Android 8.0) — covers 95%+ of Kenyan Android devices | Android |
@@ -1443,7 +1443,7 @@ Response: { "approved": true }
 | Rainfall Data | CHIRPS — Climate Hazards Group | Direct REST API | Free |
 | Soil Data | SoilGrids — ISRIC | REST API | Free |
 | ML Training Data | ICRAF Open Datasets + FAO | Open download | Free |
-| Database | PostgreSQL + PostGIS | Supabase free tier | Free |
+| Database | MySQL | AWS/PlanetScale free tier | Free |
 | Backend Compute | FastAPI + Celery + Redis | Railway.app → Hetzner CX11 | ~$6/month |
 | Blockchain Dev | Solidity + Hardhat + Chai | Open source | Free |
 | Testnet | Polygon Mumbai | Free MATIC from faucet | Free |
