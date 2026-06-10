@@ -188,27 +188,9 @@ private fun OnboardingPageContent(
             Image(
                 painter = painterResource(page.illustrationRes),
                 contentDescription = page.title,
-                modifier = Modifier.size(180.dp),
-                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
             )
-
-            // Card label at the bottom
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(bottom = 18.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = page.cardLabel,
-                    color = Color.White.copy(alpha = 0.85f),
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.5.sp,
-                    ),
-                )
-            }
         }
 
         Spacer(modifier = Modifier.height(36.dp))
