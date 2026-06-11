@@ -7,8 +7,9 @@ import kotlin.math.sin
 // Step 2 — farm polygon drawing state
 data class FarmBoundaryUiState(
     val points: List<LatLng> = emptyList(),
-    val mapType: Int = com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE,
+    val mapType: Int = com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID,
     val isSaving: Boolean = false,
+    val currentRegionName: String = "Detecting location...",
 )
 
 // Returns polygon area in acres using the Shoelace formula with haversine correction.

@@ -273,6 +273,7 @@ fun ShambaGuardNavGraph(
                         uiState = state,
                         canSave = vm.canSave(),
                         onMapTapped = vm::onMapTapped,
+                        onCameraMoved = vm::onCameraMoved,
                         onUndo = vm::onUndoLastPoint,
                         onToggleLayer = vm::onToggleMapType,
                         onSave = {
@@ -312,6 +313,7 @@ fun ShambaGuardNavGraph(
                         onWaterSelected = vm::onWaterSelected,
                         onIncrementTrees = vm::onIncrementTrees,
                         onDecrementTrees = vm::onDecrementTrees,
+                        onTreesChanged = vm::onTreesChanged,
                         onComplete = vm::submitFarmDetails,
                         onBack = { backStack.removeLastOrNull() },
                     )

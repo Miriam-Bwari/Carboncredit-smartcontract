@@ -1,5 +1,7 @@
 package dev.korryr.shambaguard.ui.features.auth.view
 
+import android.Manifest
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -32,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,10 +43,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Dash
 import com.google.android.gms.maps.model.Gap
@@ -74,11 +82,14 @@ private const val DEFAULT_ZOOM = 15f
 private val PolygonGreen = Color(0xFF2E9647)
 private val PolygonFill = Color(0x332E9647)
 
+@OptIn(ExperimentalPermissionsApi::class)
+@SuppressLint("MissingPermission")
 @Composable
 fun FarmBoundaryScreen(
     uiState: FarmBoundaryUiState,
     canSave: Boolean,
     onMapTapped: (LatLng) -> Unit,
+    onCameraMoved: (LatLng) -> Unit,
     onUndo: () -> Unit,
     onToggleLayer: () -> Unit,
     onSave: () -> Unit,
@@ -91,8 +102,42 @@ fun FarmBoundaryScreen(
         label = "Step2Progress",
     )
 
+    val context = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    
+    val locationPermissionState = rememberPermissionState(
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    // Request permission on launch
+    LaunchedEffect(Unit) {
+        if (!locationPermissionState.status.isGranted) {
+            locationPermissionState.launchPermissionRequest()
+        }
+    }
+
     val cameraState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(DEFAULT_CENTER, DEFAULT_ZOOM)
+    }
+
+    // Snap to location when permission granted
+    LaunchedEffect(locationPermissionState.status.isGranted) {
+        if (locationPermissionState.status.isGranted) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val latLng = LatLng(location.latitude, location.longitude)
+                    cameraState.position = CameraPosition.fromLatLngZoom(latLng, DEFAULT_ZOOM)
+                    onCameraMoved(latLng)
+                }
+            }
+        }
+    }
+
+    // Listen to camera movements
+    LaunchedEffect(cameraState.isMoving) {
+        if (!cameraState.isMoving) {
+            onCameraMoved(cameraState.position.target)
+        }
     }
 
     val mapProperties = remember(uiState.mapType) {
@@ -229,6 +274,7 @@ fun FarmBoundaryScreen(
             // Bottom confirm sheet
             ConfirmBoundarySheet(
                 estimatedAcres = estimatedAcres,
+                currentRegionName = uiState.currentRegionName,
                 canSave = canSave,
                 onSave = onSave,
             )
@@ -313,6 +359,7 @@ private fun AreaLabel(acres: Double, modifier: Modifier = Modifier) {
 @Composable
 private fun ConfirmBoundarySheet(
     estimatedAcres: Double?,
+    currentRegionName: String,
     canSave: Boolean,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
@@ -360,7 +407,7 @@ private fun ConfirmBoundarySheet(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Nyeri South District",
+                            text = currentRegionName,
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             ),
