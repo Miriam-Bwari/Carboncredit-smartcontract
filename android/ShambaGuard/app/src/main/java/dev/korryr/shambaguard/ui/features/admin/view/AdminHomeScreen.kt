@@ -26,12 +26,17 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Teal40
 
+import dev.korryr.shambaguard.ui.features.admin.presentation.AdminHomeUiState
+
 @Composable
 fun AdminHomeScreen(
+    uiState: AdminHomeUiState,
     onNavigateToAgents: () -> Unit,
     onNavigateToMap: () -> Unit,
     onNavigateToPool: () -> Unit,
 ) {
+    val stats = uiState.stats
+
     Scaffold(
         topBar = {
             ShambaTopBar(
@@ -65,7 +70,7 @@ fun AdminHomeScreen(
                 item {
                     AdminStatCard(
                         title = "Total Farmers",
-                        value = "1,240",
+                        value = stats?.totalFarmers?.toString() ?: "0",
                         icon = Icons.Filled.Groups,
                         color = Green40
                     )
@@ -73,15 +78,17 @@ fun AdminHomeScreen(
                 item {
                     AdminStatCard(
                         title = "Active Policies",
-                        value = "850",
+                        value = stats?.activePolicies?.toString() ?: "0",
                         icon = Icons.Filled.VerifiedUser,
                         color = Teal40
                     )
                 }
                 item {
+                    val poolKes = stats?.poolBalanceKes ?: 0.0
+                    val formattedPool = if (poolKes >= 1_000_000) String.format("%.1fM", poolKes / 1_000_000) else poolKes.toInt().toString()
                     AdminStatCard(
                         title = "Pool Balance (KES)",
-                        value = "4.5M",
+                        value = formattedPool,
                         icon = Icons.Filled.AccountBalanceWallet,
                         color = Color(0xFFE6A800)
                     )
@@ -89,7 +96,7 @@ fun AdminHomeScreen(
                 item {
                     AdminStatCard(
                         title = "Pending Agents",
-                        value = "2",
+                        value = stats?.pendingAgents?.toString() ?: "0",
                         icon = Icons.Filled.PersonAdd,
                         color = Color(0xFFD32F2F)
                     )

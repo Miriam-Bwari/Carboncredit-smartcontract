@@ -8,8 +8,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 
+import androidx.compose.foundation.lazy.items
+import dev.korryr.shambaguard.ui.features.admin.presentation.AgentManagementUiState
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AgentManagementScreen(
+    uiState: AgentManagementUiState,
+    onApprove: (String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     Scaffold(
@@ -31,9 +37,23 @@ fun AgentManagementScreen(
                 Text("Pending Approvals", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp))
             }
 
-            // Dummy List
-            items(2) { index ->
-                AgentItemCard(name = "Agent $index", phone = "25471234567$index", status = "PENDING")
+            if (uiState.isLoading) {
+                item {
+                    CircularWavyProgressIndicator(modifier = Modifier.padding(16.dp))
+                }
+            } else if (uiState.pendingAgents.isEmpty()) {
+                item {
+                    Text("No pending agents.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            } else {
+                items(uiState.pendingAgents) { agent ->
+                    AgentItemCard(
+                        name = agent.fullName,
+                        phone = agent.phoneNumber,
+                        status = "PENDING",
+                        onApprove = { onApprove(agent.id) }
+                    )
+                }
             }
 
             item {
@@ -41,15 +61,16 @@ fun AgentManagementScreen(
                 Text("Active Agents", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp))
             }
 
-            items(5) { index ->
-                AgentItemCard(name = "Active Agent $index", phone = "25479876543$index", status = "APPROVED")
+            // Dummy Active list since backend doesn't currently return active agents in a separate endpoint yet
+            items(2) { index ->
+                AgentItemCard(name = "Active Agent $index", phone = "25479876543$index", status = "APPROVED", onApprove = {})
             }
         }
     }
 }
 
 @Composable
-fun AgentItemCard(name: String, phone: String, status: String) {
+fun AgentItemCard(name: String, phone: String, status: String, onApprove: () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -62,7 +83,7 @@ fun AgentItemCard(name: String, phone: String, status: String) {
                 Text(phone, style = MaterialTheme.typography.bodyMedium)
             }
             if (status == "PENDING") {
-                Button(onClick = { /* Approve */ }) {
+                Button(onClick = onApprove) {
                     Text("Approve")
                 }
             } else {

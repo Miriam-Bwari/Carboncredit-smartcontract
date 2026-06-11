@@ -359,15 +359,36 @@ fun ShambaGuardNavGraph(
 
                 // Admin screens
                 entry<AdminHomeKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.admin.presentation.AdminHomeViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
                     AdminHomeScreen(
+                        uiState = state,
                         onNavigateToAgents = { backStack.add(AdminAgentsKey) },
                         onNavigateToMap = { backStack.add(AdminMapKey) },
                         onNavigateToPool = { backStack.add(AdminPoolKey) },
                     )
                 }
                 entry<AdminMapKey> { FarmMapScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
-                entry<AdminAgentsKey> { AgentManagementScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
-                entry<AdminPoolKey> { PoolHealthScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AdminAgentsKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.admin.presentation.AgentManagementViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.admin.view.AgentManagementScreen(
+                        uiState = state,
+                        onApprove = vm::approveAgent,
+                        onNavigateBack = { backStack.removeLastOrNull() }
+                    )
+                }
+                entry<AdminPoolKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.admin.presentation.PoolHealthViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.admin.view.PoolHealthScreen(
+                        uiState = state,
+                        onNavigateBack = { backStack.removeLastOrNull() }
+                    )
+                }
 
                 // Agent screens
                 entry<AgentHomeKey> {
