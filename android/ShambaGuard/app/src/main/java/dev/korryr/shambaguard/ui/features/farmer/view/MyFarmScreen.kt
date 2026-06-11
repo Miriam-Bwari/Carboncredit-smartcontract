@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -161,16 +160,16 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
                     scrollGesturesEnabled = false, // Static preview map
                     zoomGesturesEnabled = false,
                     tiltGesturesEnabled = false,
-                    rotationGesturesEnabled = false
+                    rotationGesturesEnabled = false,
                 ),
-                onMapLoaded = { mapLoaded = true }
+                onMapLoaded = { mapLoaded = true },
             ) {
                 if (uiState.polygonCoords.isNotEmpty()) {
                     Polygon(
                         points = uiState.polygonCoords,
                         fillColor = Color(0xFF4CAF50).copy(alpha = 0.4f),
                         strokeColor = Color(0xFF4CAF50),
-                        strokeWidth = 5f
+                        strokeWidth = 5f,
                     )
                 }
             }

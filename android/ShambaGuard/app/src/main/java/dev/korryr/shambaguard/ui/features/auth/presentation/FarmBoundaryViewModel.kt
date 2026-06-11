@@ -70,6 +70,7 @@ class FarmBoundaryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val geocoder = Geocoder(context, Locale.getDefault())
+
                 @Suppress("DEPRECATION")
                 val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
                 if (!addresses.isNullOrEmpty()) {

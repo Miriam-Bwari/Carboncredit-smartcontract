@@ -6,7 +6,7 @@ data class AdminDashboardStatsDto(
     @SerializedName("total_farmers") val totalFarmers: Int,
     @SerializedName("active_policies") val activePolicies: Int,
     @SerializedName("pending_agents") val pendingAgents: Int,
-    @SerializedName("pool_balance_kes") val poolBalanceKes: Double
+    @SerializedName("pool_balance_kes") val poolBalanceKes: Double,
 )
 
 data class PoolHealthDto(
@@ -14,7 +14,7 @@ data class PoolHealthDto(
     @SerializedName("coverage_liability") val coverageLiability: Double,
     @SerializedName("ratio_percentage") val ratioPercentage: Double,
     @SerializedName("status") val status: String,
-    @SerializedName("target_ratio") val targetRatio: Double
+    @SerializedName("target_ratio") val targetRatio: Double,
 )
 
 data class AdminAgentDto(
@@ -22,5 +22,5 @@ data class AdminAgentDto(
     @SerializedName("full_name") val fullName: String,
     @SerializedName("phone_number") val phoneNumber: String,
     @SerializedName("county") val county: String,
-    @SerializedName("is_active") val isActive: Boolean
+    @SerializedName("is_active") val isActive: Boolean,
 )

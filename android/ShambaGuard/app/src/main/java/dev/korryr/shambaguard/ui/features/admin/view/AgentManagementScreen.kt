@@ -51,7 +51,7 @@ fun AgentManagementScreen(
                         name = agent.fullName,
                         phone = agent.phoneNumber,
                         status = "PENDING",
-                        onApprove = { onApprove(agent.id) }
+                        onApprove = { onApprove(agent.id) },
                     )
                 }
             }

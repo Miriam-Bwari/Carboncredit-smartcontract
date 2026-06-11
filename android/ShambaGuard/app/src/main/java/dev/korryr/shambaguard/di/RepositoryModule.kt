@@ -15,6 +15,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAdminRepository(
-        networkAdminRepository: NetworkAdminRepository
+        networkAdminRepository: NetworkAdminRepository,
     ): AdminRepository
 }

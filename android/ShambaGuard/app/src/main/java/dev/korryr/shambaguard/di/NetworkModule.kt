@@ -42,6 +42,5 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAdminApi(retrofit: Retrofit): dev.korryr.shambaguard.ui.features.admin.data.remote.AdminApi =
-        retrofit.create(dev.korryr.shambaguard.ui.features.admin.data.remote.AdminApi::class.java)
+    fun provideAdminApi(retrofit: Retrofit): dev.korryr.shambaguard.ui.features.admin.data.remote.AdminApi = retrofit.create(dev.korryr.shambaguard.ui.features.admin.data.remote.AdminApi::class.java)
 }

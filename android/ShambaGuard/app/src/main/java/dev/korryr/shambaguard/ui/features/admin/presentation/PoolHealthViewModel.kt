@@ -15,12 +15,12 @@ import javax.inject.Inject
 data class PoolHealthUiState(
     val isLoading: Boolean = false,
     val poolHealth: PoolHealth? = null,
-    val error: String? = null
+    val error: String? = null,
 )
 
 @HiltViewModel
 class PoolHealthViewModel @Inject constructor(
-    private val repository: AdminRepository
+    private val repository: AdminRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PoolHealthUiState(isLoading = true))
@@ -40,7 +40,7 @@ class PoolHealthViewModel @Inject constructor(
                     },
                     onFailure = { error ->
                         _uiState.update { it.copy(isLoading = false, error = error.message) }
-                    }
+                    },
                 )
             }
         }

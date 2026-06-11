@@ -18,6 +18,6 @@ interface AdminApi {
 
     @PUT("admin/agents/{agent_id}/approve")
     suspend fun approveAgent(
-        @Path("agent_id") agentId: String
+        @Path("agent_id") agentId: String,
     ): Response<AdminAgentDto>
 }

@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NetworkAdminRepository @Inject constructor(
-    private val adminApi: AdminApi
+    private val adminApi: AdminApi,
 ) : AdminRepository {
 
     override fun getDashboardStats(): Flow<Result<AdminDashboardStats>> = flow {
@@ -20,12 +20,16 @@ class NetworkAdminRepository @Inject constructor(
             val response = adminApi.getDashboardStats()
             if (response.isSuccessful) {
                 response.body()?.let { dto ->
-                    emit(Result.success(AdminDashboardStats(
-                        totalFarmers = dto.totalFarmers,
-                        activePolicies = dto.activePolicies,
-                        pendingAgents = dto.pendingAgents,
-                        poolBalanceKes = dto.poolBalanceKes
-                    )))
+                    emit(
+                        Result.success(
+                            AdminDashboardStats(
+                                totalFarmers = dto.totalFarmers,
+                                activePolicies = dto.activePolicies,
+                                pendingAgents = dto.pendingAgents,
+                                poolBalanceKes = dto.poolBalanceKes,
+                            ),
+                        ),
+                    )
                 } ?: emit(Result.failure(Exception("Empty body")))
             } else {
                 emit(Result.failure(Exception(response.message())))
@@ -40,13 +44,17 @@ class NetworkAdminRepository @Inject constructor(
             val response = adminApi.getPoolHealth()
             if (response.isSuccessful) {
                 response.body()?.let { dto ->
-                    emit(Result.success(PoolHealth(
-                        poolBalance = dto.poolBalance,
-                        coverageLiability = dto.coverageLiability,
-                        ratioPercentage = dto.ratioPercentage,
-                        status = dto.status,
-                        targetRatio = dto.targetRatio
-                    )))
+                    emit(
+                        Result.success(
+                            PoolHealth(
+                                poolBalance = dto.poolBalance,
+                                coverageLiability = dto.coverageLiability,
+                                ratioPercentage = dto.ratioPercentage,
+                                status = dto.status,
+                                targetRatio = dto.targetRatio,
+                            ),
+                        ),
+                    )
                 } ?: emit(Result.failure(Exception("Empty body")))
             } else {
                 emit(Result.failure(Exception(response.message())))
@@ -66,7 +74,7 @@ class NetworkAdminRepository @Inject constructor(
                         fullName = dto.fullName,
                         phoneNumber = dto.phoneNumber,
                         county = dto.county,
-                        isActive = false
+                        isActive = false,
                     )
                 } ?: emptyList<AgentModel>()
                 emit(Result.success(list))
@@ -78,27 +86,27 @@ class NetworkAdminRepository @Inject constructor(
         }
     }
 
-    override suspend fun approveAgent(agentId: String): Result<AgentModel> {
-        return try {
-            val response = adminApi.approveAgent(agentId)
-            if (response.isSuccessful) {
-                val dto = response.body()
-                if (dto != null) {
-                    Result.success(AgentModel(
+    override suspend fun approveAgent(agentId: String): Result<AgentModel> = try {
+        val response = adminApi.approveAgent(agentId)
+        if (response.isSuccessful) {
+            val dto = response.body()
+            if (dto != null) {
+                Result.success(
+                    AgentModel(
                         id = dto.id ?: "",
                         fullName = dto.fullName,
                         phoneNumber = dto.phoneNumber,
                         county = dto.county,
-                        isActive = true
-                    ))
-                } else {
-                    Result.failure(Exception("Empty body"))
-                }
+                        isActive = true,
+                    ),
+                )
             } else {
-                Result.failure(Exception(response.message()))
+                Result.failure(Exception("Empty body"))
             }
-        } catch (e: Exception) {
-            Result.failure(e)
+        } else {
+            Result.failure(Exception(response.message()))
         }
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 }

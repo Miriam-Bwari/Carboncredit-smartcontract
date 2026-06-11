@@ -377,7 +377,7 @@ fun ShambaGuardNavGraph(
                     dev.korryr.shambaguard.ui.features.admin.view.AgentManagementScreen(
                         uiState = state,
                         onApprove = vm::approveAgent,
-                        onNavigateBack = { backStack.removeLastOrNull() }
+                        onNavigateBack = { backStack.removeLastOrNull() },
                     )
                 }
                 entry<AdminPoolKey> {
@@ -386,7 +386,7 @@ fun ShambaGuardNavGraph(
 
                     dev.korryr.shambaguard.ui.features.admin.view.PoolHealthScreen(
                         uiState = state,
-                        onNavigateBack = { backStack.removeLastOrNull() }
+                        onNavigateBack = { backStack.removeLastOrNull() },
                     )
                 }
 
@@ -442,7 +442,7 @@ fun ShambaGuardNavGraph(
                             // Clear backstack and go to login
                             backStack.clear()
                             backStack.add(LoginKey)
-                        }
+                        },
                     )
                 }
 

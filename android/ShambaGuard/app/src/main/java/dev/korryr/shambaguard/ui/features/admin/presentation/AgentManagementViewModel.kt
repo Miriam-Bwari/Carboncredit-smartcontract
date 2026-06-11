@@ -15,12 +15,12 @@ import javax.inject.Inject
 data class AgentManagementUiState(
     val isLoading: Boolean = false,
     val pendingAgents: List<AgentModel> = emptyList(),
-    val error: String? = null
+    val error: String? = null,
 )
 
 @HiltViewModel
 class AgentManagementViewModel @Inject constructor(
-    private val repository: AdminRepository
+    private val repository: AdminRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AgentManagementUiState(isLoading = true))
@@ -40,7 +40,7 @@ class AgentManagementViewModel @Inject constructor(
                     },
                     onFailure = { error ->
                         _uiState.update { it.copy(isLoading = false, error = error.message) }
-                    }
+                    },
                 )
             }
         }
@@ -56,13 +56,13 @@ class AgentManagementViewModel @Inject constructor(
                     _uiState.update { state ->
                         state.copy(
                             isLoading = false,
-                            pendingAgents = state.pendingAgents.filter { it.id != approvedAgent.id }
+                            pendingAgents = state.pendingAgents.filter { it.id != approvedAgent.id },
                         )
                     }
                 },
                 onFailure = { error ->
                     _uiState.update { it.copy(isLoading = false, error = error.message) }
-                }
+                },
             )
         }
     }

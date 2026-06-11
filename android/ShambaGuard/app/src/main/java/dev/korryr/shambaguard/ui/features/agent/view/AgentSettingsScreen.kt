@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
@@ -35,15 +34,15 @@ fun AgentSettingsScreen(
             ShambaTopBar(
                 title = "Settings",
                 onBack = onNavigateBack,
-                trailingIcon = {} // Empty to hide location pin
+                trailingIcon = {}, // Empty to hide location pin
             )
-        }
+        },
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -60,37 +59,37 @@ fun AgentSettingsScreen(
                     Icon(
                         imageVector = Icons.Filled.Logout,
                         contentDescription = "Log Out",
-                        tint = MaterialTheme.colorScheme.error
+                        tint = MaterialTheme.colorScheme.error,
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = "Log Out",
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = MaterialTheme.colorScheme.error,
-                            fontWeight = FontWeight.Bold
-                        )
+                            fontWeight = FontWeight.Bold,
+                        ),
                     )
                 }
-                
+
                 if (uiState.isLoggingOut) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.error,
-                        strokeWidth = 2.dp
+                        strokeWidth = 2.dp,
                     )
                 } else {
                     Button(
                         onClick = { showLogoutDialog = true },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer
-                        )
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        ),
                     ) {
                         Text("Log Out")
                     }
                 }
             }
-            
+
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
 
@@ -104,12 +103,12 @@ fun AgentSettingsScreen(
                         onClick = {
                             showLogoutDialog = false
                             onLogout()
-                        }
+                        },
                     ) {
                         Text(
                             text = "Log Out",
                             color = MaterialTheme.colorScheme.error,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 },
@@ -117,7 +116,7 @@ fun AgentSettingsScreen(
                     TextButton(onClick = { showLogoutDialog = false }) {
                         Text("Cancel")
                     }
-                }
+                },
             )
         }
     }

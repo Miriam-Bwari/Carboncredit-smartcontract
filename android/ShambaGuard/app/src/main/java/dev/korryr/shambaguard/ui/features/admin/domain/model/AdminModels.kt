@@ -4,7 +4,7 @@ data class AdminDashboardStats(
     val totalFarmers: Int,
     val activePolicies: Int,
     val pendingAgents: Int,
-    val poolBalanceKes: Double
+    val poolBalanceKes: Double,
 )
 
 data class PoolHealth(
@@ -12,7 +12,7 @@ data class PoolHealth(
     val coverageLiability: Double,
     val ratioPercentage: Double,
     val status: String,
-    val targetRatio: Double
+    val targetRatio: Double,
 )
 
 data class AgentModel(
@@ -20,5 +20,5 @@ data class AgentModel(
     val fullName: String,
     val phoneNumber: String,
     val county: String,
-    val isActive: Boolean
+    val isActive: Boolean,
 )

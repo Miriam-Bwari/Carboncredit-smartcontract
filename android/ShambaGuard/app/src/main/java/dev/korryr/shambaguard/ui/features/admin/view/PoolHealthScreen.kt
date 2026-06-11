@@ -47,7 +47,7 @@ fun PoolHealthScreen(
                         Text(
                             "Current Ratio: ${health.ratioPercentage}%",
                             style = MaterialTheme.typography.headlineMedium,
-                            color = if (health.status == "HEALTHY") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                            color = if (health.status == "HEALTHY") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                         )
                         Text("Status: ${health.status}", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }

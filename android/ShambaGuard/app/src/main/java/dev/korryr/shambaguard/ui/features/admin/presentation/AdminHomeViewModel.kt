@@ -15,12 +15,12 @@ import javax.inject.Inject
 data class AdminHomeUiState(
     val isLoading: Boolean = false,
     val stats: AdminDashboardStats? = null,
-    val error: String? = null
+    val error: String? = null,
 )
 
 @HiltViewModel
 class AdminHomeViewModel @Inject constructor(
-    private val repository: AdminRepository
+    private val repository: AdminRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AdminHomeUiState(isLoading = true))
@@ -40,7 +40,7 @@ class AdminHomeViewModel @Inject constructor(
                     },
                     onFailure = { error ->
                         _uiState.update { it.copy(isLoading = false, error = error.message) }
-                    }
+                    },
                 )
             }
         }

@@ -69,7 +69,7 @@ fun AgentDashboardScreen(
                             .clickable(onClick = onSettingsClicked)
                             .padding(6.dp),
                     )
-                }
+                },
             )
 
             Column(
