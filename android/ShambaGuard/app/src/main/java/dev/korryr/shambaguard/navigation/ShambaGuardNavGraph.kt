@@ -423,6 +423,9 @@ fun ShambaGuardNavGraph(
                     dev.korryr.shambaguard.ui.features.agent.view.MapPolygonScreen(
                         uiState = state,
                         onUpdatePolygon = agentOnboardingVm::updatePolygon,
+                        onCameraMoved = agentOnboardingVm::onCameraMoved,
+                        onToggleMapType = agentOnboardingVm::onToggleMapType,
+                        onUndo = agentOnboardingVm::onUndoLastPoint,
                         onNavigateBack = { backStack.removeLastOrNull() },
                         onNavigateToPractices = { backStack.add(AgentOnboardingPracticesKey) },
                     )

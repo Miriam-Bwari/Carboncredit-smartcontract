@@ -15,9 +15,9 @@ data class FarmBoundaryUiState(
 
 // Returns polygon area in acres using the Shoelace formula with haversine correction.
 // Requires >= 3 points. Returns null if the polygon is not yet closed.
-fun FarmBoundaryUiState.estimatedAreaAcres(): Double? {
-    if (points.size < 3) return null
-    val closed = points + points.first()
+fun List<LatLng>.estimatedAreaAcres(): Double? {
+    if (size < 3) return null
+    val closed = this + this.first()
     var area = 0.0
     for (i in 0 until closed.size - 1) {
         val a = closed[i]

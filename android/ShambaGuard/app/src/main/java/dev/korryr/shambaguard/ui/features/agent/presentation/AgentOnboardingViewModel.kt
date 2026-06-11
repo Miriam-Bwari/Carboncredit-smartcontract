@@ -18,8 +18,16 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
+import android.content.Context
+import android.location.Geocoder
+import com.google.android.gms.maps.GoogleMap
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 @HiltViewModel
 class AgentOnboardingViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val sessionManager: SessionManager,
     private val userDao: UserDao,
     private val farmDao: FarmDao,
@@ -34,6 +42,58 @@ class AgentOnboardingViewModel @Inject constructor(
 
     fun updatePolygon(points: List<LatLng>) {
         _uiState.update { it.copy(polygonPoints = points) }
+    }
+
+    fun onUndoLastPoint() {
+        _uiState.update { state ->
+            if (state.polygonPoints.isEmpty()) {
+                state
+            } else {
+                state.copy(polygonPoints = state.polygonPoints.dropLast(1))
+            }
+        }
+    }
+
+    fun onToggleMapType() {
+        _uiState.update { state ->
+            val next = if (state.mapType == GoogleMap.MAP_TYPE_HYBRID) {
+                GoogleMap.MAP_TYPE_NORMAL
+            } else {
+                GoogleMap.MAP_TYPE_HYBRID
+            }
+            state.copy(mapType = next)
+        }
+    }
+
+    fun onCameraMoved(point: LatLng) {
+        viewModelScope.launch {
+            val name = getRegionName(point)
+            _uiState.update { it.copy(currentRegionName = name) }
+        }
+    }
+
+    private suspend fun getRegionName(point: LatLng): String = withContext(Dispatchers.IO) {
+        try {
+            val geocoder = Geocoder(context)
+            val addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1)
+            if (!addresses.isNullOrEmpty()) {
+                val address = addresses[0]
+                val subAdmin = address.subAdminArea
+                val admin = address.adminArea
+                val locality = address.locality
+
+                when {
+                    !subAdmin.isNullOrBlank() -> subAdmin
+                    !locality.isNullOrBlank() -> locality
+                    !admin.isNullOrBlank() -> admin
+                    else -> "Unknown Region"
+                }
+            } else {
+                "Unknown Region"
+            }
+        } catch (e: Exception) {
+            "Offline Area"
+        }
     }
 
     fun updatePractices(cropType: String, tillageMethod: String, treeCount: Int, irrigationSource: String) {

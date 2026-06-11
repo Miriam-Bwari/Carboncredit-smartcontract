@@ -102,76 +102,16 @@ fun FarmBoundaryScreen(
         label = "Step2Progress",
     )
 
-    val context = LocalContext.current
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    
-    val locationPermissionState = rememberPermissionState(
-        Manifest.permission.ACCESS_FINE_LOCATION
-    )
+    val estimatedAcres = uiState.points.estimatedAreaAcres()
 
-    // Request permission on launch
-    LaunchedEffect(Unit) {
-        if (!locationPermissionState.status.isGranted) {
-            locationPermissionState.launchPermissionRequest()
-        }
-    }
-
-    val cameraState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(DEFAULT_CENTER, DEFAULT_ZOOM)
-    }
-
-    // Snap to location when permission granted
-    LaunchedEffect(locationPermissionState.status.isGranted) {
-        if (locationPermissionState.status.isGranted) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    val latLng = LatLng(location.latitude, location.longitude)
-                    cameraState.position = CameraPosition.fromLatLngZoom(latLng, DEFAULT_ZOOM)
-                    onCameraMoved(latLng)
-                }
-            }
-        }
-    }
-
-    // Listen to camera movements
-    LaunchedEffect(cameraState.isMoving) {
-        if (!cameraState.isMoving) {
-            onCameraMoved(cameraState.position.target)
-        }
-    }
-
-    val mapProperties = remember(uiState.mapType) {
-        MapProperties(
-            mapType = when (uiState.mapType) {
-                com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL -> com.google.maps.android.compose.MapType.NORMAL
-                com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN -> com.google.maps.android.compose.MapType.TERRAIN
-                com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID -> com.google.maps.android.compose.MapType.HYBRID
-                else -> com.google.maps.android.compose.MapType.SATELLITE
-            },
-        )
-    }
-
-    val mapUiSettings = remember {
-        MapUiSettings(
-            zoomControlsEnabled = false,
-            myLocationButtonEnabled = false,
-            mapToolbarEnabled = false,
-        )
-    }
-
-    val estimatedAcres = uiState.estimatedAreaAcres()
-
-    Surface(
-        modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding(),
-        ) {
-            // Top bar with progress
+    dev.korryr.shambaguard.sharedComposables.ShambaPolygonMap(
+        polygonPoints = uiState.points,
+        currentRegionName = uiState.currentRegionName,
+        mapType = uiState.mapType,
+        estimatedAcres = estimatedAcres,
+        canSave = canSave,
+        saveCtaText = stringResource(R.string.farm_step2_save_cta),
+        topBar = {
             FarmBoundaryTopBar(
                 currentStep = STEP2_CURRENT,
                 totalSteps = STEP2_TOTAL,
@@ -179,280 +119,20 @@ fun FarmBoundaryScreen(
                 onBack = onBack,
                 onToggleLayer = onToggleLayer,
             )
-
-            // Map fills remaining space
-            Box(modifier = Modifier.weight(1f)) {
-                GoogleMap(
-                    modifier = Modifier.fillMaxSize(),
-                    cameraPositionState = cameraState,
-                    properties = mapProperties,
-                    uiSettings = mapUiSettings,
-                    onMapClick = onMapTapped,
-                ) {
-                    // Draw dashed outline as we go
-                    if (uiState.points.size >= 2) {
-                        Polyline(
-                            points = uiState.points,
-                            color = PolygonGreen,
-                            width = 6f,
-                            pattern = listOf(Dash(20f), Gap(10f)),
-                        )
-                    }
-
-                    // Filled polygon once closed (>= 3 points)
-                    if (uiState.points.size >= 3) {
-                        Polygon(
-                            points = uiState.points,
-                            strokeColor = PolygonGreen,
-                            strokeWidth = 6f,
-                            fillColor = PolygonFill,
-                            geodesic = true,
-                        )
-                    }
-
-                    // Corner markers
-                    uiState.points.forEach { point ->
-                        Marker(
-                            state = MarkerState(position = point),
-                        )
-                    }
-                }
-
-                // Floating instruction card
-                InstructionCard(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 12.dp, start = 16.dp, end = 16.dp),
-                )
-
-                // Area label in the polygon centre
-                if (estimatedAcres != null) {
-                    AreaLabel(
-                        acres = estimatedAcres,
-                        modifier = Modifier.align(Alignment.Center),
-                    )
-                }
-
-                // Undo button
-                if (uiState.points.isNotEmpty()) {
-                    IconButton(
-                        onClick = onUndo,
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(bottom = 140.dp, end = 16.dp)
-                            .size(44.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surface),
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Undo,
-                            contentDescription = stringResource(R.string.farm_step2_undo),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                }
-
-                // Hint shown until 3 points are placed
-                if (uiState.points.size < 3) {
-                    Text(
-                        text = stringResource(R.string.farm_step2_min_points_hint),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = Color.White,
-                        ),
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 140.dp)
-                            .background(
-                                color = Color.Black.copy(alpha = 0.55f),
-                                shape = RoundedCornerShape(50),
-                            )
-                            .padding(horizontal = 14.dp, vertical = 6.dp),
-                    )
-                }
-            }
-
-            // Bottom confirm sheet
-            ConfirmBoundarySheet(
-                estimatedAcres = estimatedAcres,
-                currentRegionName = uiState.currentRegionName,
-                canSave = canSave,
-                onSave = onSave,
-            )
-        }
-    }
-}
-
-// Floating card that explains what the user should do on the map
-@Composable
-private fun InstructionCard(modifier: Modifier = Modifier) {
-    Card(
+        },
+        onMapTapped = onMapTapped,
+        onCameraMoved = onCameraMoved,
+        onUndo = onUndo,
+        onToggleMapType = onToggleLayer,
+        onSave = onSave,
         modifier = modifier
-            .fillMaxWidth()
-            .shadow(4.dp, RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-        ),
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.LocationOn,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(20.dp),
-                )
-            }
-
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Column {
-                Text(
-                    text = stringResource(R.string.farm_step2_instruction_title),
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    ),
-                )
-                Text(
-                    text = stringResource(R.string.farm_step2_instruction_subtitle),
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
-                )
-            }
-        }
-    }
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding(),
+    )
 }
 
-// Green pill label shown at the polygon centre with the estimated acreage
-@Composable
-private fun AreaLabel(acres: Double, modifier: Modifier = Modifier) {
-    val formatted = stringResource(R.string.farm_step2_area_acres_format, acres)
-    Box(
-        modifier = modifier
-            .shadow(4.dp, RoundedCornerShape(50))
-            .background(PolygonGreen, RoundedCornerShape(50))
-            .padding(horizontal = 14.dp, vertical = 6.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = "▲ $formatted",
-            style = MaterialTheme.typography.labelMedium.copy(
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-            ),
-        )
-    }
-}
 
-// Bottom white sheet with confirm info and save CTA
-@Composable
-private fun ConfirmBoundarySheet(
-    estimatedAcres: Double?,
-    currentRegionName: String,
-    canSave: Boolean,
-    onSave: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 16.dp,
-        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-    ) {
-        Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)) {
-            // Drag handle
-            Box(
-                modifier = Modifier
-                    .width(40.dp)
-                    .height(4.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(MaterialTheme.colorScheme.outlineVariant)
-                    .align(Alignment.CenterHorizontally),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                // Left: heading + district
-                Column {
-                    Text(
-                        text = stringResource(R.string.farm_step2_confirm_heading),
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        ),
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Filled.LocationOn,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(14.dp),
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = currentRegionName,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            ),
-                        )
-                    }
-                }
-
-                // Right: estimated size
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = stringResource(R.string.farm_step2_estimated_label),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            letterSpacing = 0.5.sp,
-                        ),
-                    )
-                    Text(
-                        text = if (estimatedAcres != null) {
-                            stringResource(R.string.farm_step2_area_acres_format, estimatedAcres)
-                        } else {
-                            "— ac"
-                        },
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.primary,
-                        ),
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            ShambaButton(
-                text = stringResource(R.string.farm_step2_save_cta),
-                onClick = onSave,
-                enabled = canSave,
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                ),
-            )
-        }
-    }
-}
 
 // Top bar reused from Step 1 pattern — back, step label, progress bar, layer toggle
 @Composable
