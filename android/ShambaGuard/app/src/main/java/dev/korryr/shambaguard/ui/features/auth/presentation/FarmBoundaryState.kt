@@ -1,5 +1,6 @@
 package dev.korryr.shambaguard.ui.features.auth.presentation
 
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import kotlin.math.abs
 import kotlin.math.sin
@@ -7,7 +8,7 @@ import kotlin.math.sin
 // Step 2 — farm polygon drawing state
 data class FarmBoundaryUiState(
     val points: List<LatLng> = emptyList(),
-    val mapType: Int = com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID,
+    val mapType: Int = GoogleMap.MAP_TYPE_HYBRID,
     val isSaving: Boolean = false,
     val currentRegionName: String = "Detecting location...",
 )
