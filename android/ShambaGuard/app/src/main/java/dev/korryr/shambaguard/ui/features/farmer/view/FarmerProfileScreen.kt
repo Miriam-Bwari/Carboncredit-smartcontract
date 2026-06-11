@@ -27,6 +27,7 @@ import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
 import dev.korryr.shambaguard.ui.theme.Green95
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FarmerProfileScreen(
     uiState: FarmerProfileUiState,
@@ -37,7 +38,7 @@ fun FarmerProfileScreen(
     onChangePinClicked: () -> Unit,
     onPolicyDocsClicked: () -> Unit,
     onPrivacyPolicyClicked: () -> Unit,
-    onNavigateToSettings: () -> Unit,
+    onThemeChanged: (dev.korryr.shambaguard.core.datastore.AppThemeMode) -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -64,11 +65,45 @@ fun FarmerProfileScreen(
 
             // PREFERENCES section
             ProfileSection(title = "PREFERENCES") {
-                ChevronRow(
-                    icon = Icons.Filled.Settings,
-                    label = "App Theme & Settings",
-                    onClick = onNavigateToSettings,
-                )
+                // Theme Toggle
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Text(
+                        text = "App Theme",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        ),
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SingleChoiceSegmentedButtonRow(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SegmentedButton(
+                            selected = uiState.themeMode == dev.korryr.shambaguard.core.datastore.AppThemeMode.SYSTEM,
+                            onClick = { onThemeChanged(dev.korryr.shambaguard.core.datastore.AppThemeMode.SYSTEM) },
+                            shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
+                            icon = { Icon(Icons.Filled.PhoneAndroid, contentDescription = "System") }
+                        ) {
+                            Text("System")
+                        }
+                        SegmentedButton(
+                            selected = uiState.themeMode == dev.korryr.shambaguard.core.datastore.AppThemeMode.LIGHT,
+                            onClick = { onThemeChanged(dev.korryr.shambaguard.core.datastore.AppThemeMode.LIGHT) },
+                            shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
+                            icon = { Icon(Icons.Filled.LightMode, contentDescription = "Light") }
+                        ) {
+                            Text("Light")
+                        }
+                        SegmentedButton(
+                            selected = uiState.themeMode == dev.korryr.shambaguard.core.datastore.AppThemeMode.DARK,
+                            onClick = { onThemeChanged(dev.korryr.shambaguard.core.datastore.AppThemeMode.DARK) },
+                            shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+                            icon = { Icon(Icons.Filled.DarkMode, contentDescription = "Dark") }
+                        ) {
+                            Text("Dark")
+                        }
+                    }
+                }
                 SettingsDivider()
                 // Language toggle (ENG / SWA)
                 LanguageRow(

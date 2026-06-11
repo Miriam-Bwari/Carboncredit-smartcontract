@@ -15,7 +15,8 @@ data class FarmerProfileUiState(
     val biometricEnabled: Boolean = false,
 
     // App version
-    val appVersion: String = "v2.4.1",
+    val appVersion: String = "v1.0.0",
 
+    val themeMode: dev.korryr.shambaguard.core.datastore.AppThemeMode = dev.korryr.shambaguard.core.datastore.AppThemeMode.SYSTEM,
     val isLoading: Boolean = false,
 )

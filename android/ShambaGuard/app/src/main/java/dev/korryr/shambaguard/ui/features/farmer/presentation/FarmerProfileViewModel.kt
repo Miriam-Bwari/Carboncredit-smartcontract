@@ -13,10 +13,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import dev.korryr.shambaguard.core.datastore.SettingsManager
+import dev.korryr.shambaguard.core.datastore.AppThemeMode
+
 @HiltViewModel
 class FarmerProfileViewModel @Inject constructor(
     private val farmRepository: FarmRepository,
     private val sessionManager: SessionManager,
+    private val settingsManager: SettingsManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FarmerProfileUiState(isLoading = true))
@@ -24,6 +28,12 @@ class FarmerProfileViewModel @Inject constructor(
 
     init {
         loadProfileData()
+        
+        viewModelScope.launch {
+            settingsManager.appThemeFlow.collect { theme ->
+                _uiState.update { it.copy(themeMode = theme) }
+            }
+        }
     }
 
     private fun loadProfileData() {
@@ -64,6 +74,12 @@ class FarmerProfileViewModel @Inject constructor(
 
     fun onBiometricToggled() {
         _uiState.update { it.copy(biometricEnabled = !it.biometricEnabled) }
+    }
+
+    fun setTheme(mode: AppThemeMode) {
+        viewModelScope.launch {
+            settingsManager.setThemeMode(mode)
+        }
     }
 
     fun logout() {

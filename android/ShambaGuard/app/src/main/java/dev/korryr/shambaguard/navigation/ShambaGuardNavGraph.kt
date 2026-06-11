@@ -558,7 +558,7 @@ fun ShambaGuardNavGraph(
                         onChangePinClicked = {},
                         onPolicyDocsClicked = {},
                         onPrivacyPolicyClicked = {},
-                        onNavigateToSettings = { backStack.add(SharedSettingsKey) },
+                        onThemeChanged = vm::setTheme,
                         onSignOut = {
                             vm.logout()
                             navigateTo(LoginKey)
