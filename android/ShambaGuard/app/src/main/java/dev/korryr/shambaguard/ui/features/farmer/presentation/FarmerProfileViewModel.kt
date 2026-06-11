@@ -34,6 +34,12 @@ class FarmerProfileViewModel @Inject constructor(
                 _uiState.update { it.copy(themeMode = theme) }
             }
         }
+
+        viewModelScope.launch {
+            settingsManager.appLanguageFlow.collect { lang ->
+                _uiState.update { it.copy(selectedLanguage = lang) }
+            }
+        }
     }
 
     private fun loadProfileData() {
@@ -61,7 +67,9 @@ class FarmerProfileViewModel @Inject constructor(
     }
 
     fun onLanguageSelected(lang: String) {
-        _uiState.update { it.copy(selectedLanguage = lang) }
+        viewModelScope.launch {
+            settingsManager.setLanguage(lang)
+        }
     }
 
     fun onPushNotificationsToggled() {

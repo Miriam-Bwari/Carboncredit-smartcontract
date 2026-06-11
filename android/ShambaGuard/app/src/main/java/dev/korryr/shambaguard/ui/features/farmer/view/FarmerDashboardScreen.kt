@@ -140,7 +140,7 @@ fun FarmerDashboardScreen(
                         },
                         valueLine2 = stringResource(
                             R.string.dashboard_policy_expiry,
-                            uiState.policyExpiry,
+                            if (uiState.policyExpiry == "None" || uiState.policyExpiry.isBlank()) stringResource(R.string.none) else uiState.policyExpiry,
                         ),
                         onClick = onViewPolicy,
                         modifier = Modifier.weight(1f),
@@ -150,7 +150,7 @@ fun FarmerDashboardScreen(
                         iconTint = Green40,
                         iconBgColor = Green95,
                         title = stringResource(R.string.dashboard_carbon),
-                        valueLine1 = "${uiState.carbonTonnes} tonnes",
+                        valueLine1 = stringResource(R.string.dashboard_tonnes, uiState.carbonTonnes),
                         valueLine1Color = Green40,
                         valueLine2 = stringResource(R.string.dashboard_carbon_claim),
                         onClick = onViewCarbon,
@@ -206,7 +206,7 @@ fun FarmerDashboardScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        text = "Welcome to Shamba Guard!",
+                        text = stringResource(R.string.dashboard_welcome_title),
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.onBackground,
@@ -216,7 +216,7 @@ fun FarmerDashboardScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "To unlock satellite drought monitoring, carbon tracking, and insurance policies, we need to know where your farm is located.",
+                        text = stringResource(R.string.dashboard_welcome_body),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
@@ -226,7 +226,7 @@ fun FarmerDashboardScreen(
                     Spacer(modifier = Modifier.height(32.dp))
 
                     dev.korryr.shambaguard.sharedComposables.ShambaButton(
-                        text = "Register My Farm",
+                        text = stringResource(R.string.dashboard_register_cta),
                         onClick = onRegisterFarm,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -245,6 +245,11 @@ private fun DashboardTopBar(
     farmRegion: String,
     modifier: Modifier = Modifier,
 ) {
+    val displayFarmerName = if (farmerName == "Farmer" || farmerName.isBlank()) stringResource(R.string.farmer) else farmerName
+    val displayRegion = if (farmRegion == "Unknown Region" || farmRegion.isBlank()) stringResource(R.string.unknown_region) else farmRegion
+
+    val displayFarmName = if (farmName.isBlank()) stringResource(R.string.unknown_farm) else farmName
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -253,9 +258,10 @@ private fun DashboardTopBar(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             // "Habari, Mary 👋"
+            val greeting = stringResource(R.string.dashboard_greeting, displayFarmerName)
             Text(
                 text = buildAnnotatedString {
-                    append("Habari, $farmerName ")
+                    append("$greeting ")
                     withStyle(SpanStyle(fontSize = 22.sp)) { append("👋") }
                 },
                 style = MaterialTheme.typography.headlineSmall.copy(
@@ -273,7 +279,7 @@ private fun DashboardTopBar(
                 )
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = "$farmName — $farmRegion",
+                    text = "$displayFarmName — $displayRegion",
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -506,7 +512,7 @@ private fun DroughtAlertCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "$rainfallDelta% from average",
+                    text = stringResource(R.string.dashboard_rainfall_delta, rainfallDelta),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = progressColor,
                     ),

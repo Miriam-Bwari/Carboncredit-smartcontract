@@ -175,5 +175,32 @@
     <string name="agent_pending_body">Your agent account is pending admin approval. You will receive an SMS once your account is activated.</string>
     <string name="agent_pending_contact_hint">Contact your supervisor if you need faster approval.</string>
     <string name="agent_pending_go_to_login">Go to Login</string>
+    <!-- Farmer Profile Screen -->
+    <string name="preferences">PREFERENCES</string>
+    <string name="app_theme">App Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="push_notifications">Push Notifications</string>
+    <string name="drought_alerts">Drought Alerts</string>
+    <string name="security">SECURITY</string>
+    <string name="biometric_unlock">Biometric Unlock</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="legal_and_support">LEGAL &amp; SUPPORT</string>
+    <string name="policy_documents">Policy Documents</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="app_version">App Version</string>
+    <string name="log_out">Log Out</string>
 
+    <!-- Farmer Dashboard Empty State -->
+    <string name="dashboard_welcome_title">Welcome to Shamba Guard!</string>
+    <string name="dashboard_welcome_body">To unlock satellite drought monitoring, carbon tracking, and insurance policies, we need to know where your farm is located.</string>
+    <string name="dashboard_register_cta">Register My Farm</string>
+    <string name="dashboard_greeting">Hello, %1$s</string>
+    <string name="dashboard_tonnes">%1$s tonnes</string>
+    <string name="dashboard_rainfall_delta">%1$d%% from average</string>
+    <string name="farmer">Farmer</string>
+    <string name="unknown_region">Unknown Region</string>
+    <string name="unknown_farm">Unknown Farm</string>
+    <string name="none">None</string>
 </resources>

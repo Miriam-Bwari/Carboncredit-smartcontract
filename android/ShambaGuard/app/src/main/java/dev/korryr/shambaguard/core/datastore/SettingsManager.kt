@@ -26,6 +26,7 @@ class SettingsManager @Inject constructor(
 ) {
     companion object {
         private val APP_THEME = stringPreferencesKey("app_theme")
+        private val APP_LANGUAGE = stringPreferencesKey("app_language")
     }
 
     val appThemeFlow: Flow<AppThemeMode> = context.settingsDataStore.data.map { preferences ->
@@ -37,9 +38,19 @@ class SettingsManager @Inject constructor(
         }
     }
 
+    val appLanguageFlow: Flow<String> = context.settingsDataStore.data.map { preferences ->
+        preferences[APP_LANGUAGE] ?: "ENG"
+    }
+
     suspend fun setThemeMode(mode: AppThemeMode) {
         context.settingsDataStore.edit { preferences ->
             preferences[APP_THEME] = mode.name
+        }
+    }
+
+    suspend fun setLanguage(lang: String) {
+        context.settingsDataStore.edit { preferences ->
+            preferences[APP_LANGUAGE] = lang
         }
     }
 }

@@ -64,11 +64,11 @@ fun FarmerProfileScreen(
             ProfileHeader(uiState)
 
             // PREFERENCES section
-            ProfileSection(title = "PREFERENCES") {
+            ProfileSection(title = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.preferences)) {
                 // Theme Toggle
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                     Text(
-                        text = "App Theme",
+                        text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.app_theme),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -84,7 +84,7 @@ fun FarmerProfileScreen(
                             shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
                             icon = { Icon(Icons.Filled.PhoneAndroid, contentDescription = "System") }
                         ) {
-                            Text("System")
+                            Text(androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.theme_system))
                         }
                         SegmentedButton(
                             selected = uiState.themeMode == dev.korryr.shambaguard.core.datastore.AppThemeMode.LIGHT,
@@ -92,7 +92,7 @@ fun FarmerProfileScreen(
                             shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
                             icon = { Icon(Icons.Filled.LightMode, contentDescription = "Light") }
                         ) {
-                            Text("Light")
+                            Text(androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.theme_light))
                         }
                         SegmentedButton(
                             selected = uiState.themeMode == dev.korryr.shambaguard.core.datastore.AppThemeMode.DARK,
@@ -100,7 +100,7 @@ fun FarmerProfileScreen(
                             shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
                             icon = { Icon(Icons.Filled.DarkMode, contentDescription = "Dark") }
                         ) {
-                            Text("Dark")
+                            Text(androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.theme_dark))
                         }
                     }
                 }
@@ -113,46 +113,46 @@ fun FarmerProfileScreen(
                 SettingsDivider()
                 SwitchRow(
                     icon = Icons.Filled.Notifications,
-                    label = "Push Notifications",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.push_notifications),
                     checked = uiState.pushNotificationsOn,
                     onToggle = onPushNotifications,
                 )
                 SettingsDivider()
                 SwitchRow(
                     icon = Icons.Filled.WbSunny,
-                    label = "Drought Alerts",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_alerts),
                     checked = uiState.droughtAlertsOn,
                     onToggle = onDroughtAlerts,
                 )
             }
 
             // SECURITY section
-            ProfileSection(title = "SECURITY") {
+            ProfileSection(title = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.security)) {
                 SwitchRow(
                     icon = Icons.Filled.Fingerprint,
-                    label = "Biometric Unlock",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.biometric_unlock),
                     checked = uiState.biometricEnabled,
                     onToggle = onBiometricToggled,
                 )
                 SettingsDivider()
                 ChevronRow(
                     icon = Icons.Filled.Password,
-                    label = "Change PIN",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.change_pin),
                     onClick = onChangePinClicked,
                 )
             }
 
             // LEGAL & SUPPORT section
-            ProfileSection(title = "LEGAL & SUPPORT") {
+            ProfileSection(title = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.legal_and_support)) {
                 ChevronRow(
                     icon = Icons.Filled.Article,
-                    label = "Policy Documents",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.policy_documents),
                     onClick = onPolicyDocsClicked,
                 )
                 SettingsDivider()
                 ChevronRow(
                     icon = Icons.Filled.Shield,
-                    label = "Privacy Policy",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.privacy_policy),
                     onClick = onPrivacyPolicyClicked,
                 )
             }
@@ -180,7 +180,7 @@ fun FarmerProfileScreen(
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "Sign Out",
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.log_out),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.error,
@@ -190,7 +190,7 @@ fun FarmerProfileScreen(
 
             // App version
             Text(
-                text = "Shamba Guard ${uiState.appVersion}",
+                text = "${androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.app_version)} ${uiState.appVersion}",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodySmall.copy(
