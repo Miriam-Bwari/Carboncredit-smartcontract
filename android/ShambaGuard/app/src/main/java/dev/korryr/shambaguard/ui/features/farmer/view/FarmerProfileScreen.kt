@@ -37,6 +37,7 @@ fun FarmerProfileScreen(
     onChangePinClicked: () -> Unit,
     onPolicyDocsClicked: () -> Unit,
     onPrivacyPolicyClicked: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -63,6 +64,12 @@ fun FarmerProfileScreen(
 
             // PREFERENCES section
             ProfileSection(title = "PREFERENCES") {
+                ChevronRow(
+                    icon = Icons.Filled.Settings,
+                    label = "App Theme & Settings",
+                    onClick = onNavigateToSettings,
+                )
+                SettingsDivider()
                 // Language toggle (ENG / SWA)
                 LanguageRow(
                     selected = uiState.selectedLanguage,

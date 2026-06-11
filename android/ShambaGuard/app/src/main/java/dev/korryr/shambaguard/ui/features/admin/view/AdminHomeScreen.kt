@@ -28,12 +28,15 @@ import dev.korryr.shambaguard.ui.theme.Teal40
 
 import dev.korryr.shambaguard.ui.features.admin.presentation.AdminHomeUiState
 
+import androidx.compose.material.icons.filled.Settings
+
 @Composable
 fun AdminHomeScreen(
     uiState: AdminHomeUiState,
     onNavigateToAgents: () -> Unit,
     onNavigateToMap: () -> Unit,
     onNavigateToPool: () -> Unit,
+    onNavigateToSettings: () -> Unit,
 ) {
     val stats = uiState.stats
 
@@ -42,6 +45,11 @@ fun AdminHomeScreen(
             ShambaTopBar(
                 title = "Admin Dashboard",
                 onBack = null,
+                trailingIcon = {
+                    IconButton(onClick = onNavigateToSettings) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
             )
         },
         containerColor = MaterialTheme.colorScheme.background,

@@ -1,22 +1,27 @@
-package dev.korryr.shambaguard.ui.features.agent.view
+package dev.korryr.shambaguard.ui.features.settings.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.LightMode
+import androidx.compose.material.icons.rounded.PhoneAndroid
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import dev.korryr.shambaguard.core.datastore.AppThemeMode
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
-import dev.korryr.shambaguard.ui.features.agent.presentation.AgentSettingsUiState
+import dev.korryr.shambaguard.ui.features.settings.presentation.SharedSettingsUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AgentSettingsScreen(
-    uiState: AgentSettingsUiState,
+fun SharedSettingsScreen(
+    uiState: SharedSettingsUiState,
+    onThemeChanged: (AppThemeMode) -> Unit,
     onLogout: () -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToLogin: () -> Unit,
@@ -45,6 +50,55 @@ fun AgentSettingsScreen(
                 .background(MaterialTheme.colorScheme.background),
         ) {
             Spacer(modifier = Modifier.height(24.dp))
+
+            // Theme row
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+            ) {
+                Text(
+                    text = "App Theme",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SingleChoiceSegmentedButtonRow(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    SegmentedButton(
+                        selected = uiState.themeMode == AppThemeMode.SYSTEM,
+                        onClick = { onThemeChanged(AppThemeMode.SYSTEM) },
+                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
+                        icon = { Icon(Icons.Rounded.PhoneAndroid, contentDescription = "System") }
+                    ) {
+                        Text("System")
+                    }
+                    SegmentedButton(
+                        selected = uiState.themeMode == AppThemeMode.LIGHT,
+                        onClick = { onThemeChanged(AppThemeMode.LIGHT) },
+                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
+                        icon = { Icon(Icons.Rounded.LightMode, contentDescription = "Light") }
+                    ) {
+                        Text("Light")
+                    }
+                    SegmentedButton(
+                        selected = uiState.themeMode == AppThemeMode.DARK,
+                        onClick = { onThemeChanged(AppThemeMode.DARK) },
+                        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+                        icon = { Icon(Icons.Rounded.DarkMode, contentDescription = "Dark") }
+                    ) {
+                        Text("Dark")
+                    }
+                }
+            }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Logout row
             Row(

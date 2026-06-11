@@ -69,7 +69,7 @@ data object AgentFarmersKey
 data object AgentSyncKey
 
 @Serializable
-data object AgentSettingsKey
+data object SharedSettingsKey
 
 // Agent Onboarding Wizard (Offline flow)
 @Serializable

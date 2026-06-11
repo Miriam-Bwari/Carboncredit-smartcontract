@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import dev.korryr.shambaguard.core.datastore.AppThemeMode
 
 // ShambaGuard Material 3 colour schemes
 // All roles map to ShambaGuard brand tokens from Color.kt.
@@ -110,9 +111,15 @@ private val ShambaDarkColorScheme = darkColorScheme(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ShambaGuardTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    appThemeMode: AppThemeMode = AppThemeMode.SYSTEM,
     content: @Composable () -> Unit,
 ) {
+    val darkTheme = when (appThemeMode) {
+        AppThemeMode.LIGHT -> false
+        AppThemeMode.DARK -> true
+        AppThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
     val colorScheme = if (darkTheme) ShambaDarkColorScheme else ShambaLightColorScheme
 
     // Make the system status bar transparent & adapt icon tint to theme

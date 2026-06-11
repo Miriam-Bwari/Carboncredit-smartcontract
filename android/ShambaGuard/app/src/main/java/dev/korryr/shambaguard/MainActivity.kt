@@ -14,18 +14,31 @@ import dev.korryr.shambaguard.navigation.ShambaGuardNavGraph
 import dev.korryr.shambaguard.navigation.UserRole
 import dev.korryr.shambaguard.ui.theme.ShambaGuardTheme
 
+import dev.korryr.shambaguard.core.datastore.SettingsManager
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @javax.inject.Inject
     lateinit var sessionManager: SessionManager
 
+    @javax.inject.Inject
+    lateinit var settingsManager: SettingsManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ShambaGuardTheme {
-                val savedRole by sessionManager.userRoleFlow.collectAsState(initial = null)
+            val appThemeMode by settingsManager.appThemeFlow.collectAsStateWithLifecycle(initialValue = null)
+
+            if (appThemeMode == null) {
+                Box(modifier = Modifier.fillMaxSize())
+                return@setContent
+            }
+
+            ShambaGuardTheme(appThemeMode = appThemeMode!!) {
+                val savedRole by sessionManager.userRoleFlow.collectAsStateWithLifecycle(initialValue = null)
 
                 // Show a blank box for the split-second DataStore takes to emit its first value
                 if (savedRole == null) {

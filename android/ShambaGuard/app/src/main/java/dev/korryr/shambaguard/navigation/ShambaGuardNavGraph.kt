@@ -367,6 +367,7 @@ fun ShambaGuardNavGraph(
                         onNavigateToAgents = { backStack.add(AdminAgentsKey) },
                         onNavigateToMap = { backStack.add(AdminMapKey) },
                         onNavigateToPool = { backStack.add(AdminPoolKey) },
+                        onNavigateToSettings = { backStack.add(SharedSettingsKey) }
                     )
                 }
                 entry<AdminMapKey> { FarmMapScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
@@ -401,7 +402,7 @@ fun ShambaGuardNavGraph(
                         onSyncNow = vm::onSyncNow,
                         onFilterToggled = vm::onFilterToggled,
                         onFarmerClicked = { /* AgentFarmerDetailKey(it) — Week 5 */ },
-                        onSettingsClicked = { backStack.add(AgentSettingsKey) },
+                        onSettingsClicked = { backStack.add(SharedSettingsKey) },
                     )
                 }
                 entry<AgentFarmersKey> {
@@ -429,16 +430,16 @@ fun ShambaGuardNavGraph(
                         onNavigateBack = { backStack.removeLastOrNull() },
                     )
                 }
-                entry<AgentSettingsKey> {
-                    val vm: dev.korryr.shambaguard.ui.features.agent.presentation.AgentSettingsViewModel = hiltViewModel()
+                entry<SharedSettingsKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.settings.presentation.SharedSettingsViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
 
-                    dev.korryr.shambaguard.ui.features.agent.view.AgentSettingsScreen(
+                    dev.korryr.shambaguard.ui.features.settings.view.SharedSettingsScreen(
                         uiState = state,
+                        onThemeChanged = vm::setTheme,
                         onLogout = vm::logout,
                         onNavigateBack = { backStack.removeLastOrNull() },
                         onNavigateToLogin = {
-                            vm.onNavigated()
                             // Clear backstack and go to login
                             backStack.clear()
                             backStack.add(LoginKey)
@@ -502,9 +503,9 @@ fun ShambaGuardNavGraph(
 
                     FarmerDashboardScreen(
                         uiState = state,
-                        onSeeInsights = { navigateTo(FarmerDroughtInsightsKey) },
-                        onViewPolicy = { navigateTo(FarmerPolicyKey) },
-                        onViewCarbon = { navigateTo(FarmerCarbonKey) },
+                        onSeeInsights = { backStack.add(FarmerDroughtKey) },
+                        onViewPolicy = { backStack.add(FarmerPolicyKey) },
+                        onViewCarbon = { backStack.add(FarmerCarbonKey) },
                         onRegisterFarm = { backStack.add(FarmBoundaryKey) },
                     )
                 }
@@ -557,6 +558,7 @@ fun ShambaGuardNavGraph(
                         onChangePinClicked = {},
                         onPolicyDocsClicked = {},
                         onPrivacyPolicyClicked = {},
+                        onNavigateToSettings = { backStack.add(SharedSettingsKey) },
                         onSignOut = {
                             vm.logout()
                             navigateTo(LoginKey)

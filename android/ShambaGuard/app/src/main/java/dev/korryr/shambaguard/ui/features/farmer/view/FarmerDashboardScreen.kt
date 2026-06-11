@@ -27,7 +27,9 @@ import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Terrain
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
