@@ -68,6 +68,9 @@ data object AgentFarmersKey
 @Serializable
 data object AgentSyncKey
 
+@Serializable
+data object AgentSettingsKey
+
 // Agent Onboarding Wizard (Offline flow)
 @Serializable
 data object AgentOnboardingDetailsKey

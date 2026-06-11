@@ -1,6 +1,7 @@
 package dev.korryr.shambaguard.sharedComposables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +30,18 @@ fun ShambaTopBar(
     title: String = "Habari, Shamba Guard",
     onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    trailingIcon: @Composable () -> Unit = {
+        Icon(
+            imageVector = Icons.Filled.LocationOn,
+            contentDescription = "Location",
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .clickable {}
+                .padding(6.dp),
+        )
+    },
 ) {
     Row(
         modifier = modifier
@@ -63,16 +76,12 @@ fun ShambaTopBar(
             ),
         )
 
-        // Location pin — always visible
-        Icon(
-            imageVector = Icons.Filled.LocationOn,
-            contentDescription = "Location",
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .clickable {}
-                .padding(6.dp),
-        )
+        // Trailing icon slot — default to the location pin
+        Box(
+            modifier = Modifier.size(48.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            trailingIcon()
+        }
     }
 }

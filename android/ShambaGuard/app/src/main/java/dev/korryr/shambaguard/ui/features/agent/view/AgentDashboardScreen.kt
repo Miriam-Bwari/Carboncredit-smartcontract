@@ -46,6 +46,7 @@ fun AgentDashboardScreen(
     onSyncNow: () -> Unit,
     onFilterToggled: () -> Unit,
     onFarmerClicked: (String) -> Unit,
+    onSettingsClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -55,7 +56,21 @@ fun AgentDashboardScreen(
                 .statusBarsPadding()
                 .background(MaterialTheme.colorScheme.background),
         ) {
-            ShambaTopBar(onBack = null)
+            ShambaTopBar(
+                onBack = null,
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Settings",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .clickable(onClick = onSettingsClicked)
+                            .padding(6.dp),
+                    )
+                }
+            )
 
             Column(
                 modifier = Modifier

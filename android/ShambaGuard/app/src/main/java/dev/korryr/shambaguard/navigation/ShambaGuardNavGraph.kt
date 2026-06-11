@@ -380,6 +380,7 @@ fun ShambaGuardNavGraph(
                         onSyncNow = vm::onSyncNow,
                         onFilterToggled = vm::onFilterToggled,
                         onFarmerClicked = { /* AgentFarmerDetailKey(it) — Week 5 */ },
+                        onSettingsClicked = { backStack.add(AgentSettingsKey) },
                     )
                 }
                 entry<AgentFarmersKey> {
@@ -405,6 +406,22 @@ fun ShambaGuardNavGraph(
                         uiState = state,
                         onForceSync = vm::forceSync,
                         onNavigateBack = { backStack.removeLastOrNull() },
+                    )
+                }
+                entry<AgentSettingsKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.agent.presentation.AgentSettingsViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.agent.view.AgentSettingsScreen(
+                        uiState = state,
+                        onLogout = vm::logout,
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                        onNavigateToLogin = {
+                            vm.onNavigated()
+                            // Clear backstack and go to login
+                            backStack.clear()
+                            backStack.add(LoginKey)
+                        }
                     )
                 }
 
