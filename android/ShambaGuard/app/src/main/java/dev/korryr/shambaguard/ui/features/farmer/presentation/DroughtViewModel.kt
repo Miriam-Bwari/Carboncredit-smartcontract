@@ -42,6 +42,23 @@ class DroughtViewModel @Inject constructor(
             if (firstFarm != null) {
                 val farmId = firstFarm.id
 
+                // Get the local FarmEntity to extract the boundary polygon for the stress map
+                launch {
+                    farmRepository.getFarm(farmId).collect { localFarm ->
+                        if (localFarm != null) {
+                            try {
+                                val geoJson: dev.korryr.shambaguard.core.network.GeoJsonPolygonDto = com.google.gson.Gson().fromJson(localFarm.polygonJson, dev.korryr.shambaguard.core.network.GeoJsonPolygonDto::class.java)
+                                val polygonPoints = geoJson.coordinates.firstOrNull()?.map { point: List<Double> ->
+                                    com.google.android.gms.maps.model.LatLng(point[1], point[0])
+                                } ?: emptyList<com.google.android.gms.maps.model.LatLng>()
+                                _insightsState.update { it.copy(polygonPoints = polygonPoints) }
+                            } catch (e: Exception) {
+                                // Ignore parsing errors
+                            }
+                        }
+                    }
+                }
+
                 val weatherResult = farmRepository.getWeather(farmId).getOrNull()
                 if (weatherResult != null) {
                     val mm = weatherResult.rainfallMm.toInt()

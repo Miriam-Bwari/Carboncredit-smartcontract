@@ -7,6 +7,29 @@ from datetime import datetime, timedelta
 
 router = APIRouter()
 
+ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive"
+
+
+async def fetch_rainfall(client: httpx.AsyncClient, lat: float, lon: float, start: str, end: str) -> float:
+    """Fetch total precipitation for a date range from Open-Meteo archive."""
+    response = await client.get(
+        ARCHIVE_URL,
+        params={
+            "latitude": lat,
+            "longitude": lon,
+            "start_date": start,
+            "end_date": end,
+            "daily": "precipitation_sum",
+            "timezone": "auto",
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+    data = response.json()
+    values = data.get("daily", {}).get("precipitation_sum", [])
+    return round(sum(v for v in values if v is not None), 1)
+
+
 @router.get("/{farm_id}")
 async def get_farm_weather(farm_id: str, db: Session = Depends(get_db)):
     farm = db.query(Farm).filter(Farm.id == farm_id).first()
@@ -15,58 +38,49 @@ async def get_farm_weather(farm_id: str, db: Session = Depends(get_db)):
 
     coords = farm.boundary_coords.get("coordinates", [])[0] if isinstance(farm.boundary_coords, dict) else []
     if not coords or len(coords) < 1:
-        # Fallback to Nairobi
-        lon, lat = 36.82, -1.29
+        lon, lat = 36.82, -1.29  # Default: Nairobi
     else:
-        # Use first point of polygon [lon, lat]
         lon, lat = coords[0][0], coords[0][1]
 
-    # Open-Meteo historical API for last 21 days rainfall
+    # Current window: last 21 days
     end_date = datetime.utcnow().date()
     start_date = end_date - timedelta(days=21)
-    
-    url = f"https://archive-api.open-meteo.com/v1/archive"
-    params = {
-        "latitude": lat,
-        "longitude": lon,
-        "start_date": start_date.strftime("%Y-%m-%d"),
-        "end_date": end_date.strftime("%Y-%m-%d"),
-        "daily": "precipitation_sum",
-        "timezone": "auto"
-    }
+
+    # Baseline window: same 21-day period one year ago
+    baseline_end = end_date - timedelta(days=365)
+    baseline_start = start_date - timedelta(days=365)
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(url, params=params)
-            response.raise_for_status()
-            data = response.json()
-            
-            precipitation_sums = data.get("daily", {}).get("precipitation_sum", [])
-            valid_precip = [p for p in precipitation_sums if p is not None]
-            total_rainfall = sum(valid_precip)
-            
-            # Mock historical average for Delta calculation
-            # Say historical average is 50mm for this period
-            historical_avg = 50.0
-            if historical_avg > 0:
-                delta = ((total_rainfall - historical_avg) / historical_avg) * 100
-            else:
-                delta = 0
+            current_rainfall = await fetch_rainfall(
+                client, lat, lon,
+                start_date.strftime("%Y-%m-%d"),
+                end_date.strftime("%Y-%m-%d"),
+            )
+            historical_avg = await fetch_rainfall(
+                client, lat, lon,
+                baseline_start.strftime("%Y-%m-%d"),
+                baseline_end.strftime("%Y-%m-%d"),
+            )
 
-            return {
-                "farm_id": farm_id,
-                "rainfall_mm": round(total_rainfall, 1),
-                "rainfall_delta_percent": round(delta, 1),
-                "latitude": lat,
-                "longitude": lon
-            }
-    except Exception as e:
-        print(f"Weather API error: {e}")
-        # Fallback
+        if historical_avg > 0:
+            delta = ((current_rainfall - historical_avg) / historical_avg) * 100
+        else:
+            delta = 0.0
+
         return {
             "farm_id": farm_id,
-            "rainfall_mm": 12.0,
-            "rainfall_delta_percent": -65.0,
+            "rainfall_mm": current_rainfall,
+            "rainfall_delta_percent": round(delta, 1),
+            "historical_avg_mm": historical_avg,
             "latitude": lat,
-            "longitude": lon
+            "longitude": lon,
         }
+
+    except Exception as e:
+        print(f"[WEATHER] API error for farm {farm_id}: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail="Weather data temporarily unavailable. Please try again later.",
+        )
+

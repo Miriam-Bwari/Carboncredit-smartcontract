@@ -49,13 +49,11 @@ class MainActivity : ComponentActivity() {
 
             // Wrap the Activity context to provide localized resources without breaking Hilt
             val wrapper = object : android.content.ContextWrapper(context) {
-                override fun getResources(): android.content.res.Resources {
-                    return localizedContext.resources
-                }
+                override fun getResources(): android.content.res.Resources = localizedContext.resources
             }
 
             androidx.compose.runtime.CompositionLocalProvider(
-                androidx.compose.ui.platform.LocalContext provides wrapper
+                androidx.compose.ui.platform.LocalContext provides wrapper,
             ) {
                 ShambaGuardTheme(appThemeMode = appThemeMode!!) {
                     val finalRole = try {

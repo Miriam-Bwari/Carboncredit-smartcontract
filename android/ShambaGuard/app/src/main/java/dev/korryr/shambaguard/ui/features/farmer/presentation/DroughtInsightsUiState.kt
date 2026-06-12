@@ -16,4 +16,5 @@ data class DroughtInsightsUiState(
     val payoutTriggerNdvi: Float = 0.30f,
     val payoutTriggerRain: Int = 40,
     val isLoading: Boolean = true,
+    val polygonPoints: List<com.google.android.gms.maps.model.LatLng> = emptyList(),
 )

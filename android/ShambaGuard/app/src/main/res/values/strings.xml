@@ -176,6 +176,8 @@
     <string name="carbon_view_all">View All</string>
     <string name="carbon_completed">Completed</string>
     <string name="carbon_plus_kes">+ KES %1$s</string>
+    <string name="carbon_scan_pending_title">Satellite Scan Pending</string>
+    <string name="carbon_scan_pending_body">Your farm has been registered. The Sentinel-2 satellite will scan your land within the next 5 days and your carbon data will appear here automatically.</string>
 
     <!-- Login Screen -->
     <string name="login_title">Karibu Tena</string>

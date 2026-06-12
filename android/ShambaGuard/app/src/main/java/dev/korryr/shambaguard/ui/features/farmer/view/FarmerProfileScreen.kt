@@ -76,13 +76,13 @@ fun FarmerProfileScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     SingleChoiceSegmentedButtonRow(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         SegmentedButton(
                             selected = uiState.themeMode == dev.korryr.shambaguard.core.datastore.AppThemeMode.SYSTEM,
                             onClick = { onThemeChanged(dev.korryr.shambaguard.core.datastore.AppThemeMode.SYSTEM) },
                             shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
-                            icon = { Icon(Icons.Filled.PhoneAndroid, contentDescription = "System") }
+                            icon = { Icon(Icons.Filled.PhoneAndroid, contentDescription = "System") },
                         ) {
                             Text(androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.theme_system))
                         }
@@ -90,7 +90,7 @@ fun FarmerProfileScreen(
                             selected = uiState.themeMode == dev.korryr.shambaguard.core.datastore.AppThemeMode.LIGHT,
                             onClick = { onThemeChanged(dev.korryr.shambaguard.core.datastore.AppThemeMode.LIGHT) },
                             shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
-                            icon = { Icon(Icons.Filled.LightMode, contentDescription = "Light") }
+                            icon = { Icon(Icons.Filled.LightMode, contentDescription = "Light") },
                         ) {
                             Text(androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.theme_light))
                         }
@@ -98,7 +98,7 @@ fun FarmerProfileScreen(
                             selected = uiState.themeMode == dev.korryr.shambaguard.core.datastore.AppThemeMode.DARK,
                             onClick = { onThemeChanged(dev.korryr.shambaguard.core.datastore.AppThemeMode.DARK) },
                             shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
-                            icon = { Icon(Icons.Filled.DarkMode, contentDescription = "Dark") }
+                            icon = { Icon(Icons.Filled.DarkMode, contentDescription = "Dark") },
                         ) {
                             Text(androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.theme_dark))
                         }

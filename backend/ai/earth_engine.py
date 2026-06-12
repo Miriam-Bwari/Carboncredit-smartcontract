@@ -27,15 +27,18 @@ def init_earth_engine():
 
 
 # ── REAL NDVI FUNCTION ────────────────────────────────────────────
-def get_farm_ndvi(boundary_coords: list, scan_date: str) -> dict:
+def get_farm_ndvi(boundary_coords: list, scan_date: str) -> dict | None:
     """
     Computes NDVI using Sentinel-2 imagery for a farm polygon.
+    Returns None if satellite data is unavailable (cloudy, GEE down, etc.)
+    so callers can surface a proper 'data unavailable' message rather than
+    showing fabricated values.
     """
 
     try:
         init_earth_engine()
 
-        # Convert [lat, lng] → [lng, lat]
+        # Convert [lat, lng] to GEE [lng, lat]
         ee_coords = [[lng, lat] for lat, lng in boundary_coords]
         geometry = ee.Geometry.Polygon([ee_coords])
 
@@ -53,7 +56,8 @@ def get_farm_ndvi(boundary_coords: list, scan_date: str) -> dict:
         )
 
         if collection.size().getInfo() == 0:
-            return get_farm_ndvi_mock(boundary_coords, scan_date)
+            print(f"[GEE] No cloud-free imagery for scan date {scan_date} — skipping scan")
+            return None
 
         image = collection.first()
 
@@ -69,7 +73,8 @@ def get_farm_ndvi(boundary_coords: list, scan_date: str) -> dict:
         ndvi_value = stats.get("NDVI")
 
         if ndvi_value is None:
-            return get_farm_ndvi_mock(boundary_coords, scan_date)
+            print("[GEE] NDVI computation returned null — skipping scan")
+            return None
 
         raw = f"{boundary_coords}{scan_date}{ndvi_value}"
         hash_val = hashlib.sha256(raw.encode()).hexdigest()
@@ -78,28 +83,12 @@ def get_farm_ndvi(boundary_coords: list, scan_date: str) -> dict:
             "ndvi": round(ndvi_value, 4),
             "data_hash": hash_val,
             "scan_date": scan_date,
-            "is_mock": False,
             "source": "Sentinel-2 COPERNICUS/S2_SR_HARMONIZED"
         }
 
     except Exception as e:
-        print(f"GEE error: {e}")
-        return get_farm_ndvi_mock(boundary_coords, scan_date)
-
-
-# ── MOCK FALLBACK ─────────────────────────────────────────────────
-def get_farm_ndvi_mock(boundary_coords: list, scan_date: str) -> dict:
-    mock_ndvi = round(random.uniform(0.25, 0.65), 4)
-
-    raw = f"{boundary_coords}{scan_date}{mock_ndvi}"
-    hash_val = hashlib.sha256(raw.encode()).hexdigest()
-
-    return {
-        "ndvi": mock_ndvi,
-        "data_hash": hash_val,
-        "scan_date": scan_date,
-        "is_mock": True
-    }
+        print(f"[GEE] Satellite scan failed: {e}")
+        return None
 
 
 # ── TEST CONNECTION ───────────────────────────────────────────────

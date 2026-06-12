@@ -10,4 +10,5 @@ interface AdminRepository {
     fun getPoolHealth(): Flow<Result<PoolHealth>>
     fun getPendingAgents(): Flow<Result<List<AgentModel>>>
     suspend fun approveAgent(agentId: String): Result<AgentModel>
+    fun getCarbonScanStatus(): Flow<Result<dev.korryr.shambaguard.ui.features.admin.domain.model.CarbonScanStatus>>
 }

@@ -29,6 +29,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +45,9 @@ import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
 import dev.korryr.shambaguard.ui.theme.Green99
 import dev.korryr.shambaguard.ui.theme.ShambaAmber
+import com.google.maps.android.compose.*
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLngBounds
 
 @Composable
 fun DroughtInsightsScreen(
@@ -101,6 +106,23 @@ fun DroughtInsightsScreen(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                // Real Farm Stress Map
+                if (uiState.polygonPoints.isNotEmpty()) {
+                    Text(
+                        text = "Farm Stress Map (NDVI)",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        ),
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    FarmStressMapCard(
+                        polygonPoints = uiState.polygonPoints,
+                        ndviScore = uiState.ndviScore,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
 
                 // Rainfall Trend Card
                 InsightCard(
@@ -310,6 +332,64 @@ private fun SatelliteInfoCard(
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
+            )
+        }
+    }
+}
+
+@Composable
+private fun FarmStressMapCard(
+    polygonPoints: List<com.google.android.gms.maps.model.LatLng>,
+    ndviScore: Float,
+) {
+    if (polygonPoints.isEmpty()) return
+
+    // Calculate bounding box and center
+    val boundsBuilder = LatLngBounds.builder()
+    polygonPoints.forEach { boundsBuilder.include(it) }
+    val bounds = boundsBuilder.build()
+    val center = bounds.center
+
+    // Map color to NDVI (Red < 0.3, Yellow 0.3-0.5, Green > 0.5)
+    val mapColor = when {
+        ndviScore < 0.3f -> Color(0x66B00020) // Red with alpha
+        ndviScore < 0.5f -> Color(0x66FFC107) // Amber with alpha
+        else -> Color(0x664CAF50) // Green with alpha
+    }
+    val strokeColor = when {
+        ndviScore < 0.3f -> Color(0xFFB00020)
+        ndviScore < 0.5f -> Color(0xFFFFC107)
+        else -> Color(0xFF4CAF50)
+    }
+
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(center, 16f) // Initial zoom, will update if needed
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth()
+            .height(250.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    ) {
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            uiSettings = MapUiSettings(
+                zoomControlsEnabled = false,
+                mapToolbarEnabled = false,
+                myLocationButtonEnabled = false,
+                scrollGesturesEnabled = false, // Read only stress map
+                zoomGesturesEnabled = false,
+            ),
+            properties = MapProperties(mapType = MapType.SATELLITE),
+        ) {
+            Polygon(
+                points = polygonPoints,
+                fillColor = mapColor,
+                strokeColor = strokeColor,
+                strokeWidth = 3f,
             )
         }
     }

@@ -109,4 +109,27 @@ class NetworkAdminRepository @Inject constructor(
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    override fun getCarbonScanStatus(): Flow<Result<dev.korryr.shambaguard.ui.features.admin.domain.model.CarbonScanStatus>> = flow {
+        try {
+            val response = adminApi.getCarbonScanStatus()
+            if (response.isSuccessful) {
+                response.body()?.let { dto ->
+                    emit(
+                        Result.success(
+                            dev.korryr.shambaguard.ui.features.admin.domain.model.CarbonScanStatus(
+                                totalFarms = dto.totalFarms,
+                                scannedFarms = dto.scannedFarms,
+                                pendingFarms = dto.pendingFarms,
+                            ),
+                        ),
+                    )
+                } ?: emit(Result.failure(Exception("Empty body")))
+            } else {
+                emit(Result.failure(Exception(response.message())))
+            }
+        } catch (e: Exception) {
+            emit(Result.failure(e))
+        }
+    }
 }

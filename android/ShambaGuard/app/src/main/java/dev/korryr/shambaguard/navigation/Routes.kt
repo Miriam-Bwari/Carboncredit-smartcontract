@@ -113,6 +113,21 @@ data object FarmerDroughtInsightsKey // Drought Insights deep dive
 @Serializable
 data object FarmerCoverageKey // Coverage Status details
 
+@Serializable
+data class AgentFarmerDetailKey(val farmerId: String, val farmId: String) // Agent taps a farmer card
+
+@Serializable
+data object FarmerChangePasswordKey // Change password from profile
+
+@Serializable
+data object PolicyDocsKey // Insurance policy document viewer
+
+@Serializable
+data object PrivacyPolicyKey // Privacy policy viewer
+
+@Serializable
+data object AdminScanStatusKey // Admin scan health dashboard
+
 // Bottom-nav tab metadata
 sealed class BottomTab(
     val title: String,

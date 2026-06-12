@@ -24,3 +24,9 @@ data class AdminAgentDto(
     @SerializedName("county") val county: String,
     @SerializedName("is_active") val isActive: Boolean,
 )
+
+data class CarbonScanStatusDto(
+    @SerializedName("total_farms") val totalFarms: Int,
+    @SerializedName("scanned_farms") val scannedFarms: Int,
+    @SerializedName("pending_farms") val pendingFarms: Int,
+)

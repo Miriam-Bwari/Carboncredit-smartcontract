@@ -15,6 +15,7 @@ import javax.inject.Inject
 data class AdminHomeUiState(
     val isLoading: Boolean = false,
     val stats: AdminDashboardStats? = null,
+    val scanStatus: dev.korryr.shambaguard.ui.features.admin.domain.model.CarbonScanStatus? = null,
     val error: String? = null,
 )
 
@@ -33,15 +34,27 @@ class AdminHomeViewModel @Inject constructor(
     fun loadStats() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
-            repository.getDashboardStats().collect { result ->
-                result.fold(
-                    onSuccess = { stats ->
-                        _uiState.update { it.copy(isLoading = false, stats = stats) }
-                    },
-                    onFailure = { error ->
-                        _uiState.update { it.copy(isLoading = false, error = error.message) }
-                    },
-                )
+
+            // Launch concurrent fetches
+            launch {
+                repository.getDashboardStats().collect { result ->
+                    result.fold(
+                        onSuccess = { stats ->
+                            _uiState.update { it.copy(isLoading = false, stats = stats) }
+                        },
+                        onFailure = { error ->
+                            _uiState.update { it.copy(isLoading = false, error = error.message) }
+                        },
+                    )
+                }
+            }
+
+            launch {
+                repository.getCarbonScanStatus().collect { result ->
+                    result.onSuccess { scanStatus ->
+                        _uiState.update { it.copy(scanStatus = scanStatus) }
+                    }
+                }
             }
         }
     }

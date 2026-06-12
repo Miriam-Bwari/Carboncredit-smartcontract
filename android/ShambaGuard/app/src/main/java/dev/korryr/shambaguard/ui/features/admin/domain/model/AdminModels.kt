@@ -22,3 +22,9 @@ data class AgentModel(
     val county: String,
     val isActive: Boolean,
 )
+
+data class CarbonScanStatus(
+    val totalFarms: Int,
+    val scannedFarms: Int,
+    val pendingFarms: Int,
+)

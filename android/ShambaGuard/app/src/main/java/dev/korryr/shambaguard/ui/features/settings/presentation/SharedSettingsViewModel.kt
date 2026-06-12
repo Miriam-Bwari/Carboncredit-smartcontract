@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SharedSettingsViewModel @Inject constructor(
     private val sessionManager: SessionManager,
-    private val settingsManager: SettingsManager
+    private val settingsManager: SettingsManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SharedSettingsUiState())
