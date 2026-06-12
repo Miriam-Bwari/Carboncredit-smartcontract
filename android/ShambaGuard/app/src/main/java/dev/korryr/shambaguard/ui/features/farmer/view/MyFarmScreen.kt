@@ -99,7 +99,7 @@ fun MyFarmScreen(
             IconButton(onClick = onAddPractice) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "Add Practice",
+                    contentDescription = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_add_practice),
                     tint = White,
                     modifier = Modifier.size(28.dp),
                 )
@@ -210,7 +210,7 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "${uiState.farmAcres} Acres",
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_acres_format, uiState.farmAcres),
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -233,7 +233,7 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
             ) {
                 Icon(
                     imageVector = Icons.Filled.Map,
-                    contentDescription = "View on map",
+                    contentDescription = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_view_on_map),
                     tint = Green40,
                     modifier = Modifier.size(22.dp),
                 )
@@ -247,7 +247,7 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
 private fun LandHealthSection(uiState: MyFarmUiState) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "Land Health",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_land_health),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -262,7 +262,7 @@ private fun LandHealthSection(uiState: MyFarmUiState) {
                 maxValue = 1.0f,
                 displayText = String.format("%.1f", uiState.ndviScore),
                 arcColor = Green40,
-                label = "NDVI Score",
+                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_ndvi_score),
                 status = uiState.ndviStatus,
                 statusColor = Green40,
             )
@@ -273,7 +273,7 @@ private fun LandHealthSection(uiState: MyFarmUiState) {
                 maxValue = 1.0f,
                 displayText = "${uiState.vegCoverPercent.toInt()}%",
                 arcColor = Color(0xFFD32F2F),
-                label = "Veg Cover",
+                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_veg_cover),
                 status = uiState.vegCoverStatus,
                 statusColor = MaterialTheme.colorScheme.onSurface,
             )
@@ -402,7 +402,7 @@ private fun SoilCarbonCard(uiState: MyFarmUiState) {
             }
             Spacer(Modifier.width(12.dp))
             Text(
-                text = "Soil Carbon Level",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_soil_carbon_level),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
@@ -448,7 +448,7 @@ private fun SoilCarbonCard(uiState: MyFarmUiState) {
 private fun PracticeLogSection(practices: List<FarmPractice>) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "Practice Log",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_practice_log),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -603,27 +603,27 @@ fun AddPracticeDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Log New Practice", fontWeight = FontWeight.Bold) },
+        title = { Text(androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_log_new_practice), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 ShambaTextField(
                     value = tillageMethod,
                     onValueChange = { tillageMethod = it },
-                    label = "Tillage Method (e.g. Minimum Tillage)",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_tillage_label),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 ShambaTextField(
                     value = treeCount,
                     onValueChange = { treeCount = it },
-                    label = "Trees Planted",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_trees_label),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 ShambaTextField(
                     value = irrigationSource,
                     onValueChange = { irrigationSource = it },
-                    label = "Irrigation Source",
+                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_irrigation_label),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -634,7 +634,7 @@ fun AddPracticeDialog(
                 CircularWavyProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.primary)
             } else {
                 ShambaButton(
-                    text = "Submit",
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_submit),
                     onClick = { onSubmit(tillageMethod, treeCount, irrigationSource) },
                     enabled = tillageMethod.isNotBlank(),
                 )
@@ -642,7 +642,7 @@ fun AddPracticeDialog(
         },
         dismissButton = {
             ShambaButton(
-                text = "Cancel",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_cancel),
                 onClick = onDismiss,
                 enabled = !isSubmitting,
                 type = ShambaButtonType.Text,

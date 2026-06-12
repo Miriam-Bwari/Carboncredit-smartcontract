@@ -101,7 +101,7 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
         ) {
             Text(
-                text = "AVAILABLE CARBON CREDITS",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_available_credits),
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = Green90,
                     letterSpacing = 1.sp,
@@ -110,7 +110,7 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "${uiState.carbonTonnes} tonnes CO2e",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_tonnes_co2e, uiState.carbonTonnes),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
                     color = White,
@@ -127,7 +127,7 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text = "≈ KES %,d".format(uiState.kesEquivalent),
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_kes_approx, "%,d".format(uiState.kesEquivalent)),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = ShambaAmber,
@@ -146,7 +146,7 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "Sell Credits Now",
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_sell_credits_now),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF3D2E00),
@@ -162,7 +162,7 @@ private fun CarbonBanner(uiState: CarbonUiState, onSellCredits: () -> Unit) {
 private fun MintingPipelineSection(steps: List<PipelineStep>) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "Minting Pipeline",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_minting_pipeline),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -285,7 +285,7 @@ private fun PipelineRow(step: PipelineStep, isLast: Boolean) {
 private fun RealImpactSection(uiState: CarbonUiState) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "Your Real Impact",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_real_impact),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -301,7 +301,7 @@ private fun RealImpactSection(uiState: CarbonUiState) {
                 iconTint = Green40,
                 value = "${uiState.treesEquivalent}",
                 valueColor = Green40,
-                label = "Trees planted\nequivalent",
+                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_trees_equivalent),
             )
             // Cars / km card
             ImpactCard(
@@ -312,7 +312,7 @@ private fun RealImpactSection(uiState: CarbonUiState) {
                 iconTint = ImpactCarRed,
                 value = "${uiState.kmNotDriven}",
                 valueColor = ImpactCarRed,
-                label = "Km not driven",
+                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_km_not_driven),
             )
         }
     }
@@ -381,7 +381,7 @@ private fun EarningsHistorySection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Earnings History",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_earnings_history),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
@@ -389,7 +389,7 @@ private fun EarningsHistorySection(
                 ),
             )
             Text(
-                text = "View All",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_view_all),
                 modifier = Modifier.clickable(onClick = onViewAll),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = Green40,
@@ -464,7 +464,7 @@ private fun EarningRow(earning: CarbonEarning) {
 
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text = "+ KES %,d".format(earning.amountKes),
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_plus_kes, "%,d".format(earning.amountKes)),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -479,7 +479,7 @@ private fun EarningRow(earning: CarbonEarning) {
                         .padding(horizontal = 10.dp, vertical = 3.dp),
                 ) {
                     Text(
-                        text = "Completed",
+                        text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_completed),
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = CompletedText,
                             fontWeight = FontWeight.SemiBold,

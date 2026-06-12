@@ -176,6 +176,36 @@
     <string name="insights_source">Chanzo: %1$s</string>
     <string name="insights_last_updated">Ilisasishwa: %1$s</string>
 
+    <!-- My Farm Screen -->
+    <string name="my_farm_add_practice">Ongeza Shughuli</string>
+    <string name="my_farm_acres_format">Ekari %1$s</string>
+    <string name="my_farm_view_on_map">Tazama kwenye ramani</string>
+    <string name="my_farm_land_health">Afya ya Ardhi</string>
+    <string name="my_farm_ndvi_score">Alama ya NDVI</string>
+    <string name="my_farm_veg_cover">Uoto wa Asili</string>
+    <string name="my_farm_soil_carbon_level">Kiwango cha Kaboni</string>
+    <string name="my_farm_practice_log">Kumbukumbu za Shughuli</string>
+    <string name="my_farm_log_new_practice">Sajili Shughuli Mpya</string>
+    <string name="my_farm_tillage_label">Njia ya Kulima (mf. Kulima kidogo)</string>
+    <string name="my_farm_trees_label">Miti Iliyopandwa</string>
+    <string name="my_farm_irrigation_label">Chanzo cha Maji</string>
+    <string name="my_farm_submit">Wasilisha</string>
+    <string name="my_farm_cancel">Ghairi</string>
+
+    <!-- Carbon Screen -->
+    <string name="carbon_available_credits">KABONI INAYOPATIKANA</string>
+    <string name="carbon_tonnes_co2e">tani %1$s CO2e</string>
+    <string name="carbon_kes_approx">≈ KSh %1$s</string>
+    <string name="carbon_sell_credits_now">Uza Mikopo Sasa</string>
+    <string name="carbon_minting_pipeline">Mchakato wa Kuidhinisha</string>
+    <string name="carbon_real_impact">Athari Yako Halisi</string>
+    <string name="carbon_trees_equivalent">Sawa na\nmiti iliyopandwa</string>
+    <string name="carbon_km_not_driven">Km ambazo hazijaendeshwa</string>
+    <string name="carbon_earnings_history">Historia ya Mapato</string>
+    <string name="carbon_view_all">Tazama Yote</string>
+    <string name="carbon_completed">Imekamilika</string>
+    <string name="carbon_plus_kes">+ KSh %1$s</string>
+
     <!-- Login Screen -->
     <string name="login_title">Karibu Tena</string>
     <string name="login_subtitle">Karibu tena kwenye Shamba Guard</string>
