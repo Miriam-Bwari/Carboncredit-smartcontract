@@ -371,7 +371,7 @@ private fun FarmStressMapCard(
             .height(250.dp)
             .clip(RoundedCornerShape(16.dp))
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),

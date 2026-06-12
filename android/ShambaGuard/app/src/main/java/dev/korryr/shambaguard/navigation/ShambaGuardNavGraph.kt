@@ -368,13 +368,13 @@ fun ShambaGuardNavGraph(
                         onNavigateToAgents = { backStack.add(AdminAgentsKey) },
                         onNavigateToMap = { backStack.add(AdminMapKey) },
                         onNavigateToPool = { backStack.add(AdminPoolKey) },
-                        onNavigateToSettings = { backStack.add(SharedSettingsKey) }
+                        onNavigateToSettings = { backStack.add(SharedSettingsKey) },
                     )
                 }
-                entry<AdminMapKey> { 
+                entry<AdminMapKey> {
                     dev.korryr.shambaguard.ui.features.admin.view.FarmMapScreen(
-                        onNavigateBack = { backStack.removeLastOrNull() }
-                    ) 
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                    )
                 }
                 entry<AdminAgentsKey> {
                     val vm: dev.korryr.shambaguard.ui.features.admin.presentation.AgentManagementViewModel = hiltViewModel()
@@ -634,14 +634,14 @@ fun ShambaGuardNavGraph(
                         onPaymentDone = { navigateTo(initialKey) },
                     )
                 }
-                entry<FarmerPayoutsKey> { 
+                entry<FarmerPayoutsKey> {
                     val vm: CarbonViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
-                    
+
                     PayoutHistoryScreen(
                         earnings = state.earnings,
-                        onNavigateBack = { backStack.removeLastOrNull() }
-                    ) 
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                    )
                 }
             },
         )

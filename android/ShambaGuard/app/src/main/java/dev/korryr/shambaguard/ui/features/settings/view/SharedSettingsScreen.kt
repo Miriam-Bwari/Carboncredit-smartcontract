@@ -68,13 +68,13 @@ fun SharedSettingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     SegmentedButton(
                         selected = uiState.themeMode == AppThemeMode.SYSTEM,
                         onClick = { onThemeChanged(AppThemeMode.SYSTEM) },
                         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
-                        icon = { Icon(Icons.Rounded.PhoneAndroid, contentDescription = "System") }
+                        icon = { Icon(Icons.Rounded.PhoneAndroid, contentDescription = "System") },
                     ) {
                         Text("System")
                     }
@@ -82,7 +82,7 @@ fun SharedSettingsScreen(
                         selected = uiState.themeMode == AppThemeMode.LIGHT,
                         onClick = { onThemeChanged(AppThemeMode.LIGHT) },
                         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
-                        icon = { Icon(Icons.Rounded.LightMode, contentDescription = "Light") }
+                        icon = { Icon(Icons.Rounded.LightMode, contentDescription = "Light") },
                     ) {
                         Text("Light")
                     }
@@ -90,7 +90,7 @@ fun SharedSettingsScreen(
                         selected = uiState.themeMode == AppThemeMode.DARK,
                         onClick = { onThemeChanged(AppThemeMode.DARK) },
                         shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
-                        icon = { Icon(Icons.Rounded.DarkMode, contentDescription = "Dark") }
+                        icon = { Icon(Icons.Rounded.DarkMode, contentDescription = "Dark") },
                     ) {
                         Text("Dark")
                     }

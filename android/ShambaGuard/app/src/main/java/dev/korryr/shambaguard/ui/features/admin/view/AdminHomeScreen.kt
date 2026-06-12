@@ -49,7 +49,7 @@ fun AdminHomeScreen(
                     IconButton(onClick = onNavigateToSettings) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = MaterialTheme.colorScheme.onSurface)
                     }
-                }
+                },
             )
         },
         containerColor = MaterialTheme.colorScheme.background,
@@ -145,7 +145,7 @@ fun AdminHomeScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
-            
+
             Text(
                 text = "System Health",
                 style = MaterialTheme.typography.titleMedium,
@@ -165,7 +165,7 @@ fun AdminHomeScreen(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }

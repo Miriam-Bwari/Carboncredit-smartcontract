@@ -81,4 +81,3 @@ fun PayoutItemCard(earning: CarbonEarning) {
         }
     }
 }
-

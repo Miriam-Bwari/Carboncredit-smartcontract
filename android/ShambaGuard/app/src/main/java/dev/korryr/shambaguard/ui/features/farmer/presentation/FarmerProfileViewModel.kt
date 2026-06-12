@@ -28,7 +28,7 @@ class FarmerProfileViewModel @Inject constructor(
 
     init {
         loadProfileData()
-        
+
         viewModelScope.launch {
             settingsManager.appThemeFlow.collect { theme ->
                 _uiState.update { it.copy(themeMode = theme) }

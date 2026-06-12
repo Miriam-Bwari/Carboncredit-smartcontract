@@ -15,7 +15,7 @@ import javax.inject.Singleton
 enum class AppThemeMode {
     SYSTEM,
     LIGHT,
-    DARK
+    DARK,
 }
 
 private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "shamba_settings")

@@ -41,7 +41,7 @@ class DroughtViewModel @Inject constructor(
 
             if (firstFarm != null) {
                 val farmId = firstFarm.id
-                
+
                 // Get the local FarmEntity to extract the boundary polygon for the stress map
                 launch {
                     farmRepository.getFarm(farmId).collect { localFarm ->

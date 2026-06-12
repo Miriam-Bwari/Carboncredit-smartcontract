@@ -34,7 +34,7 @@ class AdminHomeViewModel @Inject constructor(
     fun loadStats() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
-            
+
             // Launch concurrent fetches
             launch {
                 repository.getDashboardStats().collect { result ->
@@ -48,7 +48,7 @@ class AdminHomeViewModel @Inject constructor(
                     )
                 }
             }
-            
+
             launch {
                 repository.getCarbonScanStatus().collect { result ->
                     result.onSuccess { scanStatus ->

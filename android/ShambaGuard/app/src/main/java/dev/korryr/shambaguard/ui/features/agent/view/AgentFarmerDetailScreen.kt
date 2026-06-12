@@ -103,8 +103,11 @@ fun AgentFarmerDetailScreen(
                 DetailRow(
                     "Policy Status",
                     farmer.policyStatus,
-                    valueColor = if (farmer.policyStatus == "ACTIVE") Color(0xFF4CAF50)
-                    else MaterialTheme.colorScheme.error,
+                    valueColor = if (farmer.policyStatus == "ACTIVE") {
+                        Color(0xFF4CAF50)
+                    } else {
+                        MaterialTheme.colorScheme.error
+                    },
                 )
             }
 
