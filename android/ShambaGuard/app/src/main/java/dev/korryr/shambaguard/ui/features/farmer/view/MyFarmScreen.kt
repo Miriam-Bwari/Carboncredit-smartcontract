@@ -3,6 +3,7 @@ package dev.korryr.shambaguard.ui.features.farmer.view
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -85,23 +86,33 @@ fun MyFarmScreen(
             }
         }
 
-        // Floating Action Button — dark green rounded square
+        // Floating Action Button — dark green rounded square with text
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
                 .padding(end = 20.dp, bottom = 20.dp)
-                .size(56.dp)
+                .height(56.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Green10),
+                .background(Green10)
+                .clickable(onClick = onAddPractice)
+                .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center,
         ) {
-            IconButton(onClick = onAddPractice) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_add_practice),
+                    contentDescription = null,
                     tint = White,
-                    modifier = Modifier.size(28.dp),
+                    modifier = Modifier.size(24.dp),
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_add_practice),
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        color = White,
+                        fontWeight = FontWeight.Bold,
+                    ),
                 )
             }
         }
