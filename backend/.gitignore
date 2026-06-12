@@ -1,0 +1,23 @@
+# ─────────────────────────────────────────────
+# SHAMBA GUARD - GIT IGNORE FILE
+# ─────────────────────────────────────────────
+
+# Virtual environment
+venv/
+env/
+
+# Environment secrets (NEVER PUSH)
+.env
+ee_service_account.json
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Database files (local dev only)
+*.db
+
+# OS / IDE files
+.DS_Store
+.vscode/
+.idea/

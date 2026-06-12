@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shamba Guard globe icon — white outline style to match splash design -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+
+    <!-- Globe outer circle outline -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.8"
+        android:fillColor="#00000000"
+        android:pathData="M20,4 C11.163,4 4,11.163 4,20 C4,28.837 11.163,36 20,36 C28.837,36 36,28.837 36,20 C36,11.163 28.837,4 20,4 Z" />
+
+    <!-- Vertical centre meridian -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M20,4 C20,4 20,36 20,36" />
+
+    <!-- Horizontal equator -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M4,20 Q20,17 36,20" />
+
+    <!-- Upper latitude line -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M7,13 Q20,10.5 33,13" />
+
+    <!-- Lower latitude line -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M7,27 Q20,29.5 33,27" />
+
+    <!-- Left vertical meridian arc -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M20,4 C14,8 11,13 11,20 C11,27 14,32 20,36" />
+
+    <!-- Right vertical meridian arc -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M20,4 C26,8 29,13 29,20 C29,27 26,32 20,36" />
+
+</vector>

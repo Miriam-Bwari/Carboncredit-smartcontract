@@ -1,0 +1,253 @@
+<resources>
+    <string name="app_name">ShambaGuard</string>
+
+    <!-- Role Selection Screen -->
+    <string name="role_selection_title">Choose Your Role</string>
+    <string name="role_selection_subtitle">Chagua Jukumu</string>
+    <string name="role_selection_description">Select how you will be using Shamba Guard today.</string>
+    <string name="role_selection_cta">Continue / Endelea</string>
+    <string name="role_farmer_title">Mkulima (Farmer)</string>
+    <string name="role_agent_title">Wakala (Field Agent)</string>
+    <string name="role_farmer_description">Register your farm and protect it.</string>
+    <string name="role_agent_description">Register farmers in your area.</string>
+    <string name="role_card_selected_content_description">Selected</string>
+
+    <!-- Registration Screen - Step 1: Personal Details -->
+    <string name="reg_screen_title">Jiandikishe / Register</string>
+    <string name="reg_step_indicator">Step %1$d of %2$d</string>
+    <string name="reg_step1_heading">Personal Details</string>
+    <string name="reg_step1_subtitle">We need your basic information to set up your Shamba Guard profile.</string>
+    <string name="reg_full_name_label">Full Name (Kama Inavyoonekana kwa kitambulisho)</string>
+    <string name="reg_full_name_hint">e.g., John Doe</string>
+    <string name="reg_national_id_label">National ID Number</string>
+    <string name="reg_national_id_hint">12345678</string>
+    <string name="reg_mpesa_phone_label">M-Pesa Phone Number</string>
+    <string name="reg_mpesa_phone_hint">+254 7XX XXX XXX</string>
+    <string name="reg_mpesa_helper">This is where payouts will go</string>
+    <string name="reg_mpesa_badge">M-Pesa</string>
+    <string name="reg_next_step_cta">Next Step →</string>
+    <string name="reg_back_content_description">Navigate back</string>
+    <!-- Validation -->
+    <string name="reg_error_full_name_empty">Full name is required</string>
+    <string name="reg_error_national_id_invalid">Enter a valid 8-digit National ID</string>
+    <string name="reg_error_phone_invalid">Enter a valid M-Pesa number (e.g. +254 712 345 678)</string>
+
+    <!-- Registration Screen - Step 2: Farm Boundary -->
+    <string name="farm_step2_instruction_title">Gusa mipaka ya shamba lako</string>
+    <string name="farm_step2_instruction_subtitle">Tap your farm boundary</string>
+    <string name="farm_step2_confirm_heading">Confirm Boundary</string>
+    <string name="farm_step2_estimated_label">ESTIMATED SIZE</string>
+    <string name="farm_step2_save_cta">Save &amp; Continue →</string>
+    <string name="farm_step2_area_acres_format">%.1f ac</string>
+    <string name="farm_step2_undo">Undo</string>
+    <string name="farm_step2_layer_toggle">Toggle map layer</string>
+    <string name="farm_step2_min_points_hint">Tap at least 3 points to draw a boundary</string>
+
+    <!-- Registration Screen - Step 3: Farm Practices -->
+    <string name="practices_heading">Farm Practices</string>
+    <string name="practices_subtitle">Help us understand your farming methods to optimize your support and carbon credit potential.</string>
+    <string name="practices_carbon_tip">Good practices earn you more carbon credits</string>
+    <string name="practices_crop_section">Primary Crop Type</string>
+    <string name="practices_method_section">Farming Method</string>
+    <string name="practices_water_section">Water Source</string>
+    <string name="practices_trees_section">Mature Trees on Farm</string>
+    <string name="practices_trees_count_label">Estimated Count</string>
+    <string name="practices_complete_cta">Complete Registration</string>
+    <!-- Crop chips -->
+    <string name="crop_maize">Maize</string>
+    <string name="crop_beans">Beans</string>
+    <string name="crop_cowpeas">Cowpeas</string>
+    <string name="crop_sorghum">Sorghum</string>
+    <string name="crop_millet">Millet</string>
+    <string name="crop_cassava">Cassava</string>
+    <!-- Farming method chips -->
+    <string name="method_agroforestry">Agroforestry</string>
+    <string name="method_no_till">No-Till</string>
+    <string name="method_cover_cropping">Cover Cropping</string>
+    <string name="method_conventional">Conventional</string>
+    <!-- Water source chips -->
+    <string name="water_rain_fed">Rain-fed</string>
+    <string name="water_irrigation">Irrigation</string>
+    <string name="water_borehole">Borehole</string>
+    <!-- Accessibility -->
+    <string name="practices_decrement_trees">Decrease tree count</string>
+    <string name="practices_increment_trees">Increase tree count</string>
+
+    <!-- Policy Screen — Chagua Bima / Choose Your Coverage -->
+    <string name="policy_screen_title">Chagua Bima</string>
+    <string name="policy_screen_subtitle">Choose Your Coverage</string>
+    <!-- Tier card actions -->
+    <string name="policy_tier_select">Select Plan</string>
+    <string name="policy_tier_selected">Selected</string>
+    <string name="policy_recommended_badge">RECOMMENDED</string>
+    <!-- M-Pesa payment footer -->
+    <string name="policy_mpesa_label">M-PESA</string>
+    <string name="policy_mpesa_cta">Lipa na M-Pesa</string>
+    <string name="policy_secure_payment_hint">Malipo salama / Secure payment</string>
+    <string name="policy_payment_processing">Processing…</string>
+    <string name="policy_payment_success">Policy Activated!</string>
+
+    <!-- Farmer Dashboard Screen -->
+    <string name="dashboard_section_home">Home</string>
+    <!-- Top bar -->
+    <string name="dashboard_satellite_desc">Satellite farm thumbnail</string>
+    <!-- Alert card -->
+    <string name="dashboard_risk_critical">CRITICAL RISK</string>
+    <string name="dashboard_risk_high">HIGH RISK</string>
+    <string name="dashboard_risk_moderate">MODERATE RISK</string>
+    <string name="dashboard_risk_low">LOW RISK</string>
+    <string name="dashboard_drought_alert">Drought Alert</string>
+    <string name="dashboard_drought_watch">Drought Watch</string>
+    <string name="dashboard_conditions_normal">Conditions Normal</string>
+    <string name="dashboard_ndvi_label">NDVI Score</string>
+    <string name="dashboard_rainfall_label">Rainfall (21 Days)</string>
+    <string name="dashboard_insights_cta">See Insights &amp; Actions →</string>
+    <!-- At a Glance -->
+    <string name="dashboard_at_a_glance">At a Glance</string>
+    <string name="dashboard_policy_status">Policy Status</string>
+    <string name="dashboard_policy_active">● Active</string>
+    <string name="dashboard_policy_inactive">● Inactive</string>
+    <string name="dashboard_policy_expiry">Coverage until %1$s</string>
+    <string name="dashboard_carbon">Carbon</string>
+    <string name="dashboard_carbon_claim">Claim Value</string>
+    <!-- Recent Activity -->
+    <string name="dashboard_recent_activity">Recent Activity</string>
+
+    <!-- Early Warning Screen -->
+    <string name="drought_screen_title">Early Warning</string>
+    <string name="drought_alert_subtitle">Based on NDVI &amp; Rainfall</string>
+    <string name="drought_forecast_title">14-Day Forecast</string>
+    <string name="drought_forecast_subtitle">Drought probability index</string>
+    <string name="drought_legend_risk">Risk Score</string>
+    <string name="drought_crop_rec_label">Recommended Action</string>
+    <string name="drought_full_analysis_cta">Full Analysis →</string>
+    <string name="drought_ai_confidence">MVUA AI: %1$d%% confident</string>
+    <string name="drought_farm_stress_map">Farm Stress\nMap</string>
+    <string name="drought_updated_label">Updated\n%1$s</string>
+    <string name="drought_legend_healthy">Healthy</string>
+    <string name="drought_legend_stressed">Stressed</string>
+    <string name="drought_legend_critical">Critical</string>
+    <string name="drought_7_day_forecast">7-Day Rainfall Forecast</string>
+    <string name="drought_ai_recommendation">AI RECOMMENDATION</string>
+    <string name="drought_coverage_active">COVERAGE ACTIVE</string>
+    <string name="drought_policy_will_pay">Your policy will pay</string>
+    <string name="drought_kes_format">KES %1$s</string>
+    <string name="drought_farm_health_title">Farm Health: %1$s</string>
+    <string name="drought_ai_strategy">AI Strategy</string>
+
+    <!-- Drought Insights Screen -->
+    <string name="insights_screen_title">Drought Insights</string>
+    <string name="insights_ndvi_trend">NDVI Trend</string>
+    <string name="insights_rainfall_trend">Rainfall Trend</string>
+    <string name="insights_payout_status">Payout Status</string>
+    <string name="insights_trigger_met">Trigger Met</string>
+    <string name="insights_trigger_not_met">Not Met</string>
+    <string name="insights_trigger_desc">Requires NDVI &lt; %1$.2f and Rain &lt; %2$d mm</string>
+    <string name="insights_satellite_data">Satellite Data</string>
+    <string name="insights_source">Source: %1$s</string>
+    <string name="insights_last_updated">Updated: %1$s</string>
+
+    <!-- My Farm Screen -->
+    <string name="my_farm_add_practice">Add Practice</string>
+    <string name="my_farm_acres_format">%1$s Acres</string>
+    <string name="my_farm_view_on_map">View on map</string>
+    <string name="my_farm_land_health">Land Health</string>
+    <string name="my_farm_ndvi_score">NDVI Score</string>
+    <string name="my_farm_veg_cover">Veg Cover</string>
+    <string name="my_farm_soil_carbon_level">Soil Carbon Level</string>
+    <string name="my_farm_practice_log">Practice Log</string>
+    <string name="my_farm_log_new_practice">Log New Practice</string>
+    <string name="my_farm_tillage_label">Tillage Method (e.g. Minimum Tillage)</string>
+    <string name="my_farm_trees_label">Trees Planted</string>
+    <string name="my_farm_irrigation_label">Irrigation Source</string>
+    <string name="my_farm_submit">Submit</string>
+    <string name="my_farm_cancel">Cancel</string>
+
+    <!-- Carbon Screen -->
+    <string name="carbon_available_credits">AVAILABLE CARBON CREDITS</string>
+    <string name="carbon_tonnes_co2e">%1$s tonnes CO2e</string>
+    <string name="carbon_kes_approx">≈ KES %1$s</string>
+    <string name="carbon_sell_credits_now">Sell Credits Now</string>
+    <string name="carbon_minting_pipeline">Minting Pipeline</string>
+    <string name="carbon_real_impact">Your Real Impact</string>
+    <string name="carbon_trees_equivalent">Trees planted\nequivalent</string>
+    <string name="carbon_km_not_driven">Km not driven</string>
+    <string name="carbon_earnings_history">Earnings History</string>
+    <string name="carbon_view_all">View All</string>
+    <string name="carbon_completed">Completed</string>
+    <string name="carbon_plus_kes">+ KES %1$s</string>
+    <string name="carbon_scan_pending_title">Satellite Scan Pending</string>
+    <string name="carbon_scan_pending_body">Your farm has been registered. The Sentinel-2 satellite will scan your land within the next 5 days and your carbon data will appear here automatically.</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">Karibu Tena</string>
+    <string name="login_subtitle">Welcome back to Shamba Guard</string>
+    <string name="login_role_farmer">Farmer</string>
+    <string name="login_role_agent">Field Agent</string>
+    <string name="login_phone_label">Phone Number</string>
+    <string name="login_phone_hint">+254 7XX XXX XXX</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_show_password">Show password</string>
+    <string name="login_hide_password">Hide password</string>
+    <string name="login_cta">Sign In</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_sign_up">Sign up</string>
+    <string name="login_error_fields_required">Please enter your phone number and password</string>
+
+    <!-- Account Registration Screen -->
+    <string name="reg_account_title_farmer">Create Farmer Account</string>
+    <string name="reg_account_title_agent">Create Agent Account</string>
+    <string name="reg_account_subtitle">Enter your details to get started with Shamba Guard.</string>
+    <string name="reg_phone_label">Phone Number</string>
+    <string name="reg_phone_hint">+254 7XX XXX XXX</string>
+    <string name="reg_phone_helper">This number will be used to log in and receive M-Pesa payouts</string>
+    <string name="reg_county_label">County</string>
+    <string name="reg_county_hint">e.g. Kitui, Meru, Machakos</string>
+    <string name="reg_password_label">Password</string>
+    <string name="reg_confirm_password_label">Confirm Password</string>
+    <string name="reg_create_account_cta">Create Account</string>
+    <string name="reg_have_account">Already have an account?</string>
+    <string name="reg_sign_in">Sign in</string>
+    <!-- New validation errors -->
+    <string name="reg_error_phone_empty">Phone number is required</string>
+    <string name="reg_error_county_empty">County is required</string>
+    <string name="reg_error_password_short">Password must be exactly 4 characters</string>
+    <string name="reg_error_password_mismatch">Passwords do not match</string>
+
+    <!-- Agent Pending Screen -->
+    <string name="agent_pending_title">Registration Received!</string>
+    <string name="agent_pending_subtitle">Asante / Thank you</string>
+    <string name="agent_pending_body">Your agent account is pending admin approval. You will receive an SMS once your account is activated.</string>
+    <string name="agent_pending_contact_hint">Contact your supervisor if you need faster approval.</string>
+    <string name="agent_pending_go_to_login">Go to Login</string>
+    <!-- Farmer Profile Screen -->
+    <string name="preferences">PREFERENCES</string>
+    <string name="app_theme">App Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="push_notifications">Push Notifications</string>
+    <string name="drought_alerts">Drought Alerts</string>
+    <string name="security">SECURITY</string>
+    <string name="biometric_unlock">Biometric Unlock</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="legal_and_support">LEGAL &amp; SUPPORT</string>
+    <string name="policy_documents">Policy Documents</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="app_version">App Version</string>
+    <string name="log_out">Log Out</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_verified_farmer">Verified Farmer</string>
+
+    <!-- Farmer Dashboard Empty State -->
+    <string name="dashboard_welcome_title">Welcome to Shamba Guard!</string>
+    <string name="dashboard_welcome_body">To unlock satellite drought monitoring, carbon tracking, and insurance policies, we need to know where your farm is located.</string>
+    <string name="dashboard_register_cta">Register My Farm</string>
+    <string name="dashboard_greeting">Hello, %1$s</string>
+    <string name="dashboard_tonnes">%1$s tonnes</string>
+    <string name="dashboard_rainfall_delta">%1$d%% from average</string>
+    <string name="farmer">Farmer</string>
+    <string name="unknown_region">Unknown Region</string>
+    <string name="unknown_farm">Unknown Farm</string>
+    <string name="none">None</string>
+</resources>
