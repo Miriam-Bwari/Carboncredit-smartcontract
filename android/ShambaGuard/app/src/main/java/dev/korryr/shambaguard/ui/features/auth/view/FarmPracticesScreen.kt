@@ -5,6 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +39,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -54,7 +59,7 @@ import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesUiState
 private const val STEP3_CURRENT = 3
 private const val STEP3_TOTAL = 3
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun FarmPracticesScreen(
     uiState: FarmPracticesUiState,
@@ -64,6 +69,7 @@ fun FarmPracticesScreen(
     onWaterSelected: (String) -> Unit,
     onIncrementTrees: () -> Unit,
     onDecrementTrees: () -> Unit,
+    onTreesChanged: (String) -> Unit,
     onComplete: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -199,6 +205,7 @@ fun FarmPracticesScreen(
                     count = uiState.treeCount,
                     onIncrement = onIncrementTrees,
                     onDecrement = onDecrementTrees,
+                    onCountChanged = onTreesChanged,
                 )
 
                 Spacer(modifier = Modifier.height(40.dp))
@@ -222,7 +229,7 @@ fun FarmPracticesScreen(
                     }
 
                     if (uiState.isSubmitting) {
-                        androidx.compose.material3.CircularProgressIndicator(
+                        CircularWavyProgressIndicator(
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp),
                         )
@@ -334,6 +341,7 @@ private fun TreeCountStepper(
     count: Int,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
+    onCountChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -369,16 +377,25 @@ private fun TreeCountStepper(
             )
         }
 
-        // Count display
-        Text(
-            text = count.toString(),
-            style = MaterialTheme.typography.headlineMedium.copy(
+        // Count display (Editable)
+        BasicTextField(
+            value = count.toString(),
+            onValueChange = { newValue ->
+                // only allow numbers
+                if (newValue.isEmpty() || newValue.all { it.isDigit() }) {
+                    onCountChanged(newValue)
+                }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            textStyle = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
             ),
             modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .width(40.dp),
+                .padding(horizontal = 12.dp)
+                .width(56.dp),
+            singleLine = true,
         )
 
         // Increment button

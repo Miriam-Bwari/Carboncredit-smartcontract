@@ -3,6 +3,7 @@ package dev.korryr.shambaguard.ui.features.farmer.view
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -17,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -86,23 +86,33 @@ fun MyFarmScreen(
             }
         }
 
-        // Floating Action Button — dark green rounded square
+        // Floating Action Button — dark green rounded square with text
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
                 .padding(end = 20.dp, bottom = 20.dp)
-                .size(56.dp)
+                .height(56.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Green10),
+                .background(Green10)
+                .clickable(onClick = onAddPractice)
+                .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center,
         ) {
-            IconButton(onClick = onAddPractice) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "Add Practice",
+                    contentDescription = null,
                     tint = White,
-                    modifier = Modifier.size(28.dp),
+                    modifier = Modifier.size(24.dp),
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_add_practice),
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        color = White,
+                        fontWeight = FontWeight.Bold,
+                    ),
                 )
             }
         }
@@ -161,16 +171,16 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
                     scrollGesturesEnabled = false, // Static preview map
                     zoomGesturesEnabled = false,
                     tiltGesturesEnabled = false,
-                    rotationGesturesEnabled = false
+                    rotationGesturesEnabled = false,
                 ),
-                onMapLoaded = { mapLoaded = true }
+                onMapLoaded = { mapLoaded = true },
             ) {
                 if (uiState.polygonCoords.isNotEmpty()) {
                     Polygon(
                         points = uiState.polygonCoords,
                         fillColor = Color(0xFF4CAF50).copy(alpha = 0.4f),
                         strokeColor = Color(0xFF4CAF50),
-                        strokeWidth = 5f
+                        strokeWidth = 5f,
                     )
                 }
             }
@@ -211,7 +221,7 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "${uiState.farmAcres} Acres",
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_acres_format, uiState.farmAcres),
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -234,7 +244,7 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
             ) {
                 Icon(
                     imageVector = Icons.Filled.Map,
-                    contentDescription = "View on map",
+                    contentDescription = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_view_on_map),
                     tint = Green40,
                     modifier = Modifier.size(22.dp),
                 )
@@ -248,7 +258,7 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
 private fun LandHealthSection(uiState: MyFarmUiState) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "Land Health",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_land_health),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -263,7 +273,7 @@ private fun LandHealthSection(uiState: MyFarmUiState) {
                 maxValue = 1.0f,
                 displayText = String.format("%.1f", uiState.ndviScore),
                 arcColor = Green40,
-                label = "NDVI Score",
+                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_ndvi_score),
                 status = uiState.ndviStatus,
                 statusColor = Green40,
             )
@@ -274,7 +284,7 @@ private fun LandHealthSection(uiState: MyFarmUiState) {
                 maxValue = 1.0f,
                 displayText = "${uiState.vegCoverPercent.toInt()}%",
                 arcColor = Color(0xFFD32F2F),
-                label = "Veg Cover",
+                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_veg_cover),
                 status = uiState.vegCoverStatus,
                 statusColor = MaterialTheme.colorScheme.onSurface,
             )
@@ -403,7 +413,7 @@ private fun SoilCarbonCard(uiState: MyFarmUiState) {
             }
             Spacer(Modifier.width(12.dp))
             Text(
-                text = "Soil Carbon Level",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_soil_carbon_level),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
@@ -449,7 +459,7 @@ private fun SoilCarbonCard(uiState: MyFarmUiState) {
 private fun PracticeLogSection(practices: List<FarmPractice>) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "Practice Log",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_practice_log),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -598,33 +608,40 @@ fun AddPracticeDialog(
     onSubmit: (tillage: String, trees: String, irrigation: String) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val titleStr = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_log_new_practice)
+    val tillageLabel = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_tillage_label)
+    val treesLabel = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_trees_label)
+    val irrigationLabel = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_irrigation_label)
+    val submitStr = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_submit)
+    val cancelStr = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_cancel)
+
     var tillageMethod by remember { mutableStateOf("") }
     var treeCount by remember { mutableStateOf("") }
     var irrigationSource by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Log New Practice", fontWeight = FontWeight.Bold) },
+        title = { Text(titleStr, fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 ShambaTextField(
                     value = tillageMethod,
                     onValueChange = { tillageMethod = it },
-                    label = "Tillage Method (e.g. Minimum Tillage)",
+                    label = tillageLabel,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 ShambaTextField(
                     value = treeCount,
                     onValueChange = { treeCount = it },
-                    label = "Trees Planted",
+                    label = treesLabel,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 ShambaTextField(
                     value = irrigationSource,
                     onValueChange = { irrigationSource = it },
-                    label = "Irrigation Source",
+                    label = irrigationLabel,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -635,7 +652,7 @@ fun AddPracticeDialog(
                 CircularWavyProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.primary)
             } else {
                 ShambaButton(
-                    text = "Submit",
+                    text = submitStr,
                     onClick = { onSubmit(tillageMethod, treeCount, irrigationSource) },
                     enabled = tillageMethod.isNotBlank(),
                 )
@@ -643,7 +660,7 @@ fun AddPracticeDialog(
         },
         dismissButton = {
             ShambaButton(
-                text = "Cancel",
+                text = cancelStr,
                 onClick = onDismiss,
                 enabled = !isSubmitting,
                 type = ShambaButtonType.Text,

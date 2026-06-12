@@ -26,20 +26,33 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Teal40
 
+import dev.korryr.shambaguard.ui.features.admin.presentation.AdminHomeUiState
+
+import androidx.compose.material.icons.filled.Settings
+
 @Composable
 fun AdminHomeScreen(
+    uiState: AdminHomeUiState,
     onNavigateToAgents: () -> Unit,
     onNavigateToMap: () -> Unit,
     onNavigateToPool: () -> Unit,
+    onNavigateToSettings: () -> Unit,
 ) {
+    val stats = uiState.stats
+
     Scaffold(
         topBar = {
             ShambaTopBar(
                 title = "Admin Dashboard",
                 onBack = null,
+                trailingIcon = {
+                    IconButton(onClick = onNavigateToSettings) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
             )
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
         Column(
             modifier = Modifier
@@ -52,7 +65,7 @@ fun AdminHomeScreen(
                 text = "Platform Overview",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
 
             // Stat Grid
@@ -60,38 +73,40 @@ fun AdminHomeScreen(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth().height(200.dp)
+                modifier = Modifier.fillMaxWidth().height(200.dp),
             ) {
                 item {
                     AdminStatCard(
                         title = "Total Farmers",
-                        value = "1,240",
+                        value = stats?.totalFarmers?.toString() ?: "0",
                         icon = Icons.Filled.Groups,
-                        color = Green40
+                        color = Green40,
                     )
                 }
                 item {
                     AdminStatCard(
                         title = "Active Policies",
-                        value = "850",
+                        value = stats?.activePolicies?.toString() ?: "0",
                         icon = Icons.Filled.VerifiedUser,
-                        color = Teal40
+                        color = Teal40,
                     )
                 }
                 item {
+                    val poolKes = stats?.poolBalanceKes ?: 0.0
+                    val formattedPool = if (poolKes >= 1_000_000) String.format("%.1fM", poolKes / 1_000_000) else poolKes.toInt().toString()
                     AdminStatCard(
                         title = "Pool Balance (KES)",
-                        value = "4.5M",
+                        value = formattedPool,
                         icon = Icons.Filled.AccountBalanceWallet,
-                        color = Color(0xFFE6A800)
+                        color = Color(0xFFE6A800),
                     )
                 }
                 item {
                     AdminStatCard(
                         title = "Pending Agents",
-                        value = "2",
+                        value = stats?.pendingAgents?.toString() ?: "0",
                         icon = Icons.Filled.PersonAdd,
-                        color = Color(0xFFD32F2F)
+                        color = Color(0xFFD32F2F),
                     )
                 }
             }
@@ -101,32 +116,32 @@ fun AdminHomeScreen(
                 text = "Quick Actions",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
 
             AdminActionCard(
                 title = "Manage Field Agents",
                 subtitle = "Approve or suspend agent accounts",
                 icon = Icons.Filled.PersonAdd,
-                onClick = onNavigateToAgents
+                onClick = onNavigateToAgents,
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             AdminActionCard(
                 title = "View Farm Maps",
                 subtitle = "Monitor polygons and NDVI heatmaps",
                 icon = Icons.Filled.Map,
-                onClick = onNavigateToMap
+                onClick = onNavigateToMap,
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             AdminActionCard(
                 title = "Pool Health Monitor",
                 subtitle = "Check coverage ratio and liabilities",
                 icon = Icons.Filled.AccountBalanceWallet,
-                onClick = onNavigateToPool
+                onClick = onNavigateToPool,
             )
         }
     }
@@ -138,18 +153,18 @@ fun AdminStatCard(title: String, value: String, icon: ImageVector, color: Color)
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.Start,
         ) {
             Box(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
                     .background(color.copy(alpha = 0.1f)),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
             }
@@ -168,18 +183,18 @@ fun AdminActionCard(title: String, subtitle: String, icon: ImageVector, onClick:
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             }

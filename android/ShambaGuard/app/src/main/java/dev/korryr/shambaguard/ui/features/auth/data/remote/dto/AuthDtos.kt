@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 // Registration request bodies
 
 data class FarmerRegisterRequestDto(
+    @SerializedName("id") val id: String? = null,
     @SerializedName("full_name") val fullName: String,
     @SerializedName("phone_number") val phoneNumber: String,
     @SerializedName("password") val password: String,

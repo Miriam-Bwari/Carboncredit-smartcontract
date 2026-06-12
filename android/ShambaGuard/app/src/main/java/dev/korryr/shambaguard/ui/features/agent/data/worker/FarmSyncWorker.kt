@@ -10,7 +10,7 @@ import dev.korryr.shambaguard.data.local.dao.FarmDao
 import dev.korryr.shambaguard.data.local.dao.UserDao
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.FarmApi
 import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmRegisterRequestDto
-import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FarmerRegisterRequestDto
+import dev.korryr.shambaguard.ui.features.auth.data.remote.dto.FarmerRegisterRequestDto
 import dev.korryr.shambaguard.core.network.GeoJsonPolygonDto
 import timber.log.Timber
 

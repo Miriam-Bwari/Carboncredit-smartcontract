@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database.connection import engine, Base
 from database import models
-from routers import farmers, farms, carbon, advice, agents, payments, weather
+from routers import farmers, farms, carbon, advice, agents, payments, weather, admin
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,6 +22,7 @@ app.add_middleware(
 
 app.include_router(farmers.router,  prefix="/api/farmers",  tags=["Farmers"])
 app.include_router(agents.router,   prefix="/api/agents",   tags=["Agents"])
+app.include_router(admin.router,    prefix="/api/admin",    tags=["Admin"])
 app.include_router(farms.router,    prefix="/api/farms",    tags=["Farms"])
 app.include_router(carbon.router,   prefix="/api/carbon",   tags=["Carbon"])
 app.include_router(advice.router,   prefix="/api/advice",   tags=["AI Advice"])

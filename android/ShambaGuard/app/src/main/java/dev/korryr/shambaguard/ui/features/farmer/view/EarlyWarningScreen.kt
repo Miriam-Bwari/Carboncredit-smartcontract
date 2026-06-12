@@ -100,7 +100,7 @@ private fun DroughtAlertBanner(uiState: EarlyWarningUiState) {
             Spacer(Modifier.height(8.dp))
             // Bilingual title
             Text(
-                text = "${uiState.alertTitleSwahili}\n${uiState.alertTitleEnglish}",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_farm_health_title, uiState.farmHealthValue),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
                     color = White,
@@ -133,7 +133,7 @@ private fun DroughtAlertBanner(uiState: EarlyWarningUiState) {
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text = "MVUA AI: ${uiState.aiConfidence}% confident",
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_ai_confidence, uiState.aiConfidence),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = White,
                         fontWeight = FontWeight.SemiBold,
@@ -169,7 +169,7 @@ private fun FarmStressMapCard(lastUpdated: String) {
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = "Farm Stress\nMap",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_farm_stress_map),
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -185,7 +185,7 @@ private fun FarmStressMapCard(lastUpdated: String) {
                     .padding(horizontal = 10.dp, vertical = 6.dp),
             ) {
                 Text(
-                    text = "Updated\n$lastUpdated",
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_updated_label, lastUpdated),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
@@ -276,9 +276,9 @@ private fun FarmStressMapCard(lastUpdated: String) {
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            LegendDot(color = Color(0xFF2E9447), label = "Healthy")
-            LegendDot(color = HeatYellow, label = "Stressed")
-            LegendDot(color = HeatRed, label = "Critical")
+            LegendDot(color = Color(0xFF2E9447), label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_legend_healthy))
+            LegendDot(color = HeatYellow, label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_legend_stressed))
+            LegendDot(color = HeatRed, label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_legend_critical))
         }
     }
 }
@@ -307,7 +307,7 @@ private fun LegendDot(color: Color, label: String) {
 private fun RainfallForecastSection(forecast: List<RainfallDay>) {
     Column {
         Text(
-            text = "7-Day Rainfall Forecast",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_7_day_forecast),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -377,7 +377,7 @@ private fun AIRecommendationCard(uiState: EarlyWarningUiState) {
             )
             Spacer(Modifier.width(6.dp))
             Text(
-                text = "AI RECOMMENDATION",
+                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_ai_recommendation),
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = ShambaAmber,
                     fontWeight = FontWeight.Bold,
@@ -388,7 +388,7 @@ private fun AIRecommendationCard(uiState: EarlyWarningUiState) {
         Spacer(Modifier.height(10.dp))
         // Crop title
         Text(
-            text = uiState.aiCropTitle,
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_ai_strategy),
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = White,
@@ -437,7 +437,7 @@ private fun CoverageCard(uiState: EarlyWarningUiState) {
         Spacer(Modifier.height(12.dp))
         // "COVERAGE ACTIVE"
         Text(
-            text = "COVERAGE ACTIVE",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_coverage_active),
             style = MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold,
@@ -446,7 +446,7 @@ private fun CoverageCard(uiState: EarlyWarningUiState) {
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "Your policy will pay",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_policy_will_pay),
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
@@ -454,7 +454,7 @@ private fun CoverageCard(uiState: EarlyWarningUiState) {
         Spacer(Modifier.height(6.dp))
         // KES amount
         Text(
-            text = "KES ${"%,d".format(uiState.payoutKes)}",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_kes_format, "%,d".format(uiState.payoutKes)),
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = Green40,

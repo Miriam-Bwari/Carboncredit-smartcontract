@@ -1,5 +1,7 @@
 package dev.korryr.shambaguard.ui.features.farmer.presentation
 
+import com.google.android.gms.maps.model.LatLng
+
 data class FarmPractice(
     val title: String,
     val date: String,
@@ -12,7 +14,7 @@ data class MyFarmUiState(
     val plotName: String = "Loading...",
     val farmAcres: Float = 0f,
     val activeCrop: String = "Loading...",
-    val polygonCoords: List<com.google.android.gms.maps.model.LatLng> = emptyList(),
+    val polygonCoords: List<LatLng> = emptyList(),
 
     // Land health
     val ndviScore: Float = 0f,

@@ -60,6 +60,11 @@ class FarmPracticesViewModel @Inject constructor(
         }
     }
 
+    fun onTreesChanged(count: String) {
+        val parsed = count.toIntOrNull() ?: 0
+        _uiState.update { it.copy(treeCount = maxOf(0, parsed)) }
+    }
+
     fun canComplete(): Boolean = _uiState.value.canComplete()
 
     fun onNavigationConsumed() {

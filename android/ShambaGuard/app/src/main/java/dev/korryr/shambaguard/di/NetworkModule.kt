@@ -39,4 +39,8 @@ object NetworkModule {
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+
+    @Provides
+    @Singleton
+    fun provideAdminApi(retrofit: Retrofit): dev.korryr.shambaguard.ui.features.admin.data.remote.AdminApi = retrofit.create(dev.korryr.shambaguard.ui.features.admin.data.remote.AdminApi::class.java)
 }

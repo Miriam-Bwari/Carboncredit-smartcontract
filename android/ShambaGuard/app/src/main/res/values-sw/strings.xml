@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Farmer Profile Screen -->
+    <string name="preferences">MAPENDELEO</string>
+    <string name="app_theme">Mandhari ya Programu</string>
+    <string name="theme_system">Mfumo</string>
+    <string name="theme_light">Mwanga</string>
+    <string name="theme_dark">Giza</string>
+    <string name="push_notifications">Arifa za Simu</string>
+    <string name="drought_alerts">Arifa za Ukame</string>
+    <string name="security">USALAMA</string>
+    <string name="biometric_unlock">Kufungua kwa Alama ya Kidole</string>
+    <string name="change_pin">Badilisha PIN</string>
+    <string name="legal_and_support">SHERIA NA MSAADA</string>
+    <string name="policy_documents">Hati za Sera</string>
+    <string name="privacy_policy">Sera ya Faragha</string>
+    <string name="app_version">Toleo la Programu</string>
+    <string name="log_out">Ondoka</string>
+    <string name="profile_language">Lugha</string>
+    <string name="profile_verified_farmer">Mkulima Aliyethibitishwa</string>
+
+    <!-- Farmer Dashboard Empty State -->
+    <string name="dashboard_welcome_title">Karibu Shamba Guard!</string>
+    <string name="dashboard_welcome_body">Ili kufungua ufuatiliaji wa ukame kupitia setilaiti, ufuatiliaji wa kaboni, na sera za bima, tunahitaji kujua shamba lako liko wapi.</string>
+    <string name="dashboard_register_cta">Sajili Shamba Langu</string>
+    <string name="dashboard_greeting">Habari, %1$s</string>
+    <string name="dashboard_tonnes">tani %1$s</string>
+    <string name="dashboard_rainfall_delta">%1$d%% kutoka wastani</string>
+    <string name="farmer">Mkulima</string>
+    <string name="unknown_region">Eneo Lisilojulikana</string>
+    <string name="unknown_farm">Shamba Lisilojulikana</string>
+    <string name="none">Hakuna</string>
+
+    <!-- Role Selection Screen -->
+    <string name="role_selection_title">Chagua Jukumu Lako</string>
+    <string name="role_selection_subtitle">Chagua Jukumu</string>
+    <string name="role_selection_description">Chagua jinsi utakavyotumia Shamba Guard leo.</string>
+    <string name="role_selection_cta">Endelea</string>
+    <string name="role_farmer_title">Mkulima</string>
+    <string name="role_agent_title">Wakala</string>
+    <string name="role_farmer_description">Sajili shamba lako na ulilinde.</string>
+    <string name="role_agent_description">Sajili wakulima katika eneo lako.</string>
+    <string name="role_card_selected_content_description">Imechaguliwa</string>
+
+    <!-- Registration Screen - Step 1: Personal Details -->
+    <string name="reg_screen_title">Jiandikishe</string>
+    <string name="reg_step_indicator">Hatua ya %1$d kati ya %2$d</string>
+    <string name="reg_step1_heading">Maelezo Binafsi</string>
+    <string name="reg_step1_subtitle">Tunahitaji taarifa zako za msingi ili kuunda wasifu wako wa Shamba Guard.</string>
+    <string name="reg_full_name_label">Jina Kamili (Kama Inavyoonekana kwa kitambulisho)</string>
+    <string name="reg_full_name_hint">mf. John Doe</string>
+    <string name="reg_national_id_label">Nambari ya Kitambulisho cha Taifa</string>
+    <string name="reg_national_id_hint">12345678</string>
+    <string name="reg_mpesa_phone_label">Nambari ya Simu ya M-Pesa</string>
+    <string name="reg_mpesa_phone_hint">+254 7XX XXX XXX</string>
+    <string name="reg_mpesa_helper">Hapa ndipo malipo yatatumwa</string>
+    <string name="reg_mpesa_badge">M-Pesa</string>
+    <string name="reg_next_step_cta">Hatua Inayofuata →</string>
+    <string name="reg_back_content_description">Rudi nyuma</string>
+    <!-- Validation -->
+    <string name="reg_error_full_name_empty">Jina kamili linahitajika</string>
+    <string name="reg_error_national_id_invalid">Ingiza nambari halali ya Kitambulisho cha Taifa (tarakimu 8)</string>
+    <string name="reg_error_phone_invalid">Ingiza nambari halali ya M-Pesa (mf. +254 712 345 678)</string>
+
+    <!-- Registration Screen - Step 2: Farm Boundary -->
+    <string name="farm_step2_instruction_title">Gusa mipaka ya shamba lako</string>
+    <string name="farm_step2_instruction_subtitle">Gusa mpaka wa shamba lako</string>
+    <string name="farm_step2_confirm_heading">Thibitisha Mpaka</string>
+    <string name="farm_step2_estimated_label">UKUBWA UNAOKADIRIWA</string>
+    <string name="farm_step2_save_cta">Hifadhi &amp; Endelea →</string>
+    <string name="farm_step2_area_acres_format">ac %.1f</string>
+    <string name="farm_step2_undo">Tendua</string>
+    <string name="farm_step2_layer_toggle">Badilisha safu ya ramani</string>
+    <string name="farm_step2_min_points_hint">Gusa angalau vituo 3 ili kuchora mpaka</string>
+
+    <!-- Registration Screen - Step 3: Farm Practices -->
+    <string name="practices_heading">Mbinu za Kilimo</string>
+    <string name="practices_subtitle">Tusaidie kuelewa mbinu zako za kilimo ili kuboresha usaidizi wetu na uwezekano wa kupata mikopo ya kaboni.</string>
+    <string name="practices_carbon_tip">Mbinu nzuri hukupa mikopo zaidi ya kaboni</string>
+    <string name="practices_crop_section">Zao Kuu</string>
+    <string name="practices_method_section">Mbinu ya Kilimo</string>
+    <string name="practices_water_section">Chanzo cha Maji</string>
+    <string name="practices_trees_section">Miti Iliyokomaa Shambani</string>
+    <string name="practices_trees_count_label">Idadi Inayokadiriwa</string>
+    <string name="practices_complete_cta">Kamilisha Usajili</string>
+    <!-- Crop chips -->
+    <string name="crop_maize">Mahindi</string>
+    <string name="crop_beans">Maharage</string>
+    <string name="crop_cowpeas">Kunde</string>
+    <string name="crop_sorghum">Mtama</string>
+    <string name="crop_millet">Uwele</string>
+    <string name="crop_cassava">Mhogo</string>
+    <!-- Farming method chips -->
+    <string name="method_agroforestry">Kilimo Mseto (Miti)</string>
+    <string name="method_no_till">Kilimo Bila Kulima</string>
+    <string name="method_cover_cropping">Kupanda Mazao ya Kufunika Ardhi</string>
+    <string name="method_conventional">Kilimo cha Kawaida</string>
+    <!-- Water source chips -->
+    <string name="water_rain_fed">Kutegemea Mvua</string>
+    <string name="water_irrigation">Umwagiliaji</string>
+    <string name="water_borehole">Kisima</string>
+    <!-- Accessibility -->
+    <string name="practices_decrement_trees">Punguza idadi ya miti</string>
+    <string name="practices_increment_trees">Ongeza idadi ya miti</string>
+
+    <!-- Policy Screen — Chagua Bima / Choose Your Coverage -->
+    <string name="policy_screen_title">Chagua Bima</string>
+    <string name="policy_screen_subtitle">Chagua Kinga Yako</string>
+    <!-- Tier card actions -->
+    <string name="policy_tier_select">Chagua Mpango</string>
+    <string name="policy_tier_selected">Imechaguliwa</string>
+    <string name="policy_recommended_badge">INAPENDEKEZWA</string>
+    <!-- M-Pesa payment footer -->
+    <string name="policy_mpesa_label">M-PESA</string>
+    <string name="policy_mpesa_cta">Lipa na M-Pesa</string>
+    <string name="policy_secure_payment_hint">Malipo salama</string>
+    <string name="policy_payment_processing">Inashughulikiwa…</string>
+    <string name="policy_payment_success">Bima Imeidhinishwa!</string>
+
+    <!-- Farmer Dashboard Screen -->
+    <string name="dashboard_section_home">Nyumbani</string>
+    <!-- Top bar -->
+    <string name="dashboard_satellite_desc">Picha ya satelaiti ya shamba</string>
+    <!-- Alert card -->
+    <string name="dashboard_risk_critical">HATARI KUBWA SANA</string>
+    <string name="dashboard_risk_high">HATARI KUBWA</string>
+    <string name="dashboard_risk_moderate">HATARI YA WASTANI</string>
+    <string name="dashboard_risk_low">HATARI NDOGO</string>
+    <string name="dashboard_drought_alert">Tahadhari ya Ukame</string>
+    <string name="dashboard_drought_watch">Uangalizi wa Ukame</string>
+    <string name="dashboard_conditions_normal">Hali ya Kawaida</string>
+    <string name="dashboard_ndvi_label">Alama ya NDVI</string>
+    <string name="dashboard_rainfall_label">Mvua (Siku 21)</string>
+    <string name="dashboard_insights_cta">Tazama Maarifa na Hatua za Kuchukua →</string>
+    <!-- At a Glance -->
+    <string name="dashboard_at_a_glance">Kwa Ufupi</string>
+    <string name="dashboard_policy_status">Hali ya Bima</string>
+    <string name="dashboard_policy_active">● Inatumika</string>
+    <string name="dashboard_policy_inactive">● Haitumiki</string>
+    <string name="dashboard_policy_expiry">Kinga hadi %1$s</string>
+    <string name="dashboard_carbon">Kaboni</string>
+    <string name="dashboard_carbon_claim">Thamani ya Dai</string>
+    <!-- Recent Activity -->
+    <string name="dashboard_recent_activity">Shughuli za Hivi Karibuni</string>
+
+    <!-- Early Warning Screen -->
+    <string name="drought_screen_title">Onyo la Mapema</string>
+    <string name="drought_alert_subtitle">Kulingana na NDVI &amp; Mvua</string>
+    <string name="drought_forecast_title">Utabiri wa Siku 14</string>
+    <string name="drought_forecast_subtitle">Kielezo cha uwezekano wa ukame</string>
+    <string name="drought_legend_risk">Alama ya Hatari</string>
+    <string name="drought_crop_rec_label">Hatua Inayopendekezwa</string>
+    <string name="drought_full_analysis_cta">Uchambuzi Kamili →</string>
+    <string name="drought_ai_confidence">MVUA AI: Asilimia %1$d uhakika</string>
+    <string name="drought_farm_stress_map">Ramani ya Mkazo\nwa Shamba</string>
+    <string name="drought_updated_label">Ilisasishwa\n%1$s</string>
+    <string name="drought_legend_healthy">Afya Nzuri</string>
+    <string name="drought_legend_stressed">Ina Mkazo</string>
+    <string name="drought_legend_critical">Hali Mbaya</string>
+    <string name="drought_7_day_forecast">Utabiri wa Mvua Siku 7</string>
+    <string name="drought_ai_recommendation">MAPENDEKEZO YA AI</string>
+    <string name="drought_coverage_active">BIMA INATUMIKA</string>
+    <string name="drought_policy_will_pay">Bima yako italipa</string>
+    <string name="drought_kes_format">KSh %1$s</string>
+    <string name="drought_farm_health_title">Hali ya Shamba: %1$s</string>
+    <string name="drought_ai_strategy">Mbinu ya AI</string>
+    <!-- Drought Insights Screen -->
+    <string name="insights_screen_title">Maarifa ya Ukame</string>
+    <string name="insights_ndvi_trend">Mwenendo wa NDVI</string>
+    <string name="insights_rainfall_trend">Mwenendo wa Mvua</string>
+    <string name="insights_payout_status">Hali ya Malipo</string>
+    <string name="insights_trigger_met">Kiwango Kimefikiwa</string>
+    <string name="insights_trigger_not_met">Haijafikiwa</string>
+    <string name="insights_trigger_desc">Inahitaji NDVI &lt; %1$.2f na Mvua &lt; %2$d mm</string>
+    <string name="insights_satellite_data">Takwimu za Satelaiti</string>
+    <string name="insights_source">Chanzo: %1$s</string>
+    <string name="insights_last_updated">Ilisasishwa: %1$s</string>
+
+    <!-- My Farm Screen -->
+    <string name="my_farm_add_practice">Ongeza Shughuli</string>
+    <string name="my_farm_acres_format">Ekari %1$s</string>
+    <string name="my_farm_view_on_map">Tazama kwenye ramani</string>
+    <string name="my_farm_land_health">Afya ya Ardhi</string>
+    <string name="my_farm_ndvi_score">Alama ya NDVI</string>
+    <string name="my_farm_veg_cover">Uoto wa Asili</string>
+    <string name="my_farm_soil_carbon_level">Kiwango cha Kaboni</string>
+    <string name="my_farm_practice_log">Kumbukumbu za Shughuli</string>
+    <string name="my_farm_log_new_practice">Sajili Shughuli Mpya</string>
+    <string name="my_farm_tillage_label">Njia ya Kulima (mf. Kulima kidogo)</string>
+    <string name="my_farm_trees_label">Miti Iliyopandwa</string>
+    <string name="my_farm_irrigation_label">Chanzo cha Maji</string>
+    <string name="my_farm_submit">Wasilisha</string>
+    <string name="my_farm_cancel">Ghairi</string>
+
+    <!-- Carbon Screen -->
+    <string name="carbon_available_credits">KABONI INAYOPATIKANA</string>
+    <string name="carbon_tonnes_co2e">tani %1$s CO2e</string>
+    <string name="carbon_kes_approx">≈ KSh %1$s</string>
+    <string name="carbon_sell_credits_now">Uza Mikopo Sasa</string>
+    <string name="carbon_minting_pipeline">Mchakato wa Kuidhinisha</string>
+    <string name="carbon_real_impact">Athari Yako Halisi</string>
+    <string name="carbon_trees_equivalent">Sawa na\nmiti iliyopandwa</string>
+    <string name="carbon_km_not_driven">Km ambazo hazijaendeshwa</string>
+    <string name="carbon_earnings_history">Historia ya Mapato</string>
+    <string name="carbon_view_all">Tazama Yote</string>
+    <string name="carbon_completed">Imekamilika</string>
+    <string name="carbon_plus_kes">+ KSh %1$s</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">Karibu Tena</string>
+    <string name="login_subtitle">Karibu tena kwenye Shamba Guard</string>
+    <string name="login_role_farmer">Mkulima</string>
+    <string name="login_role_agent">Wakala</string>
+    <string name="login_phone_label">Nambari ya Simu</string>
+    <string name="login_phone_hint">+254 7XX XXX XXX</string>
+    <string name="login_password_label">Nenosiri</string>
+    <string name="login_show_password">Onyesha nenosiri</string>
+    <string name="login_hide_password">Ficha nenosiri</string>
+    <string name="login_cta">Ingia</string>
+    <string name="login_no_account">Huna akaunti?</string>
+    <string name="login_sign_up">Jisajili</string>
+    <string name="login_error_fields_required">Tafadhali ingiza nambari yako ya simu na nenosiri</string>
+
+    <!-- Account Registration Screen -->
+    <string name="reg_account_title_farmer">Unda Akaunti ya Mkulima</string>
+    <string name="reg_account_title_agent">Unda Akaunti ya Wakala</string>
+    <string name="reg_account_subtitle">Ingiza maelezo yako ili kuanza kutumia Shamba Guard.</string>
+    <string name="reg_phone_label">Nambari ya Simu</string>
+    <string name="reg_phone_hint">+254 7XX XXX XXX</string>
+    <string name="reg_phone_helper">Nambari hii itatumika kuingia na kupokea malipo ya M-Pesa</string>
+    <string name="reg_county_label">Kaunti</string>
+    <string name="reg_county_hint">mf. Kitui, Meru, Machakos</string>
+    <string name="reg_password_label">Nenosiri</string>
+    <string name="reg_confirm_password_label">Thibitisha Nenosiri</string>
+    <string name="reg_create_account_cta">Unda Akaunti</string>
+    <string name="reg_have_account">Tayari una akaunti?</string>
+    <string name="reg_sign_in">Ingia</string>
+    <!-- New validation errors -->
+    <string name="reg_error_phone_empty">Nambari ya simu inahitajika</string>
+    <string name="reg_error_county_empty">Kaunti inahitajika</string>
+    <string name="reg_error_password_short">Nenosiri lazima liwe na herufi 4 kamili</string>
+    <string name="reg_error_password_mismatch">Manenosiri hayaendani</string>
+
+    <!-- Agent Pending Screen -->
+    <string name="agent_pending_title">Usajili Umepokelewa!</string>
+    <string name="agent_pending_subtitle">Asante</string>
+    <string name="agent_pending_body">Akaunti yako ya wakala inasubiri idhini ya msimamizi. Utapokea SMS punde akaunti yako itakapowezeshwa.</string>
+    <string name="agent_pending_contact_hint">Wasiliana na msimamizi wako ikiwa unahitaji idhini ya haraka.</string>
+    <string name="agent_pending_go_to_login">Nenda kwenye Ingia</string>
+
+</resources>

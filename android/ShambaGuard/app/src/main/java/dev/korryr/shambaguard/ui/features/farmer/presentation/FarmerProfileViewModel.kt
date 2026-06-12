@@ -13,10 +13,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import dev.korryr.shambaguard.core.datastore.SettingsManager
+import dev.korryr.shambaguard.core.datastore.AppThemeMode
+
 @HiltViewModel
 class FarmerProfileViewModel @Inject constructor(
     private val farmRepository: FarmRepository,
     private val sessionManager: SessionManager,
+    private val settingsManager: SettingsManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FarmerProfileUiState(isLoading = true))
@@ -24,6 +28,18 @@ class FarmerProfileViewModel @Inject constructor(
 
     init {
         loadProfileData()
+        
+        viewModelScope.launch {
+            settingsManager.appThemeFlow.collect { theme ->
+                _uiState.update { it.copy(themeMode = theme) }
+            }
+        }
+
+        viewModelScope.launch {
+            settingsManager.appLanguageFlow.collect { lang ->
+                _uiState.update { it.copy(selectedLanguage = lang) }
+            }
+        }
     }
 
     private fun loadProfileData() {
@@ -51,7 +67,9 @@ class FarmerProfileViewModel @Inject constructor(
     }
 
     fun onLanguageSelected(lang: String) {
-        _uiState.update { it.copy(selectedLanguage = lang) }
+        viewModelScope.launch {
+            settingsManager.setLanguage(lang)
+        }
     }
 
     fun onPushNotificationsToggled() {
@@ -64,5 +82,17 @@ class FarmerProfileViewModel @Inject constructor(
 
     fun onBiometricToggled() {
         _uiState.update { it.copy(biometricEnabled = !it.biometricEnabled) }
+    }
+
+    fun setTheme(mode: AppThemeMode) {
+        viewModelScope.launch {
+            settingsManager.setThemeMode(mode)
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            sessionManager.clearSession()
+        }
     }
 }

@@ -10,6 +10,8 @@ data class AgentOnboardingUiState(
 
     // Step 2: Map
     val polygonPoints: List<LatLng> = emptyList(),
+    val mapType: Int = com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID,
+    val currentRegionName: String = "Detecting location...",
 
     // Step 3: Practices
     val cropType: String = "",

@@ -1,5 +1,6 @@
 package dev.korryr.shambaguard.ui.features.auth.presentation
 
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import kotlin.math.abs
 import kotlin.math.sin
@@ -7,15 +8,16 @@ import kotlin.math.sin
 // Step 2 — farm polygon drawing state
 data class FarmBoundaryUiState(
     val points: List<LatLng> = emptyList(),
-    val mapType: Int = com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE,
+    val mapType: Int = GoogleMap.MAP_TYPE_HYBRID,
     val isSaving: Boolean = false,
+    val currentRegionName: String = "Detecting location...",
 )
 
 // Returns polygon area in acres using the Shoelace formula with haversine correction.
 // Requires >= 3 points. Returns null if the polygon is not yet closed.
-fun FarmBoundaryUiState.estimatedAreaAcres(): Double? {
-    if (points.size < 3) return null
-    val closed = points + points.first()
+fun List<LatLng>.estimatedAreaAcres(): Double? {
+    if (size < 3) return null
+    val closed = this + this.first()
     var area = 0.0
     for (i in 0 until closed.size - 1) {
         val a = closed[i]

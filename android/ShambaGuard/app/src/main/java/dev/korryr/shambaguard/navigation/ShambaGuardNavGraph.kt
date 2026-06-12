@@ -273,6 +273,7 @@ fun ShambaGuardNavGraph(
                         uiState = state,
                         canSave = vm.canSave(),
                         onMapTapped = vm::onMapTapped,
+                        onCameraMoved = vm::onCameraMoved,
                         onUndo = vm::onUndoLastPoint,
                         onToggleLayer = vm::onToggleMapType,
                         onSave = {
@@ -312,6 +313,7 @@ fun ShambaGuardNavGraph(
                         onWaterSelected = vm::onWaterSelected,
                         onIncrementTrees = vm::onIncrementTrees,
                         onDecrementTrees = vm::onDecrementTrees,
+                        onTreesChanged = vm::onTreesChanged,
                         onComplete = vm::submitFarmDetails,
                         onBack = { backStack.removeLastOrNull() },
                     )
@@ -357,15 +359,37 @@ fun ShambaGuardNavGraph(
 
                 // Admin screens
                 entry<AdminHomeKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.admin.presentation.AdminHomeViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
                     AdminHomeScreen(
+                        uiState = state,
                         onNavigateToAgents = { backStack.add(AdminAgentsKey) },
                         onNavigateToMap = { backStack.add(AdminMapKey) },
                         onNavigateToPool = { backStack.add(AdminPoolKey) },
+                        onNavigateToSettings = { backStack.add(SharedSettingsKey) }
                     )
                 }
                 entry<AdminMapKey> { FarmMapScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
-                entry<AdminAgentsKey> { AgentManagementScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
-                entry<AdminPoolKey> { PoolHealthScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AdminAgentsKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.admin.presentation.AgentManagementViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.admin.view.AgentManagementScreen(
+                        uiState = state,
+                        onApprove = vm::approveAgent,
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                    )
+                }
+                entry<AdminPoolKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.admin.presentation.PoolHealthViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.admin.view.PoolHealthScreen(
+                        uiState = state,
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                    )
+                }
 
                 // Agent screens
                 entry<AgentHomeKey> {
@@ -378,6 +402,7 @@ fun ShambaGuardNavGraph(
                         onSyncNow = vm::onSyncNow,
                         onFilterToggled = vm::onFilterToggled,
                         onFarmerClicked = { /* AgentFarmerDetailKey(it) — Week 5 */ },
+                        onSettingsClicked = { backStack.add(SharedSettingsKey) },
                     )
                 }
                 entry<AgentFarmersKey> {
@@ -405,6 +430,22 @@ fun ShambaGuardNavGraph(
                         onNavigateBack = { backStack.removeLastOrNull() },
                     )
                 }
+                entry<SharedSettingsKey> {
+                    val vm: dev.korryr.shambaguard.ui.features.settings.presentation.SharedSettingsViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+
+                    dev.korryr.shambaguard.ui.features.settings.view.SharedSettingsScreen(
+                        uiState = state,
+                        onThemeChanged = vm::setTheme,
+                        onLogout = vm::logout,
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                        onNavigateToLogin = {
+                            // Clear backstack and go to login
+                            backStack.clear()
+                            backStack.add(LoginKey)
+                        },
+                    )
+                }
 
                 // Agent Onboarding Flow
                 entry<AgentOnboardingDetailsKey> {
@@ -421,6 +462,9 @@ fun ShambaGuardNavGraph(
                     dev.korryr.shambaguard.ui.features.agent.view.MapPolygonScreen(
                         uiState = state,
                         onUpdatePolygon = agentOnboardingVm::updatePolygon,
+                        onCameraMoved = agentOnboardingVm::onCameraMoved,
+                        onToggleMapType = agentOnboardingVm::onToggleMapType,
+                        onUndo = agentOnboardingVm::onUndoLastPoint,
                         onNavigateBack = { backStack.removeLastOrNull() },
                         onNavigateToPractices = { backStack.add(AgentOnboardingPracticesKey) },
                     )
@@ -459,9 +503,9 @@ fun ShambaGuardNavGraph(
 
                     FarmerDashboardScreen(
                         uiState = state,
-                        onSeeInsights = { navigateTo(FarmerDroughtInsightsKey) },
-                        onViewPolicy = { navigateTo(FarmerPolicyKey) },
-                        onViewCarbon = { navigateTo(FarmerCarbonKey) },
+                        onSeeInsights = { backStack.add(FarmerDroughtKey) },
+                        onViewPolicy = { backStack.add(FarmerPolicyKey) },
+                        onViewCarbon = { backStack.add(FarmerCarbonKey) },
                         onRegisterFarm = { backStack.add(FarmBoundaryKey) },
                     )
                 }
@@ -514,7 +558,11 @@ fun ShambaGuardNavGraph(
                         onChangePinClicked = {},
                         onPolicyDocsClicked = {},
                         onPrivacyPolicyClicked = {},
-                        onSignOut = { navigateTo(LoginKey) },
+                        onThemeChanged = vm::setTheme,
+                        onSignOut = {
+                            vm.logout()
+                            navigateTo(LoginKey)
+                        },
                     )
                 }
                 // Non-tab screens — navigated from dashboard or tabs

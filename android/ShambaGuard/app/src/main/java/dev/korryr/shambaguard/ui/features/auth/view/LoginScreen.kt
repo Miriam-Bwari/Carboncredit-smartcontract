@@ -58,6 +58,11 @@ import dev.korryr.shambaguard.sharedComposables.ShambaButton
 import dev.korryr.shambaguard.sharedComposables.ShambaTextField
 import dev.korryr.shambaguard.ui.features.auth.presentation.LoginUiState
 
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LoginScreen(
@@ -71,6 +76,9 @@ fun LoginScreen(
     onSignUpClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var tapCount by remember { mutableIntStateOf(0) }
+    var isAdminMode by remember { mutableStateOf(false) }
+
     LaunchedEffect(uiState.successRole) {
         uiState.successRole?.let { onLoginSuccess(it) }
     }
@@ -101,13 +109,19 @@ fun LoginScreen(
                 modifier = Modifier
                     .size(64.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(if (isAdminMode) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer)
+                    .clickable {
+                        tapCount++
+                        if (tapCount >= 7) {
+                            isAdminMode = true
+                        }
+                    },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     painter = painterResource(R.drawable.leaf),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = if (isAdminMode) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(32.dp),
                 )
             }
@@ -115,7 +129,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = stringResource(R.string.login_title),
+                text = if (isAdminMode) "Admin Login" else stringResource(R.string.login_title),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -126,7 +140,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = stringResource(R.string.login_subtitle),
+                text = if (isAdminMode) "Authorized personnel only" else stringResource(R.string.login_subtitle),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
@@ -136,23 +150,24 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // Role toggle
-            RoleToggle(
-                selectedRole = uiState.role,
-                onRoleToggled = onRoleToggled,
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-                    .fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(28.dp))
+            if (!isAdminMode) {
+                RoleToggle(
+                    selectedRole = uiState.role,
+                    onRoleToggled = onRoleToggled,
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .fillMaxWidth(),
+                )
+                Spacer(modifier = Modifier.height(28.dp))
+            }
 
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                 ShambaTextField(
                     value = uiState.phone,
                     onValueChange = onPhoneChanged,
-                    label = stringResource(R.string.login_phone_label),
+                    label = if (isAdminMode) "Admin Email" else stringResource(R.string.login_phone_label),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Phone,
+                        keyboardType = if (isAdminMode) KeyboardType.Email else KeyboardType.Phone,
                         imeAction = ImeAction.Next,
                     ),
                     enabled = !uiState.isLoading,

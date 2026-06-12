@@ -173,7 +173,7 @@ class RegistrationViewModel @Inject constructor(
                     // Auto-login to obtain and save the access token!
                     val loginRole = if (role == AppUserRole.Farmer) dev.korryr.shambaguard.navigation.UserRole.Farmer else dev.korryr.shambaguard.navigation.UserRole.Agent
                     authRepository.login(state.phone.replace(" ", ""), state.password, loginRole)
-                    
+
                     _uiState.update { it.copy(isLoading = false, successId = id) }
                 },
                 onFailure = { e ->
