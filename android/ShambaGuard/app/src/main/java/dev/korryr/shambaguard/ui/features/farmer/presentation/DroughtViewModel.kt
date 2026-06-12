@@ -63,10 +63,8 @@ class DroughtViewModel @Inject constructor(
                     _warningState.update {
                         it.copy(
                             currentRisk = risk,
-                            alertTitleSwahili = "",
-                            alertTitleEnglish = "Farm Health: ${adviceResult.farmHealth}",
+                            farmHealthValue = adviceResult.farmHealth,
                             alertBody = adviceRec,
-                            aiCropTitle = "AI Strategy",
                             aiCropBody = adviceRec,
                         )
                     }

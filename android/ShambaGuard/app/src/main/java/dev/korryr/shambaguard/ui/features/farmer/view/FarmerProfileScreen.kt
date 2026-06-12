@@ -257,7 +257,7 @@ private fun ProfileHeader(uiState: FarmerProfileUiState) {
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text = "Verified Farmer",
+                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.profile_verified_farmer),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Green40,
                         fontWeight = FontWeight.SemiBold,
@@ -312,7 +312,7 @@ private fun LanguageRow(selected: String, onSelect: (String) -> Unit) {
         )
         Spacer(Modifier.width(14.dp))
         Text(
-            text = "Language",
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.profile_language),
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface,

@@ -121,6 +121,19 @@
     <string name="drought_legend_risk">Risk Score</string>
     <string name="drought_crop_rec_label">Recommended Action</string>
     <string name="drought_full_analysis_cta">Full Analysis →</string>
+    <string name="drought_ai_confidence">MVUA AI: %1$d%% confident</string>
+    <string name="drought_farm_stress_map">Farm Stress\nMap</string>
+    <string name="drought_updated_label">Updated\n%1$s</string>
+    <string name="drought_legend_healthy">Healthy</string>
+    <string name="drought_legend_stressed">Stressed</string>
+    <string name="drought_legend_critical">Critical</string>
+    <string name="drought_7_day_forecast">7-Day Rainfall Forecast</string>
+    <string name="drought_ai_recommendation">AI RECOMMENDATION</string>
+    <string name="drought_coverage_active">COVERAGE ACTIVE</string>
+    <string name="drought_policy_will_pay">Your policy will pay</string>
+    <string name="drought_kes_format">KES %1$s</string>
+    <string name="drought_farm_health_title">Farm Health: %1$s</string>
+    <string name="drought_ai_strategy">AI Strategy</string>
 
     <!-- Drought Insights Screen -->
     <string name="insights_screen_title">Drought Insights</string>
@@ -133,6 +146,36 @@
     <string name="insights_satellite_data">Satellite Data</string>
     <string name="insights_source">Source: %1$s</string>
     <string name="insights_last_updated">Updated: %1$s</string>
+
+    <!-- My Farm Screen -->
+    <string name="my_farm_add_practice">Add Practice</string>
+    <string name="my_farm_acres_format">%1$s Acres</string>
+    <string name="my_farm_view_on_map">View on map</string>
+    <string name="my_farm_land_health">Land Health</string>
+    <string name="my_farm_ndvi_score">NDVI Score</string>
+    <string name="my_farm_veg_cover">Veg Cover</string>
+    <string name="my_farm_soil_carbon_level">Soil Carbon Level</string>
+    <string name="my_farm_practice_log">Practice Log</string>
+    <string name="my_farm_log_new_practice">Log New Practice</string>
+    <string name="my_farm_tillage_label">Tillage Method (e.g. Minimum Tillage)</string>
+    <string name="my_farm_trees_label">Trees Planted</string>
+    <string name="my_farm_irrigation_label">Irrigation Source</string>
+    <string name="my_farm_submit">Submit</string>
+    <string name="my_farm_cancel">Cancel</string>
+
+    <!-- Carbon Screen -->
+    <string name="carbon_available_credits">AVAILABLE CARBON CREDITS</string>
+    <string name="carbon_tonnes_co2e">%1$s tonnes CO2e</string>
+    <string name="carbon_kes_approx">≈ KES %1$s</string>
+    <string name="carbon_sell_credits_now">Sell Credits Now</string>
+    <string name="carbon_minting_pipeline">Minting Pipeline</string>
+    <string name="carbon_real_impact">Your Real Impact</string>
+    <string name="carbon_trees_equivalent">Trees planted\nequivalent</string>
+    <string name="carbon_km_not_driven">Km not driven</string>
+    <string name="carbon_earnings_history">Earnings History</string>
+    <string name="carbon_view_all">View All</string>
+    <string name="carbon_completed">Completed</string>
+    <string name="carbon_plus_kes">+ KES %1$s</string>
 
     <!-- Login Screen -->
     <string name="login_title">Karibu Tena</string>
@@ -191,6 +234,8 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="app_version">App Version</string>
     <string name="log_out">Log Out</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_verified_farmer">Verified Farmer</string>
 
     <!-- Farmer Dashboard Empty State -->
     <string name="dashboard_welcome_title">Welcome to Shamba Guard!</string>

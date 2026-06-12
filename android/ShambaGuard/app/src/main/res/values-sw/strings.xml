@@ -16,6 +16,8 @@
     <string name="privacy_policy">Sera ya Faragha</string>
     <string name="app_version">Toleo la Programu</string>
     <string name="log_out">Ondoka</string>
+    <string name="profile_language">Lugha</string>
+    <string name="profile_verified_farmer">Mkulima Aliyethibitishwa</string>
 
     <!-- Farmer Dashboard Empty State -->
     <string name="dashboard_welcome_title">Karibu Shamba Guard!</string>
@@ -149,7 +151,19 @@
     <string name="drought_legend_risk">Alama ya Hatari</string>
     <string name="drought_crop_rec_label">Hatua Inayopendekezwa</string>
     <string name="drought_full_analysis_cta">Uchambuzi Kamili →</string>
-
+    <string name="drought_ai_confidence">MVUA AI: Asilimia %1$d uhakika</string>
+    <string name="drought_farm_stress_map">Ramani ya Mkazo\nwa Shamba</string>
+    <string name="drought_updated_label">Ilisasishwa\n%1$s</string>
+    <string name="drought_legend_healthy">Afya Nzuri</string>
+    <string name="drought_legend_stressed">Ina Mkazo</string>
+    <string name="drought_legend_critical">Hali Mbaya</string>
+    <string name="drought_7_day_forecast">Utabiri wa Mvua Siku 7</string>
+    <string name="drought_ai_recommendation">MAPENDEKEZO YA AI</string>
+    <string name="drought_coverage_active">BIMA INATUMIKA</string>
+    <string name="drought_policy_will_pay">Bima yako italipa</string>
+    <string name="drought_kes_format">KSh %1$s</string>
+    <string name="drought_farm_health_title">Hali ya Shamba: %1$s</string>
+    <string name="drought_ai_strategy">Mbinu ya AI</string>
     <!-- Drought Insights Screen -->
     <string name="insights_screen_title">Maarifa ya Ukame</string>
     <string name="insights_ndvi_trend">Mwenendo wa NDVI</string>

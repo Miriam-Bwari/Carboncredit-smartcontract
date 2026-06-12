@@ -9,8 +9,7 @@ data class RainfallDay(
 
 data class EarlyWarningUiState(
     // Alert banner
-    val alertTitleSwahili: String = "Inapakia...",
-    val alertTitleEnglish: String = "Loading...",
+    val farmHealthValue: String = "Loading...",
     val alertBody: String = "Fetching latest drought data...",
     val aiConfidence: Int = 0,
 
@@ -21,7 +20,6 @@ data class EarlyWarningUiState(
     val rainfallForecast: List<RainfallDay> = emptyList(),
 
     // AI crop recommendation
-    val aiCropTitle: String = "Analysing farm...",
     val aiCropBody: String = "Fetching AI recommendations for your crop.",
 
     // Policy coverage card
