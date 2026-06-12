@@ -205,6 +205,8 @@
     <string name="carbon_view_all">Tazama Yote</string>
     <string name="carbon_completed">Imekamilika</string>
     <string name="carbon_plus_kes">+ KSh %1$s</string>
+    <string name="carbon_scan_pending_title">Upigaji Picha wa Setilaiti Unasubiri</string>
+    <string name="carbon_scan_pending_body">Shamba lako limesajiliwa. Setilaiti ya Sentinel-2 itapiga picha ardhi yako ndani ya siku 5 zijazo na data yako ya kaboni itaonekana hapa kiotomatiki.</string>
 
     <!-- Login Screen -->
     <string name="login_title">Karibu Tena</string>

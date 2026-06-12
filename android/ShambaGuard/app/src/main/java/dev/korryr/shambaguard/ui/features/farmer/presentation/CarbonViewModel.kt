@@ -37,11 +37,11 @@ class CarbonViewModel @Inject constructor(
                 val farmId = firstFarm.id
                 val carbonResult = farmRepository.getCarbonHistory(farmId).getOrNull()
 
-                if (carbonResult != null) {
+                if (carbonResult != null && carbonResult.scans > 0) {
                     val rawTonnes = carbonResult.totalCarbonKg / 1000f
                     val tonnes = Math.round(rawTonnes * 10.0) / 10.0f
 
-                    val kes = (carbonResult.totalCredits * 450).toInt() // Estimated market rate: 1 credit = 450 KES
+                    val kes = (carbonResult.totalCredits * 450).toInt()
 
                     val steps = mutableListOf<PipelineStep>()
                     steps.add(PipelineStep("Data Collected", "Farm scan complete", PipelineStatus.DONE))
@@ -62,7 +62,6 @@ class CarbonViewModel @Inject constructor(
                     }
 
                     val earningsList = carbonResult.records.filter { (it.credits ?: 0f) > 0f }.map { record ->
-                        // Parse "2026-06-08T05:26:40" to "2026-06-08"
                         val dateStr = try {
                             val idx = record.date.indexOf('T')
                             if (idx != -1) record.date.substring(0, idx) else record.date
@@ -88,8 +87,12 @@ class CarbonViewModel @Inject constructor(
                             kmNotDriven = (tonnes * 100).toInt(),
                             pipelineSteps = steps,
                             earnings = earningsList,
+                            satelliteDataUnavailable = false,
                         )
                     }
+                } else {
+                    // No satellite scan data yet — inform the farmer honestly
+                    _uiState.update { it.copy(satelliteDataUnavailable = true) }
                 }
             }
 

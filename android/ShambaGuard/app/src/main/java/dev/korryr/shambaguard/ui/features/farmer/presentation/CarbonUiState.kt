@@ -32,4 +32,7 @@ data class CarbonUiState(
     val earnings: List<CarbonEarning> = emptyList(),
 
     val isLoading: Boolean = true,
+
+    // True when GEE returned no data — show 'scan pending' message instead of zeros
+    val satelliteDataUnavailable: Boolean = false,
 )

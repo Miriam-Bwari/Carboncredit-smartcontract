@@ -66,12 +66,48 @@ fun CarbonScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             Spacer(Modifier.height(4.dp))
-            CarbonBanner(uiState, onSellCredits)
-            MintingPipelineSection(uiState.pipelineSteps)
-            RealImpactSection(uiState)
-            EarningsHistorySection(uiState.earnings, onViewAllEarnings)
+            if (uiState.satelliteDataUnavailable) {
+                SatellitePendingBanner()
+            } else {
+                CarbonBanner(uiState, onSellCredits)
+                MintingPipelineSection(uiState.pipelineSteps)
+                RealImpactSection(uiState)
+                EarningsHistorySection(uiState.earnings, onViewAllEarnings)
+            }
             Spacer(Modifier.height(16.dp))
         }
+    }
+}
+
+@Composable
+private fun SatellitePendingBanner() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Satellite,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(48.dp),
+        )
+        Text(
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_scan_pending_title),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            textAlign = TextAlign.Center,
+        )
+        Text(
+            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_scan_pending_body),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            ),
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
