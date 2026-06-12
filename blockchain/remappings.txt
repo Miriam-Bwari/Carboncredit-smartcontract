@@ -1,1 +1,5 @@
-forge-std/=lib/forge-std/src/
+@openzeppelin/contracts/=/home/miriam/blockchain/lib/openzeppelin-contracts/contracts/
+erc4626-tests/=/home/miriam/blockchain/lib/openzeppelin-contracts/lib/erc4626-tests/
+forge-std/=/home/miriam/blockchain/lib/forge-std/src/
+halmos-cheatcodes/=/home/miriam/blockchain/lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/
+openzeppelin-contracts/=/home/miriam/blockchain/lib/openzeppelin-contracts/contracts/
