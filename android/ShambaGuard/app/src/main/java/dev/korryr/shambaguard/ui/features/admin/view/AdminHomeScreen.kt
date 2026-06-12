@@ -143,6 +143,30 @@ fun AdminHomeScreen(
                 icon = Icons.Filled.AccountBalanceWallet,
                 onClick = onNavigateToPool,
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+            
+            Text(
+                text = "System Health",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 12.dp),
+            )
+
+            if (uiState.scanStatus != null) {
+                AdminScanHealthCard(scanStatus = uiState.scanStatus)
+            } else {
+                Card(
+                    modifier = Modifier.fillMaxWidth().height(100.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                ) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    }
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
@@ -202,6 +226,52 @@ fun AdminActionCard(title: String, subtitle: String, icon: ImageVector, onClick:
             Column {
                 Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                 Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+    }
+}
+
+@Composable
+fun AdminScanHealthCard(scanStatus: dev.korryr.shambaguard.ui.features.admin.domain.model.CarbonScanStatus) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(Icons.Filled.Map, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Text("Sentinel-2 Scan Status", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(scanStatus.totalFarms.toString(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                    Text("Total Farms", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(scanStatus.scannedFarms.toString(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = Green40)
+                    Text("Scanned", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(scanStatus.pendingFarms.toString(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = Color(0xFFD32F2F))
+                    Text("Pending", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
         }
     }

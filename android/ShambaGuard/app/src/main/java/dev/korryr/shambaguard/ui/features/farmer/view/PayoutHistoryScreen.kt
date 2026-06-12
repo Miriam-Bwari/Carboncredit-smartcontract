@@ -2,14 +2,17 @@ package dev.korryr.shambaguard.ui.features.farmer.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.ui.features.farmer.presentation.CarbonEarning
 
 @Composable
 fun PayoutHistoryScreen(
+    earnings: List<CarbonEarning>,
     onNavigateBack: () -> Unit,
 ) {
     Scaffold(
@@ -20,47 +23,62 @@ fun PayoutHistoryScreen(
             )
         },
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            item {
+        if (earnings.isEmpty()) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(padding).padding(32.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "No payouts yet",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Automated payouts are verified via satellite and logged immutably on the Polygon blockchain.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 8.dp),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 )
             }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                item {
+                    Text(
+                        text = "Automated payouts are verified via satellite and logged immutably on the Polygon blockchain.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(vertical = 8.dp),
+                    )
+                }
 
-            // Dummy List
-            items(3) { index ->
-                PayoutItemCard(
-                    amount = "KES 8,000",
-                    date = "2026-04-1${index}T06:14:00Z",
-                    txHash = "0x7a2...${index}f3",
-                    ipfsCid = "QmXyZ...${index}a1",
-                )
+                items(earnings) { earning ->
+                    PayoutItemCard(earning)
+                }
             }
         }
     }
 }
 
 @Composable
-fun PayoutItemCard(amount: String, date: String, txHash: String, ipfsCid: String) {
+fun PayoutItemCard(earning: CarbonEarning) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Drought Trigger", style = MaterialTheme.typography.titleMedium)
-                Text(amount, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                Text(earning.title, style = MaterialTheme.typography.titleMedium)
+                Text("KES ${earning.amountKes}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
             }
-            Text("Date: $date", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Date: ${earning.date}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Divider()
-            Text("Polygon Tx: $txHash", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary)
-            Text("IPFS Report: $ipfsCid", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary)
+            Text("Verification: ${if (earning.completed) "Verified & Paid" else "Pending"}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary)
         }
     }
 }
+

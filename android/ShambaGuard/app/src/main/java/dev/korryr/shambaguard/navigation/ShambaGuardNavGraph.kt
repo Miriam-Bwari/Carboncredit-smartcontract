@@ -41,6 +41,7 @@ import dev.korryr.shambaguard.ui.features.admin.view.FarmMapScreen
 import dev.korryr.shambaguard.ui.features.admin.view.PoolHealthScreen
 import dev.korryr.shambaguard.ui.features.agent.presentation.AgentDashboardViewModel
 import dev.korryr.shambaguard.ui.features.agent.view.AgentDashboardScreen
+import dev.korryr.shambaguard.ui.features.agent.view.AgentFarmerDetailScreen
 import dev.korryr.shambaguard.ui.features.agent.view.SyncStatusScreen
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmBoundaryViewModel
 import dev.korryr.shambaguard.ui.features.auth.presentation.FarmPracticesViewModel
@@ -370,7 +371,11 @@ fun ShambaGuardNavGraph(
                         onNavigateToSettings = { backStack.add(SharedSettingsKey) }
                     )
                 }
-                entry<AdminMapKey> { FarmMapScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<AdminMapKey> { 
+                    dev.korryr.shambaguard.ui.features.admin.view.FarmMapScreen(
+                        onNavigateBack = { backStack.removeLastOrNull() }
+                    ) 
+                }
                 entry<AdminAgentsKey> {
                     val vm: dev.korryr.shambaguard.ui.features.admin.presentation.AgentManagementViewModel = hiltViewModel()
                     val state by vm.uiState.collectAsStateWithLifecycle()
@@ -401,7 +406,9 @@ fun ShambaGuardNavGraph(
                         onRegisterFarmer = { backStack.add(RegistrationKey) },
                         onSyncNow = vm::onSyncNow,
                         onFilterToggled = vm::onFilterToggled,
-                        onFarmerClicked = { /* AgentFarmerDetailKey(it) — Week 5 */ },
+                        onFarmerClicked = { farmerId ->
+                            backStack.add(AgentFarmerDetailKey(farmerId = farmerId, farmId = ""))
+                        },
                         onSettingsClicked = { backStack.add(SharedSettingsKey) },
                     )
                 }
@@ -415,10 +422,23 @@ fun ShambaGuardNavGraph(
                             agentOnboardingVm.consumeNavEvent()
                             backStack.add(AgentOnboardingDetailsKey)
                         },
-                        onLogPractices = { farmId -> backStack.add(FarmPracticesKey) }, // In reality would pass farmId to Nav arg
-                        onAddEvidence = { farmId -> },
+                        onLogPractices = { farmId -> backStack.add(FarmPracticesKey(polygonJson = "{}")) }, // Needs real implementation
+                        onAddEvidence = { farmId -> backStack.add(AgentOnboardingEvidenceKey) },
                         onRefresh = vm::loadFarmers,
                     )
+                }
+                entry<AgentFarmerDetailKey> { key ->
+                    val vm: dev.korryr.shambaguard.ui.features.agent.presentation.MyFarmersViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+                    val farmer = state.farmers.find { it.farmerId == key.farmerId }
+
+                    if (farmer != null) {
+                        AgentFarmerDetailScreen(
+                            farmer = farmer,
+                            onBack = { backStack.removeLastOrNull() },
+                            onLogPractice = { backStack.add(FarmPracticesKey(polygonJson = "{}")) },
+                        )
+                    }
                 }
                 entry<AgentSyncKey> {
                     val vm: dev.korryr.shambaguard.ui.features.agent.presentation.SyncStatusViewModel = hiltViewModel()
@@ -489,6 +509,12 @@ fun ShambaGuardNavGraph(
                         onFinishRegistration = agentOnboardingVm::saveFarmerOffline,
                     )
                 }
+                entry<AgentOnboardingEvidenceKey> {
+                    dev.korryr.shambaguard.ui.features.agent.view.EvidencePhotosScreen(
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                        onNavigateToPractices = { backStack.add(AgentOnboardingPracticesKey) },
+                    )
+                }
 
                 // Farmer screens
                 entry<FarmerHomeKey> {
@@ -541,8 +567,8 @@ fun ShambaGuardNavGraph(
                     CarbonScreen(
                         uiState = state,
                         onBack = { backStack.removeLastOrNull() },
-                        onSellCredits = {},
-                        onViewAllEarnings = {},
+                        onSellCredits = { backStack.add(FarmerPolicyKey) },
+                        onViewAllEarnings = { backStack.add(FarmerPayoutsKey) },
                     )
                 }
                 entry<FarmerProfileKey> {
@@ -555,15 +581,28 @@ fun ShambaGuardNavGraph(
                         onPushNotifications = vm::onPushNotificationsToggled,
                         onDroughtAlerts = vm::onDroughtAlertsToggled,
                         onBiometricToggled = vm::onBiometricToggled,
-                        onChangePinClicked = {},
-                        onPolicyDocsClicked = {},
-                        onPrivacyPolicyClicked = {},
+                        onChangePinClicked = { backStack.add(FarmerChangePasswordKey) },
+                        onPolicyDocsClicked = { backStack.add(PolicyDocsKey) },
+                        onPrivacyPolicyClicked = { backStack.add(PrivacyPolicyKey) },
                         onThemeChanged = vm::setTheme,
                         onSignOut = {
                             vm.logout()
                             navigateTo(LoginKey)
                         },
                     )
+                }
+                entry<FarmerChangePasswordKey> {
+                    PlaceholderScreenWithAction(
+                        title = "Change PIN feature coming soon",
+                        buttonText = "Go Back",
+                        onClick = { backStack.removeLastOrNull() },
+                    )
+                }
+                entry<PolicyDocsKey> {
+                    PlaceholderScreen(role = UserRole.Farmer, title = "Insurance Policy Documents")
+                }
+                entry<PrivacyPolicyKey> {
+                    PlaceholderScreen(role = UserRole.Farmer, title = "Privacy Policy")
                 }
                 // Non-tab screens — navigated from dashboard or tabs
                 entry<FarmerDroughtInsightsKey> {
@@ -595,7 +634,15 @@ fun ShambaGuardNavGraph(
                         onPaymentDone = { navigateTo(initialKey) },
                     )
                 }
-                entry<FarmerPayoutsKey> { PayoutHistoryScreen(onNavigateBack = { backStack.removeLastOrNull() }) }
+                entry<FarmerPayoutsKey> { 
+                    val vm: CarbonViewModel = hiltViewModel()
+                    val state by vm.uiState.collectAsStateWithLifecycle()
+                    
+                    PayoutHistoryScreen(
+                        earnings = state.earnings,
+                        onNavigateBack = { backStack.removeLastOrNull() }
+                    ) 
+                }
             },
         )
     }

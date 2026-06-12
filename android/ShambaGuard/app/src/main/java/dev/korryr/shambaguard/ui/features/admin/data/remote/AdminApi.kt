@@ -20,4 +20,7 @@ interface AdminApi {
     suspend fun approveAgent(
         @Path("agent_id") agentId: String,
     ): Response<AdminAgentDto>
+
+    @GET("carbon/scan-status")
+    suspend fun getCarbonScanStatus(): Response<CarbonScanStatusDto>
 }
