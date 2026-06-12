@@ -608,33 +608,40 @@ fun AddPracticeDialog(
     onSubmit: (tillage: String, trees: String, irrigation: String) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val titleStr = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_log_new_practice)
+    val tillageLabel = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_tillage_label)
+    val treesLabel = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_trees_label)
+    val irrigationLabel = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_irrigation_label)
+    val submitStr = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_submit)
+    val cancelStr = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_cancel)
+
     var tillageMethod by remember { mutableStateOf("") }
     var treeCount by remember { mutableStateOf("") }
     var irrigationSource by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_log_new_practice), fontWeight = FontWeight.Bold) },
+        title = { Text(titleStr, fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 ShambaTextField(
                     value = tillageMethod,
                     onValueChange = { tillageMethod = it },
-                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_tillage_label),
+                    label = tillageLabel,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 ShambaTextField(
                     value = treeCount,
                     onValueChange = { treeCount = it },
-                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_trees_label),
+                    label = treesLabel,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 ShambaTextField(
                     value = irrigationSource,
                     onValueChange = { irrigationSource = it },
-                    label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_irrigation_label),
+                    label = irrigationLabel,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -645,7 +652,7 @@ fun AddPracticeDialog(
                 CircularWavyProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.primary)
             } else {
                 ShambaButton(
-                    text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_submit),
+                    text = submitStr,
                     onClick = { onSubmit(tillageMethod, treeCount, irrigationSource) },
                     enabled = tillageMethod.isNotBlank(),
                 )
@@ -653,7 +660,7 @@ fun AddPracticeDialog(
         },
         dismissButton = {
             ShambaButton(
-                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.my_farm_cancel),
+                text = cancelStr,
                 onClick = onDismiss,
                 enabled = !isSubmitting,
                 type = ShambaButtonType.Text,
