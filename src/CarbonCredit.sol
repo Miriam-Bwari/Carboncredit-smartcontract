@@ -10,9 +10,9 @@ contract CarbonCredit is ERC1155, Ownable {
 
     struct Credit {
         uint256 farmId;
-        uint256 carbonKg;     // Named carbonKg for clarity as per system spec
+        uint256 carbonKg; // Named carbonKg for clarity as per system spec
         uint256 timestamp;
-        string ndviDataHash;  // SHA256 of satellite data
+        string ndviDataHash; // SHA256 of satellite data
         bool sold;
     }
 
@@ -26,37 +26,32 @@ contract CarbonCredit is ERC1155, Ownable {
     constructor() ERC1155("") Ownable(msg.sender) {}
 
     // Called by Shamba Guard backend when carbon is verified via AI models
-    function mintCredit(
-        address farmer,
-        uint256 farmId,
-        uint256 carbonKg,
-        string memory ndviHash
-    ) external onlyOwner returns (uint256) {
+    function mintCredit(address farmer, uint256 farmId, uint256 carbonKg, string memory ndviHash)
+        external
+        onlyOwner
+        returns (uint256)
+    {
         uint256 id = nextCreditId++;
-        
+
         credits[id] = Credit({
-            farmId: farmId,
-            carbonKg: carbonKg,
-            timestamp: block.timestamp,
-            ndviDataHash: ndviHash,
-            sold: false
+            farmId: farmId, carbonKg: carbonKg, timestamp: block.timestamp, ndviDataHash: ndviHash, sold: false
         });
-        
+
         creditFarmer[id] = farmer;
-        
+
         // Mint the 1-of-1 semi-fungible credit token directly to the farmer
         _mint(farmer, id, 1, "");
-        
+
         emit CreditMinted(id, farmId, carbonKg);
         return id;
-    } 
+    }
 
     // Called by a buyer to purchase a credit directly from the marketplace functionality
     function purchaseCredit(uint256 creditId) external payable {
         Credit storage credit = credits[creditId];
         require(!credit.sold, "Credit already sold");
         require(msg.value > 0, "Payment required");
-        
+
         address farmer = creditFarmer[creditId];
         require(farmer != address(0), "Invalid credit ID");
 
@@ -64,7 +59,7 @@ contract CarbonCredit is ERC1155, Ownable {
         require(balanceOf(farmer, creditId) == 1, "Farmer no longer holds token");
 
         credit.sold = true;
-        
+
         // Calculate the transparent 90% payout splitting out middlemen manipulations
         uint256 farmerShare = (msg.value * 90) / 100;
         uint256 platformShare = msg.value - farmerShare;

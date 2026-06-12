@@ -14,7 +14,7 @@ contract DeployCarbonCredit is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         CarbonCredit carbonCredit = new CarbonCredit();
-        
+
         console.log("CarbonCredit deployed to address:", address(carbonCredit));
 
         vm.stopBroadcast();
