@@ -1,15 +1,27 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database.connection import engine, Base
 from database import models
 from routers import farmers, farms, carbon, advice, agents, payments, weather, admin
+from services.scan_scheduler import start_scheduler, stop_scheduler
 
 models.Base.metadata.create_all(bind=engine)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    start_scheduler()  # Begin Sentinel-2 auto-scan every 5 days
+    yield
+    stop_scheduler()   # Graceful shutdown
+
 
 app = FastAPI(
     title="Shamba Guard API",
     description="AI-powered carbon credit platform for smallholder farmers",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

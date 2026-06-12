@@ -11,7 +11,6 @@ from datetime import datetime
 router = APIRouter()
 
 
-# ── START SATELLITE SCAN ────────────────────────────────────────────────
 @router.post("/scan/{farm_id}")
 def scan_farm(farm_id: str, bg: BackgroundTasks, db: Session = Depends(get_db)):
 
@@ -28,7 +27,6 @@ def scan_farm(farm_id: str, bg: BackgroundTasks, db: Session = Depends(get_db)):
     }
 
 
-# ── BACKGROUND TASK ─────────────────────────────────────────────────────
 def run_real_scan(farm_id: int):
     db = SessionLocal()
 
@@ -93,7 +91,6 @@ def run_real_scan(farm_id: int):
         db.close()
 
 
-# ── HISTORY ENDPOINT ────────────────────────────────────────────────────
 @router.get("/history/{farm_id}")
 def carbon_history(farm_id: str, db: Session = Depends(get_db)):
 
@@ -125,7 +122,6 @@ def carbon_history(farm_id: str, db: Session = Depends(get_db)):
     }
 
 
-# ── NDVI TEST ENDPOINT ─────────────────────────────────────────────────
 @router.get("/ndvi-test")
 def ndvi_test():
 
@@ -144,3 +140,34 @@ def ndvi_test():
         "test": "Sentinel-2 NDVI Test",
         "result": result
     }
+
+
+@router.get("/scan-status")
+def scan_status(db: Session = Depends(get_db)):
+    """
+    Returns the last scan date for every farm.
+    Useful for monitoring the auto-scheduler health.
+    """
+    from database.models import Farm
+    farms = db.query(Farm).all()
+
+    results = []
+    for farm in farms:
+        latest = (
+            db.query(CarbonRecord)
+            .filter(CarbonRecord.farm_id == farm.id)
+            .order_by(CarbonRecord.scan_date.desc())
+            .first()
+        )
+        results.append({
+            "farm_id": farm.id,
+            "farm_name": farm.name,
+            "last_scan": str(latest.scan_date) if latest else None,
+            "last_ndvi": latest.ndvi_value if latest else None,
+            "is_due": (
+                latest is None or
+                (datetime.utcnow() - latest.scan_date).days >= 5
+            ),
+        })
+
+    return {"farms": results, "checked_at": str(datetime.utcnow())}
