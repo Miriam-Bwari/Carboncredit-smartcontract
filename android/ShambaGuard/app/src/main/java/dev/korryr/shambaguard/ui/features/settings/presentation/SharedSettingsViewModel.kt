@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.korryr.shambaguard.core.datastore.AppThemeMode
 import dev.korryr.shambaguard.core.datastore.SessionManager
 import dev.korryr.shambaguard.core.datastore.SettingsManager
+import dev.korryr.shambaguard.core.usecase.LocalDataCleaner
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class SharedSettingsViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val settingsManager: SettingsManager,
+    private val localDataCleaner: LocalDataCleaner,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SharedSettingsUiState())
@@ -39,6 +41,7 @@ class SharedSettingsViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoggingOut = true) }
+            localDataCleaner.clearAll() // Wipe all local DB tables before clearing session
             sessionManager.clearSession()
             _uiState.update { it.copy(isLoggingOut = false, logoutSuccess = true) }
         }

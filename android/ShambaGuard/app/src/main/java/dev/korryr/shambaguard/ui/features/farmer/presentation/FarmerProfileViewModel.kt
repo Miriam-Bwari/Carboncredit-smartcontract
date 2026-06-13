@@ -15,12 +15,14 @@ import javax.inject.Inject
 
 import dev.korryr.shambaguard.core.datastore.SettingsManager
 import dev.korryr.shambaguard.core.datastore.AppThemeMode
+import dev.korryr.shambaguard.core.usecase.LocalDataCleaner
 
 @HiltViewModel
 class FarmerProfileViewModel @Inject constructor(
     private val farmRepository: FarmRepository,
     private val sessionManager: SessionManager,
     private val settingsManager: SettingsManager,
+    private val localDataCleaner: LocalDataCleaner,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FarmerProfileUiState(isLoading = true))
@@ -92,6 +94,7 @@ class FarmerProfileViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
+            localDataCleaner.clearAll() // Wipe all local DB tables before clearing session
             sessionManager.clearSession()
         }
     }
