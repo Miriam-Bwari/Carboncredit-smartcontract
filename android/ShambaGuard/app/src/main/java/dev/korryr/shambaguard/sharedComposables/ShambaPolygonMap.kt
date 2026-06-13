@@ -2,6 +2,8 @@ package dev.korryr.shambaguard.sharedComposables
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.location.Geocoder
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,33 +18,45 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Dash
 import com.google.android.gms.maps.model.Gap
@@ -57,8 +71,8 @@ import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.korryr.shambaguard.R
 
-// Default map center: Nyeri, Kenya
-private val DEFAULT_CENTER = LatLng(-0.4167, 36.9500)
+// Default map center: Meru, Kenya
+private val DEFAULT_CENTER = LatLng(0.0500, 37.6494)
 private const val DEFAULT_ZOOM = 15f
 
 // Brand green used on the polygon overlay
@@ -85,6 +99,10 @@ fun ShambaPolygonMap(
 ) {
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    var searchQuery by remember { mutableStateOf("") }
+    var searchError by remember { mutableStateOf(false) }
 
     val locationPermissionState = rememberPermissionState(
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -101,7 +119,9 @@ fun ShambaPolygonMap(
         position = CameraPosition.fromLatLngZoom(DEFAULT_CENTER, DEFAULT_ZOOM)
     }
 
-    // Snap to location when permission granted
+    // Snap to GPS location when permission is granted.
+    // First try lastLocation (fast, cached). If null (cold start / no cache),
+    // request a fresh single fix with getCurrentLocation().
     LaunchedEffect(locationPermissionState.status.isGranted) {
         if (locationPermissionState.status.isGranted) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -109,6 +129,19 @@ fun ShambaPolygonMap(
                     val latLng = LatLng(location.latitude, location.longitude)
                     cameraState.position = CameraPosition.fromLatLngZoom(latLng, DEFAULT_ZOOM)
                     onCameraMoved(latLng)
+                } else {
+                    // lastLocation was null — request a fresh GPS fix
+                    val cts = CancellationTokenSource()
+                    fusedLocationClient
+                        .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cts.token)
+                        .addOnSuccessListener { freshLocation ->
+                            if (freshLocation != null) {
+                                val latLng = LatLng(freshLocation.latitude, freshLocation.longitude)
+                                cameraState.position = CameraPosition.fromLatLngZoom(latLng, DEFAULT_ZOOM)
+                                onCameraMoved(latLng)
+                            }
+                            // If still null the default center (Nyeri) remains — acceptable fallback
+                        }
                 }
             }
         }
@@ -181,11 +214,53 @@ fun ShambaPolygonMap(
                 }
             }
 
-            // Floating instruction card
-            InstructionCard(
+            // Search bar — overlaid at the very top of the map
+            LocationSearchBar(
+                query = searchQuery,
+                hasError = searchError,
+                onQueryChange = {
+                    searchQuery = it
+                    searchError = false
+                },
+                onSearch = {
+                    keyboardController?.hide()
+                    if (searchQuery.isNotBlank()) {
+                        val geocoder = Geocoder(context)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            geocoder.getFromLocationName(searchQuery, 1) { results ->
+                                val result = results.firstOrNull()
+                                if (result != null) {
+                                    val latLng = LatLng(result.latitude, result.longitude)
+                                    cameraState.position = CameraPosition.fromLatLngZoom(latLng, DEFAULT_ZOOM)
+                                    onCameraMoved(latLng)
+                                } else {
+                                    searchError = true
+                                }
+                            }
+                        } else {
+                            @Suppress("DEPRECATION")
+                            val results = geocoder.getFromLocationName(searchQuery, 1)
+                            val result = results?.firstOrNull()
+                            if (result != null) {
+                                val latLng = LatLng(result.latitude, result.longitude)
+                                cameraState.position = CameraPosition.fromLatLngZoom(latLng, DEFAULT_ZOOM)
+                                onCameraMoved(latLng)
+                            } else {
+                                searchError = true
+                            }
+                        }
+                    }
+                },
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 12.dp, start = 16.dp, end = 16.dp),
+            )
+
+            // Floating instruction card — sits below the search bar
+            InstructionCard(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 76.dp, start = 16.dp, end = 16.dp),
             )
 
             // Area label in the polygon centre
@@ -416,4 +491,58 @@ private fun ConfirmBoundarySheet(
             )
         }
     }
+}
+
+@Composable
+private fun LocationSearchBar(
+    query: String,
+    hasError: Boolean,
+    onQueryChange: (String) -> Unit,
+    onSearch: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = modifier.fillMaxWidth(),
+        placeholder = {
+            Text(
+                text = "Search location (e.g. Meru, Laare...)",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = "Search",
+                tint = if (hasError) MaterialTheme.colorScheme.error
+                       else MaterialTheme.colorScheme.primary,
+            )
+        },
+        trailingIcon = {
+            if (hasError) {
+                Text(
+                    text = "Not found",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        color = MaterialTheme.colorScheme.error,
+                    ),
+                    modifier = Modifier.padding(end = 8.dp),
+                )
+            }
+        },
+        singleLine = true,
+        shape = RoundedCornerShape(28.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = Color.Transparent,
+            errorBorderColor = MaterialTheme.colorScheme.error,
+        ),
+        isError = hasError,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+    )
 }
