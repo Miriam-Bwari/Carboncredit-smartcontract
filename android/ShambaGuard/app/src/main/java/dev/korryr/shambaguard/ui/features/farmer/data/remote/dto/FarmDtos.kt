@@ -78,6 +78,7 @@ data class AdviceDto(
     @SerializedName("ndvi_score") val ndviScore: Float,
     @SerializedName("farm_health") val farmHealth: String,
     @SerializedName("recommendations") val recommendations: List<String>,
+    @SerializedName("confidence_score") val confidenceScore: Int = 0,
 )
 
 data class CarbonRecordDto(
