@@ -8,6 +8,44 @@ from datetime import datetime, timedelta
 router = APIRouter()
 
 ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive"
+FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
+
+async def fetch_forecast(client: httpx.AsyncClient, lat: float, lon: float) -> list:
+    """Fetch 7-day rainfall forecast from Open-Meteo API."""
+    response = await client.get(
+        FORECAST_URL,
+        params={
+            "latitude": lat,
+            "longitude": lon,
+            "daily": "precipitation_sum",
+            "timezone": "auto",
+            "forecast_days": 7,
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+    data = response.json()
+    
+    forecast_days = []
+    daily = data.get("daily", {})
+    times = daily.get("time", [])
+    precips = daily.get("precipitation_sum", [])
+    
+    for i in range(len(times)):
+        try:
+            date_obj = datetime.strptime(times[i], "%Y-%m-%d")
+            day_name = date_obj.strftime("%a") # e.g. "Mon"
+            val = precips[i]
+            rain_mm = int(round(val)) if val is not None else 0
+            forecast_days.append({
+                "day": day_name,
+                "has_rain": rain_mm > 0,
+                "rainfall_mm": rain_mm
+            })
+        except Exception:
+            pass
+            
+    return forecast_days
 
 
 async def fetch_rainfall(client: httpx.AsyncClient, lat: float, lon: float, start: str, end: str) -> float:
@@ -62,6 +100,7 @@ async def get_farm_weather(farm_id: str, db: Session = Depends(get_db)):
                 baseline_start.strftime("%Y-%m-%d"),
                 baseline_end.strftime("%Y-%m-%d"),
             )
+            forecast_data = await fetch_forecast(client, lat, lon)
 
         if historical_avg > 0:
             delta = ((current_rainfall - historical_avg) / historical_avg) * 100
@@ -75,6 +114,7 @@ async def get_farm_weather(farm_id: str, db: Session = Depends(get_db)):
             "historical_avg_mm": historical_avg,
             "latitude": lat,
             "longitude": lon,
+            "forecast": forecast_data,
         }
 
     except Exception as e:

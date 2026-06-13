@@ -62,10 +62,17 @@ data class FarmSummaryDto(
     @SerializedName("crop_type") val cropType: String,
 )
 
+data class ForecastDayDto(
+    @SerializedName("day") val day: String,
+    @SerializedName("has_rain") val hasRain: Boolean,
+    @SerializedName("rainfall_mm") val rainfallMm: Int,
+)
+
 data class WeatherDto(
     @SerializedName("farm_id") val farmId: String,
     @SerializedName("rainfall_mm") val rainfallMm: Float,
     @SerializedName("rainfall_delta_percent") val rainfallDeltaPercent: Float,
+    @SerializedName("forecast") val forecast: List<ForecastDayDto>? = null,
 )
 
 data class PolicyDto(

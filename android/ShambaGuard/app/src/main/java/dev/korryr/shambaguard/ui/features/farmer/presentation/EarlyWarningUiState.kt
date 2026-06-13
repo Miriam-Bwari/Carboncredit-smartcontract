@@ -15,6 +15,7 @@ data class EarlyWarningUiState(
 
     // Farm stress map
     val mapLastUpdated: String = "Syncing",
+    val polygonPoints: List<com.google.android.gms.maps.model.LatLng> = emptyList(),
 
     // 7-day rainfall forecast
     val rainfallForecast: List<RainfallDay> = emptyList(),
