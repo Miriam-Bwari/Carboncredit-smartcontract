@@ -83,6 +83,7 @@ class DroughtViewModel @Inject constructor(
                             farmHealthValue = adviceResult.farmHealth,
                             alertBody = adviceRec,
                             aiCropBody = adviceRec,
+                            aiConfidence = adviceResult.confidenceScore,
                         )
                     }
                     _insightsState.update {
