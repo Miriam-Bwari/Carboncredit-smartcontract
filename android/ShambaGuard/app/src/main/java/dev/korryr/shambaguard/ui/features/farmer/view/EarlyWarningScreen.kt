@@ -25,7 +25,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.LaunchedEffect
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Polygon
+import com.google.maps.android.compose.rememberCameraPositionState
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtRisk
 import dev.korryr.shambaguard.ui.features.farmer.presentation.EarlyWarningUiState
 import dev.korryr.shambaguard.ui.features.farmer.presentation.RainfallDay
 import dev.korryr.shambaguard.ui.theme.Green40
@@ -68,7 +80,11 @@ fun EarlyWarningScreen(
         ) {
             Spacer(Modifier.height(4.dp))
             DroughtAlertBanner(uiState)
-            FarmStressMapCard(lastUpdated = uiState.mapLastUpdated)
+            FarmStressMapCard(
+                lastUpdated = uiState.mapLastUpdated,
+                polygonPoints = uiState.polygonPoints,
+                currentRisk = uiState.currentRisk,
+            )
             RainfallForecastSection(uiState.rainfallForecast)
             AIRecommendationCard(uiState)
             CoverageCard(uiState)
@@ -146,7 +162,31 @@ private fun DroughtAlertBanner(uiState: EarlyWarningUiState) {
 
 // Farm stress heatmap card
 @Composable
-private fun FarmStressMapCard(lastUpdated: String) {
+private fun FarmStressMapCard(
+    lastUpdated: String,
+    polygonPoints: List<LatLng>,
+    currentRisk: DroughtRisk,
+) {
+    // Map bounds logic
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(
+            LatLng(0.0500, 37.6494), // Default to Meru
+            14f
+        )
+    }
+
+    LaunchedEffect(polygonPoints) {
+        if (polygonPoints.isNotEmpty()) {
+            val builder = LatLngBounds.Builder()
+            polygonPoints.forEach { builder.include(it) }
+            val bounds = builder.build()
+            cameraPositionState.animate(
+                update = CameraUpdateFactory.newLatLngBounds(bounds, 100),
+                durationMs = 1000
+            )
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -196,76 +236,42 @@ private fun FarmStressMapCard(lastUpdated: String) {
             }
         }
 
-        // Heatmap canvas
-        Canvas(
+        // Real Google Map with Heat Polygon
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(178.dp),
         ) {
-            // Base — dark forest green
-            drawRect(HeatGreen)
-            drawRect(
-                brush = Brush.linearGradient(
-                    listOf(Color(0xFF1E4020), Color(0xFF264A25), Color(0xFF1C3A1A)),
-                    start = Offset.Zero,
-                    end = Offset(size.width, size.height),
-                ),
-            )
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                properties = MapProperties(mapType = MapType.SATELLITE),
+                uiSettings = MapUiSettings(
+                    zoomControlsEnabled = false,
+                    compassEnabled = false,
+                    myLocationButtonEnabled = false,
+                    scrollGesturesEnabled = false,
+                    zoomGesturesEnabled = false,
+                    tiltGesturesEnabled = false,
+                    rotationGesturesEnabled = false,
+                )
+            ) {
+                if (polygonPoints.isNotEmpty()) {
+                    val riskColor = when (currentRisk) {
+                        DroughtRisk.CRITICAL -> HeatRed.copy(alpha = 0.5f)
+                        DroughtRisk.HIGH -> HeatOrange.copy(alpha = 0.5f)
+                        DroughtRisk.MODERATE -> HeatYellow.copy(alpha = 0.5f)
+                        DroughtRisk.LOW -> HeatGreen.copy(alpha = 0.5f)
+                    }
 
-            // Stressed blob 1 — yellow-orange (left side, matches mockup)
-            val b1 = Offset(size.width * 0.22f, size.height * 0.52f)
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(HeatYellow.copy(alpha = 0.85f), HeatOrange.copy(alpha = 0.5f), Color.Transparent),
-                    center = b1,
-                    radius = size.minDimension * 0.38f,
-                ),
-                radius = size.minDimension * 0.38f,
-                center = b1,
-            )
-
-            // Critical blob — red (center, matching mockup)
-            val b2 = Offset(size.width * 0.46f, size.height * 0.46f)
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(HeatRed.copy(alpha = 0.9f), HeatOrange.copy(alpha = 0.4f), Color.Transparent),
-                    center = b2,
-                    radius = size.minDimension * 0.28f,
-                ),
-                radius = size.minDimension * 0.28f,
-                center = b2,
-            )
-
-            // Smaller stressed blob — upper right area
-            val b3 = Offset(size.width * 0.72f, size.height * 0.28f)
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(HeatYellow.copy(alpha = 0.6f), Color.Transparent),
-                    center = b3,
-                    radius = size.minDimension * 0.18f,
-                ),
-                radius = size.minDimension * 0.18f,
-                center = b3,
-            )
-
-            // Grid lines
-            val gridColor = White.copy(alpha = 0.12f)
-            val gridStroke = 1f
-            for (i in 0..5) {
-                val x = size.width * i / 5f
-                drawLine(gridColor, Offset(x, 0f), Offset(x, size.height), gridStroke)
+                    Polygon(
+                        points = polygonPoints,
+                        fillColor = riskColor,
+                        strokeColor = White,
+                        strokeWidth = 3f,
+                    )
+                }
             }
-            for (i in 0..4) {
-                val y = size.height * i / 4f
-                drawLine(gridColor, Offset(0f, y), Offset(size.width, y), gridStroke)
-            }
-
-            // Crosshair — vertical (right side)
-            val crossX = size.width * 0.74f
-            drawLine(White.copy(alpha = 0.65f), Offset(crossX, 0f), Offset(crossX, size.height), strokeWidth = 1.5f, cap = StrokeCap.Round)
-            // Crosshair — horizontal
-            val crossY = size.height * 0.50f
-            drawLine(White.copy(alpha = 0.65f), Offset(0f, crossY), Offset(size.width, crossY), strokeWidth = 1.5f, cap = StrokeCap.Round)
         }
 
         // Legend row

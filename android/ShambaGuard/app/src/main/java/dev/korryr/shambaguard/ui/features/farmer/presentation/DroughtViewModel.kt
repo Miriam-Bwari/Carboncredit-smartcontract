@@ -52,6 +52,7 @@ class DroughtViewModel @Inject constructor(
                                     com.google.android.gms.maps.model.LatLng(point[1], point[0])
                                 } ?: emptyList<com.google.android.gms.maps.model.LatLng>()
                                 _insightsState.update { it.copy(polygonPoints = polygonPoints) }
+                                _warningState.update { it.copy(polygonPoints = polygonPoints) }
                             } catch (e: Exception) {
                                 // Ignore parsing errors
                             }
@@ -66,6 +67,15 @@ class DroughtViewModel @Inject constructor(
 
                     _insightsState.update { it.copy(rainfallMm = mm, rainfallDelta = delta) }
                     _coverageState.update { it.copy(rainfallMm = weatherResult.rainfallMm) }
+
+                    val forecastList = weatherResult.forecast?.map {
+                        RainfallDay(
+                            day = it.day,
+                            hasRain = it.hasRain,
+                            rainfallMm = it.rainfallMm
+                        )
+                    } ?: emptyList()
+                    _warningState.update { it.copy(rainfallForecast = forecastList) }
                 }
 
                 val adviceResult = farmRepository.getAdvice(farmId).getOrNull()
