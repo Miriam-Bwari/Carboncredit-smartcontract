@@ -62,10 +62,17 @@ data class FarmSummaryDto(
     @SerializedName("crop_type") val cropType: String,
 )
 
+data class ForecastDayDto(
+    @SerializedName("day") val day: String,
+    @SerializedName("has_rain") val hasRain: Boolean,
+    @SerializedName("rainfall_mm") val rainfallMm: Int,
+)
+
 data class WeatherDto(
     @SerializedName("farm_id") val farmId: String,
     @SerializedName("rainfall_mm") val rainfallMm: Float,
     @SerializedName("rainfall_delta_percent") val rainfallDeltaPercent: Float,
+    @SerializedName("forecast") val forecast: List<ForecastDayDto>? = null,
 )
 
 data class PolicyDto(
@@ -78,6 +85,7 @@ data class AdviceDto(
     @SerializedName("ndvi_score") val ndviScore: Float,
     @SerializedName("farm_health") val farmHealth: String,
     @SerializedName("recommendations") val recommendations: List<String>,
+    @SerializedName("confidence_score") val confidenceScore: Int = 0,
 )
 
 data class CarbonRecordDto(

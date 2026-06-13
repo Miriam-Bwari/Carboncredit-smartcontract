@@ -14,4 +14,7 @@ interface FarmReportDao {
 
     @Query("SELECT * FROM farm_reports WHERE farmId = :farmId ORDER BY generatedAt DESC LIMIT 1")
     fun getLatestReportForFarm(farmId: String): Flow<FarmReportEntity?>
+
+    @Query("DELETE FROM farm_reports")
+    suspend fun deleteAll()
 }

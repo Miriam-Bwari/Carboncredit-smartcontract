@@ -20,4 +20,7 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE userId = :userId")
     suspend fun getUserByIdSync(userId: String): UserEntity?
+
+    @Query("DELETE FROM users")
+    suspend fun deleteAll()
 }

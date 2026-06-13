@@ -1,5 +1,6 @@
 package dev.korryr.shambaguard.ui.features.auth.data.repository
 
+import dev.korryr.shambaguard.core.usecase.LocalDataCleaner
 import dev.korryr.shambaguard.core.datastore.SessionManager
 import dev.korryr.shambaguard.navigation.UserRole
 import dev.korryr.shambaguard.ui.features.auth.data.remote.AuthApi
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authApi: AuthApi,
     private val sessionManager: SessionManager,
+    private val localDataCleaner: LocalDataCleaner,
 ) : AuthRepository {
 
     // Login
@@ -86,6 +88,7 @@ class AuthRepositoryImpl @Inject constructor(
     // Logout
 
     override suspend fun logout() {
+        localDataCleaner.clearAll() // Wipe all local DB tables before clearing session
         sessionManager.clearSession()
     }
 }
