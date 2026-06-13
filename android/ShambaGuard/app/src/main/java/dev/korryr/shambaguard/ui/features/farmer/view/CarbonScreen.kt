@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -331,23 +332,23 @@ private fun RealImpactSection(uiState: CarbonUiState) {
             // Trees card
             ImpactCard(
                 modifier = Modifier.weight(1f),
-                bgColor = ImpactTreeBg,
-                iconBg = Green95,
+                bgColor = MaterialTheme.colorScheme.primaryContainer,
+                iconBg = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                 icon = Icons.Filled.Park,
-                iconTint = Green40,
+                iconTint = MaterialTheme.colorScheme.primary,
                 value = "${uiState.treesEquivalent}",
-                valueColor = Green40,
+                valueColor = MaterialTheme.colorScheme.primary,
                 label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_trees_equivalent),
             )
             // Cars / km card
             ImpactCard(
                 modifier = Modifier.weight(1f),
-                bgColor = ImpactCarBg,
-                iconBg = Color(0xFFFFCDD2),
+                bgColor = MaterialTheme.colorScheme.errorContainer,
+                iconBg = MaterialTheme.colorScheme.error.copy(alpha = 0.15f),
                 icon = Icons.Filled.DirectionsCar,
-                iconTint = ImpactCarRed,
+                iconTint = MaterialTheme.colorScheme.error,
                 value = "${uiState.kmNotDriven}",
-                valueColor = ImpactCarRed,
+                valueColor = MaterialTheme.colorScheme.error,
                 label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.carbon_km_not_driven),
             )
         }
@@ -359,7 +360,7 @@ private fun ImpactCard(
     modifier: Modifier,
     bgColor: Color,
     iconBg: Color,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     iconTint: Color,
     value: String,
     valueColor: Color,
