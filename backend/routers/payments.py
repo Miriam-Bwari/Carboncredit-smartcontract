@@ -27,7 +27,6 @@ def trigger_stk_push(
 
     result = send_mpesa_payment(data.phone_number, data.amount_kes)
 
-    # Save a pending payment record regardless of outcome
     payment = Payment(
         farmer_id=data.farmer_id,
         checkout_id=result.get("checkout_id"),
@@ -46,14 +45,18 @@ def trigger_stk_push(
 
 
 @router.post("/callback")
-def mpesa_callback(payload: dict):
-    # Safaricom sends a POST to this URL after payment confirmation
-    # Extract the result and update the payment status in the database
-    # Note: This endpoint must be publicly accessible (not protected by auth)
+def mpesa_callback(payload: dict, db: Session = Depends(get_db)):
+    # Safaricom sends POST here after payment — now actually updates the DB
     try:
         body = payload.get("Body", {}).get("stkCallback", {})
         checkout_id = body.get("CheckoutRequestID")
         result_code = body.get("ResultCode")
+
+        payment = db.query(Payment).filter(Payment.checkout_id == checkout_id).first()
+        if payment:
+            payment.status = "completed" if result_code == 0 else "failed"
+            db.commit()
+
         return {"received": True, "checkout_id": checkout_id, "result_code": result_code}
     except Exception:
         return {"received": False}
@@ -75,7 +78,6 @@ def payment_status(checkout_id: str, db: Session = Depends(get_db), current_user
 
 @router.get("/policy/{farmer_id}")
 def get_farmer_policy(farmer_id: str, db: Session = Depends(get_db)):
-    # Find any completed payment for this farmer to determine policy status
     payment = db.query(Payment)\
         .filter(Payment.farmer_id == farmer_id, Payment.status == "completed")\
         .order_by(Payment.created_at.desc())\
@@ -88,10 +90,9 @@ def get_farmer_policy(farmer_id: str, db: Session = Depends(get_db)):
             "expiry_date": None
         }
 
-    # Simplified policy logic: Active for 1 year from payment
-    from datetime import timedelta
+    from datetime import datetime, timedelta
     expiry_date = payment.created_at + timedelta(days=365)
-    is_active = expiry_date > payment.created_at  # Always true given the logic, but handles future current_time logic if added
+    is_active = expiry_date > datetime.utcnow()
 
     return {
         "farmer_id": farmer_id,
