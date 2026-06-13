@@ -20,4 +20,7 @@ interface PolicyDao {
 
     @Query("SELECT * FROM policies WHERE farmId = :farmId")
     suspend fun getPolicyByFarmSync(farmId: String): PolicyEntity?
+
+    @Query("DELETE FROM policies")
+    suspend fun deleteAll()
 }

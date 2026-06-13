@@ -17,4 +17,7 @@ interface PayoutDao {
 
     @Query("SELECT * FROM payouts WHERE policyId = :policyId")
     fun getPayoutsByPolicy(policyId: String): Flow<List<PayoutEntity>>
+
+    @Query("DELETE FROM payouts")
+    suspend fun deleteAll()
 }

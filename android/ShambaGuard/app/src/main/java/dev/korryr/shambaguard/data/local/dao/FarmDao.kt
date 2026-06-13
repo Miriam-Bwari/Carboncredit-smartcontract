@@ -32,4 +32,7 @@ interface FarmDao {
 
     @Query("SELECT * FROM farms WHERE syncStatus = 'PENDING_SYNC'")
     suspend fun getPendingFarmsSync(): List<FarmEntity>
+
+    @Query("DELETE FROM farms")
+    suspend fun deleteAll()
 }
