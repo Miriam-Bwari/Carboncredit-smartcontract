@@ -123,8 +123,8 @@ fun FarmerDashboardScreen(
                 ) {
                     GlanceCard(
                         icon = Icons.Filled.CheckCircle,
-                        iconTint = Green40,
-                        iconBgColor = Green95,
+                        iconTint = MaterialTheme.colorScheme.primary,
+                        iconBgColor = MaterialTheme.colorScheme.primaryContainer,
                         title = stringResource(R.string.dashboard_policy_status),
                         valueLine1 = if (uiState.policyActive) {
                             stringResource(R.string.dashboard_policy_active)
@@ -132,7 +132,7 @@ fun FarmerDashboardScreen(
                             stringResource(R.string.dashboard_policy_inactive)
                         },
                         valueLine1Color = if (uiState.policyActive) {
-                            Green40
+                            MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.error
                         },
@@ -145,11 +145,11 @@ fun FarmerDashboardScreen(
                     )
                     GlanceCard(
                         icon = Icons.Filled.Eco,
-                        iconTint = Green40,
-                        iconBgColor = Green95,
+                        iconTint = MaterialTheme.colorScheme.primary,
+                        iconBgColor = MaterialTheme.colorScheme.primaryContainer,
                         title = stringResource(R.string.dashboard_carbon),
                         valueLine1 = stringResource(R.string.dashboard_tonnes, uiState.carbonTonnes),
-                        valueLine1Color = Green40,
+                        valueLine1Color = MaterialTheme.colorScheme.primary,
                         valueLine2 = stringResource(R.string.dashboard_carbon_claim),
                         onClick = onViewCarbon,
                         modifier = Modifier.weight(1f),
@@ -190,13 +190,13 @@ fun FarmerDashboardScreen(
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)
-                            .background(Green95),
+                            .background(MaterialTheme.colorScheme.primaryContainer),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             imageVector = Icons.Filled.LocationOn,
                             contentDescription = null,
-                            tint = Green40,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(48.dp),
                         )
                     }
@@ -299,7 +299,7 @@ private fun SatelliteThumbnail(modifier: Modifier = Modifier) {
             .clip(RoundedCornerShape(10.dp))
             .background(
                 Brush.linearGradient(
-                    listOf(Green10, Green40),
+                    listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary),
                 ),
             ),
         contentAlignment = Alignment.Center,
@@ -331,10 +331,6 @@ private fun SatelliteThumbnail(modifier: Modifier = Modifier) {
 
 // ─── Drought Alert Card ───────────────────────────────────────────────────────
 
-private val RiskRed = Color(0xFFB00020)
-private val RiskRedBg = Color(0xFFFFF0F0)
-private val RiskRedContainer = Color(0xFFFFDADB)
-
 @Composable
 private fun DroughtAlertCard(
     risk: DroughtRisk,
@@ -353,10 +349,25 @@ private fun DroughtAlertCard(
         label = "NdviProgress",
     )
 
-    val (cardBg, alertBadgeBg, progressColor) = when (risk) {
-        DroughtRisk.CRITICAL, DroughtRisk.HIGH -> Triple(RiskRedBg, RiskRedContainer, RiskRed)
-        DroughtRisk.MODERATE -> Triple(Color(0xFFFFF8E1), Color(0xFFFFECB3), ShambaAmber)
-        DroughtRisk.LOW -> Triple(Green99, Green90, Green40)
+    val (cardBg, alertBadgeBg, progressColor, onProgressColor) = when (risk) {
+        DroughtRisk.CRITICAL, DroughtRisk.HIGH -> listOf(
+            MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f),
+            MaterialTheme.colorScheme.errorContainer,
+            MaterialTheme.colorScheme.error,
+            MaterialTheme.colorScheme.onError
+        )
+        DroughtRisk.MODERATE -> listOf(
+            MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f),
+            MaterialTheme.colorScheme.tertiaryContainer,
+            MaterialTheme.colorScheme.tertiary,
+            MaterialTheme.colorScheme.onTertiary
+        )
+        DroughtRisk.LOW -> listOf(
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+            MaterialTheme.colorScheme.primaryContainer,
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.onPrimary
+        )
     }
     val riskLabel = when (risk) {
         DroughtRisk.CRITICAL -> stringResource(R.string.dashboard_risk_critical)
@@ -533,7 +544,7 @@ private fun DroughtAlertCard(
             Text(
                 text = stringResource(R.string.dashboard_insights_cta),
                 style = MaterialTheme.typography.labelLarge.copy(
-                    color = White,
+                    color = onProgressColor,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
                 ),
@@ -607,7 +618,7 @@ private fun GlanceCard(
         Text(
             text = valueLine2,
             style = MaterialTheme.typography.labelSmall.copy(
-                color = Green40,
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.SemiBold,
             ),
         )
@@ -625,12 +636,12 @@ private fun ActivityRow(
     val (iconVector, iconTint, iconBg) = when (item.type) {
         ActivityType.DROUGHT_ALERT -> Triple(
             Icons.Filled.Warning,
-            Color(0xFFB00020),
-            Color(0xFFFFDADB),
+            MaterialTheme.colorScheme.error,
+            MaterialTheme.colorScheme.errorContainer,
         )
 
-        ActivityType.PAYOUT -> Triple(Icons.Filled.CheckCircle, Green40, Green95)
-        ActivityType.CARBON -> Triple(Icons.Filled.Eco, Color(0xFF5D6B29), Color(0xFFE8F0C8))
+        ActivityType.PAYOUT -> Triple(Icons.Filled.CheckCircle, MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primaryContainer)
+        ActivityType.CARBON -> Triple(Icons.Filled.Eco, MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.secondaryContainer)
     }
 
     Row(
