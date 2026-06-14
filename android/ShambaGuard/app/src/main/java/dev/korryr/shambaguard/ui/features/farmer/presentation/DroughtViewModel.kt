@@ -47,10 +47,7 @@ class DroughtViewModel @Inject constructor(
                     farmRepository.getFarm(farmId).collect { localFarm ->
                         if (localFarm != null) {
                             try {
-                                val geoJson: dev.korryr.shambaguard.core.network.GeoJsonPolygonDto = com.google.gson.Gson().fromJson(localFarm.polygonJson, dev.korryr.shambaguard.core.network.GeoJsonPolygonDto::class.java)
-                                val polygonPoints = geoJson.coordinates.firstOrNull()?.map { point: List<Double> ->
-                                    com.google.android.gms.maps.model.LatLng(point[1], point[0])
-                                } ?: emptyList<com.google.android.gms.maps.model.LatLng>()
+                                val polygonPoints = dev.korryr.shambaguard.core.util.PolygonJsonHelper.parseToLatLng(localFarm.polygonJson)
                                 _insightsState.update { it.copy(polygonPoints = polygonPoints) }
                                 _warningState.update { it.copy(polygonPoints = polygonPoints) }
                             } catch (e: Exception) {

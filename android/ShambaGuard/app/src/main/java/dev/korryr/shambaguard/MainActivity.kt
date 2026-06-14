@@ -62,6 +62,18 @@ class MainActivity : ComponentActivity() {
                         UserRole.Unauthenticated
                     }
 
+                    // Restart Activity on logout to completely clear all ViewModels and in-memory caches
+                    var previousRole by remember { mutableStateOf(finalRole) }
+                    LaunchedEffect(finalRole) {
+                        if (previousRole != UserRole.Unauthenticated && finalRole == UserRole.Unauthenticated) {
+                            val intent = android.content.Intent(this@MainActivity, MainActivity::class.java)
+                            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            startActivity(intent)
+                            finish()
+                        }
+                        previousRole = finalRole
+                    }
+
                     ShambaGuardNavGraph(role = finalRole)
                 }
             }

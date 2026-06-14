@@ -101,8 +101,8 @@ fun DroughtInsightsScreen(
                     value = String.format("%.2f", uiState.ndviScore),
                     subtitle = "${uiState.ndviTrend} / ${uiState.ndviTrendSwahili}",
                     icon = Icons.Filled.TrendingDown,
-                    iconTint = Color(0xFFB00020),
-                    iconBg = Color(0xFFFFDADB),
+                    iconTint = MaterialTheme.colorScheme.error,
+                    iconBg = MaterialTheme.colorScheme.errorContainer,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -130,8 +130,8 @@ fun DroughtInsightsScreen(
                     value = "${uiState.rainfallMm} mm",
                     subtitle = "${uiState.rainfallDelta}% from average",
                     icon = Icons.Filled.Info,
-                    iconTint = ShambaAmber,
-                    iconBg = Color(0xFFFFFBF0),
+                    iconTint = MaterialTheme.colorScheme.tertiary,
+                    iconBg = MaterialTheme.colorScheme.tertiaryContainer,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -244,10 +244,10 @@ private fun PayoutStatusCard(
     triggerNdvi: Float,
     triggerRain: Int,
 ) {
-    val bgColor = if (isMet) Green99 else Color(0xFFFFF0F0)
-    val borderColor = if (isMet) Green90 else Color(0xFFFFDADB)
+    val bgColor = if (isMet) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f) else MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+    val borderColor = if (isMet) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer
     val icon = if (isMet) Icons.Filled.CheckCircle else Icons.Filled.Warning
-    val iconTint = if (isMet) Green40 else Color(0xFFB00020)
+    val iconTint = if (isMet) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
     val statusText =
         if (isMet) stringResource(R.string.insights_trigger_met) else stringResource(R.string.insights_trigger_not_met)
 

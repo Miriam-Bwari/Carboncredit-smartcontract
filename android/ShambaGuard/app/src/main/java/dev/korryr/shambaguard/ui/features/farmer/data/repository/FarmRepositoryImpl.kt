@@ -24,7 +24,7 @@ class FarmRepositoryImpl @Inject constructor(
             farmId = dto.farmId,
             farmerId = dto.farmerId,
             agentId = "", // backend FarmDto doesn't include agentId
-            polygonJson = dto.boundaryCoords.toString(),
+            polygonJson = com.google.gson.Gson().toJson(dto.boundaryCoords),
             areaHectares = dto.areaHectares,
             region = dto.county, // backend uses county; stored as region locally
             cropType = dto.cropType,
@@ -42,23 +42,18 @@ class FarmRepositoryImpl @Inject constructor(
     }
 
     override suspend fun pushPendingFarm(farmEntity: FarmEntity): Result<Unit> = try {
-        // Parse polygonJson to GeoJsonPolygonDto.
+        // Parse polygonJson to LatLng points using the helper
+        val points = dev.korryr.shambaguard.core.util.PolygonJsonHelper.parseToLatLng(farmEntity.polygonJson)
+        
         // GeoJSON expects [longitude, latitude]!
         val coordsList = mutableListOf<List<Double>>()
-        try {
-            val jsonArray = org.json.JSONArray(farmEntity.polygonJson)
-            for (i in 0 until jsonArray.length()) {
-                val point = jsonArray.getJSONObject(i)
-                // GeoJSON format: [longitude, latitude]
-                coordsList.add(listOf(point.getDouble("lng"), point.getDouble("lat")))
-            }
+        for (point in points) {
+            coordsList.add(listOf(point.longitude, point.latitude))
+        }
 
-            // GeoJSON Polygon MUST be closed (first point == last point)
-            if (coordsList.isNotEmpty() && coordsList.first() != coordsList.last()) {
-                coordsList.add(coordsList.first())
-            }
-        } catch (e: Exception) {
-            // Return empty if parsing fails
+        // GeoJSON Polygon MUST be closed (first point == last point)
+        if (coordsList.isNotEmpty() && coordsList.first() != coordsList.last()) {
+            coordsList.add(coordsList.first())
         }
 
         val geoJsonPolygon = dev.korryr.shambaguard.core.network.GeoJsonPolygonDto(

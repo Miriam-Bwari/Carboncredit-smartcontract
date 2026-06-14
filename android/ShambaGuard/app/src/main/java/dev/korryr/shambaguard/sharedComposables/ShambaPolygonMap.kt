@@ -22,10 +22,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.filled.GpsFixed
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -70,9 +72,10 @@ import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.korryr.shambaguard.R
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
-// Default map center: Meru, Kenya
-private val DEFAULT_CENTER = LatLng(0.0500, 37.6494)
+// Default zoom — no static center; camera stays at 0,0 until GPS resolves
 private const val DEFAULT_ZOOM = 15f
 
 // Brand green used on the polygon overlay
@@ -103,6 +106,12 @@ fun ShambaPolygonMap(
 
     var searchQuery by remember { mutableStateOf("") }
     var searchError by remember { mutableStateOf(false) }
+    // Hide the instruction overlay once the farmer places their first boundary tap
+    var showInstructions by remember { mutableStateOf(true) }
+    // Tracks whether we are still waiting for the GPS fix
+    var isLocating by remember { mutableStateOf(false) }
+    // Tracks if device GPS is physically turned on (after prompt)
+    var gpsEnabled by remember { mutableStateOf(false) }
 
     val locationPermissionState = rememberPermissionState(
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -115,34 +124,42 @@ fun ShambaPolygonMap(
         }
     }
 
-    val cameraState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(DEFAULT_CENTER, DEFAULT_ZOOM)
+    // If permission is granted, check if GPS is actually turned on
+    if (locationPermissionState.status.isGranted) {
+        dev.korryr.shambaguard.core.util.EnableLocationEffect(
+            onLocationEnabled = { gpsEnabled = true },
+            onLocationDeclined = { gpsEnabled = true } // Proceed anyway; getCurrentLocation will just fail gracefully
+        )
     }
 
-    // Snap to GPS location when permission is granted.
-    // First try lastLocation (fast, cached). If null (cold start / no cache),
-    // request a fresh single fix with getCurrentLocation().
-    LaunchedEffect(locationPermissionState.status.isGranted) {
-        if (locationPermissionState.status.isGranted) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    val latLng = LatLng(location.latitude, location.longitude)
-                    cameraState.position = CameraPosition.fromLatLngZoom(latLng, DEFAULT_ZOOM)
-                    onCameraMoved(latLng)
-                } else {
-                    // lastLocation was null — request a fresh GPS fix
-                    val cts = CancellationTokenSource()
+    val cameraState = rememberCameraPositionState()
+
+    // Snap camera to real GPS as a coroutine — no callbacks, no race conditions.
+    // Uses getCurrentLocation(HIGH_ACCURACY) directly so it always gets a fresh fix,
+    // even on cold start or emulators. No static fallback — if GPS fails, map stays
+    // centered wherever it is.
+    LaunchedEffect(locationPermissionState.status.isGranted, gpsEnabled) {
+        if (locationPermissionState.status.isGranted && gpsEnabled) {
+            isLocating = true
+            val cts = CancellationTokenSource()
+            try {
+                val location = suspendCancellableCoroutine { cont ->
                     fusedLocationClient
                         .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cts.token)
-                        .addOnSuccessListener { freshLocation ->
-                            if (freshLocation != null) {
-                                val latLng = LatLng(freshLocation.latitude, freshLocation.longitude)
-                                cameraState.position = CameraPosition.fromLatLngZoom(latLng, DEFAULT_ZOOM)
-                                onCameraMoved(latLng)
-                            }
-                            // If still null the default center (Nyeri) remains — acceptable fallback
-                        }
+                        .addOnSuccessListener { loc -> cont.resume(loc) }
+                        .addOnFailureListener { cont.resume(null) }
+                    cont.invokeOnCancellation { cts.cancel() }
                 }
+                if (location != null) {
+                    val latLng = LatLng(location.latitude, location.longitude)
+                    cameraState.animate(
+                        com.google.android.gms.maps.CameraUpdateFactory
+                            .newLatLngZoom(latLng, DEFAULT_ZOOM)
+                    )
+                    onCameraMoved(latLng)
+                }
+            } finally {
+                isLocating = false
             }
         }
     }
@@ -183,7 +200,10 @@ fun ShambaPolygonMap(
                 cameraPositionState = cameraState,
                 properties = mapProperties,
                 uiSettings = mapUiSettings,
-                onMapClick = onMapTapped,
+                onMapClick = { latLng ->
+                    showInstructions = false // Dismiss instructions on first tap
+                    onMapTapped(latLng)
+                },
             ) {
                 // Draw dashed outline as we go
                 if (polygonPoints.size >= 2) {
@@ -256,12 +276,41 @@ fun ShambaPolygonMap(
                     .padding(top = 12.dp, start = 16.dp, end = 16.dp),
             )
 
-            // Floating instruction card — sits below the search bar
-            InstructionCard(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 76.dp, start = 16.dp, end = 16.dp),
-            )
+            // Floating instruction card — visible only until the first tap
+            if (showInstructions) {
+                InstructionCard(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 76.dp, start = 16.dp, end = 16.dp),
+                )
+            }
+
+            // GPS acquiring badge — shown while waiting for a location fix
+            if (isLocating) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = if (showInstructions) 140.dp else 76.dp)
+                        .shadow(4.dp, RoundedCornerShape(50))
+                        .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(50))
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(14.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = "Finding your location…",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Medium,
+                        ),
+                    )
+                }
+            }
 
             // Area label in the polygon centre
             if (estimatedAcres != null) {
