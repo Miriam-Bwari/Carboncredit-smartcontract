@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.res.stringResource
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -40,9 +41,6 @@ import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtRisk
 import dev.korryr.shambaguard.ui.features.farmer.presentation.EarlyWarningUiState
 import dev.korryr.shambaguard.ui.features.farmer.presentation.RainfallDay
-import dev.korryr.shambaguard.ui.theme.Green40
-import dev.korryr.shambaguard.ui.theme.Green90
-import dev.korryr.shambaguard.ui.theme.ShambaAmber
 
 // Heat-map overlay colours only — these are data-encoding colours that intentionally
 // don't follow the brand palette (red = critical drought, green = healthy vegetation).
@@ -120,7 +118,7 @@ private fun DroughtAlertBanner(uiState: EarlyWarningUiState) {
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = androidx.compose.ui.res.stringResource(
+                text = stringResource(
                     dev.korryr.shambaguard.R.string.drought_farm_health_title,
                     uiState.farmHealthValue,
                 ),
@@ -157,7 +155,7 @@ private fun DroughtAlertBanner(uiState: EarlyWarningUiState) {
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text = androidx.compose.ui.res.stringResource(
+                    text = stringResource(
                         dev.korryr.shambaguard.R.string.drought_ai_confidence,
                         uiState.aiConfidence,
                     ),
@@ -218,7 +216,7 @@ private fun FarmStressMapCard(
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_farm_stress_map),
+                text = stringResource(dev.korryr.shambaguard.R.string.drought_farm_stress_map),
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -233,7 +231,7 @@ private fun FarmStressMapCard(
                     .padding(horizontal = 10.dp, vertical = 6.dp),
             ) {
                 Text(
-                    text = androidx.compose.ui.res.stringResource(
+                    text = stringResource(
                         dev.korryr.shambaguard.R.string.drought_updated_label,
                         lastUpdated,
                     ),
@@ -293,15 +291,15 @@ private fun FarmStressMapCard(
         ) {
             LegendDot(
                 color = Color(0xFF2E9447),
-                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_legend_healthy),
+                label = stringResource(dev.korryr.shambaguard.R.string.drought_legend_healthy),
             )
             LegendDot(
                 color = HeatYellow,
-                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_legend_stressed),
+                label = stringResource(dev.korryr.shambaguard.R.string.drought_legend_stressed),
             )
             LegendDot(
                 color = HeatRed,
-                label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_legend_critical),
+                label = stringResource(dev.korryr.shambaguard.R.string.drought_legend_critical),
             )
         }
     }
@@ -331,7 +329,7 @@ private fun LegendDot(color: Color, label: String) {
 private fun RainfallForecastSection(forecast: List<RainfallDay>) {
     Column {
         Text(
-            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_7_day_forecast),
+            text = stringResource(dev.korryr.shambaguard.R.string.drought_7_day_forecast),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground,
