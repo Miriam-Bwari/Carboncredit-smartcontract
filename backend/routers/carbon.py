@@ -5,6 +5,7 @@ from database.connection import get_db, SessionLocal
 from database.models import Farm, CarbonRecord
 from ai.earth_engine import get_farm_ndvi
 from ai.carbon_calculator import estimate_carbon_kg
+from services.notifications import send_push_notification
 
 from datetime import datetime
 
@@ -83,6 +84,16 @@ def run_real_scan(farm_id: int):
         db.commit()
 
         print(f"[SCAN SUCCESS] Saved farm {farm_id}")
+
+        # Send push notification to the farmer who owns this farm
+        farmer = farm.farmer  # assumes Farm has a relationship to Farmer
+        if farmer and farmer.fcm_token:
+            send_push_notification(
+                fcm_token=farmer.fcm_token,
+                title="Carbon Scan Complete! 🌱",
+                body=f"You earned {round(credits, 4)} carbon credits!",
+                data={"type": "scan_complete", "farm_id": str(farm_id)}
+            )
 
     except Exception as e:
         print(f"[SCAN FAILED] {e}")

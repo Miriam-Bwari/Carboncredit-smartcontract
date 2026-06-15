@@ -24,6 +24,7 @@ class Farmer(Base):
 
     farms    = relationship('Farm', back_populates='farmer', cascade='all, delete-orphan')
     payments = relationship('Payment', back_populates='farmer', cascade='all, delete-orphan')
+    fcm_token = Column(String(255), nullable=True)
 
 
 class Agent(Base):
