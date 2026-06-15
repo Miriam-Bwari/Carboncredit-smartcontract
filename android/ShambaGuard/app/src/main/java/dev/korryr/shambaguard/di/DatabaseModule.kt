@@ -23,7 +23,8 @@ object DatabaseModule {
         context,
         ShambaDatabase::class.java,
         "shamba_database",
-    ).build()
+    ).fallbackToDestructiveMigration()
+     .build()
 
     @Provides
     fun provideUserDao(database: ShambaDatabase): UserDao = database.userDao()
@@ -42,4 +43,7 @@ object DatabaseModule {
 
     @Provides
     fun provideSyncQueueDao(database: ShambaDatabase): SyncQueueDao = database.syncQueueDao()
+
+    @Provides
+    fun provideNotificationDao(database: ShambaDatabase): NotificationDao = database.notificationDao()
 }

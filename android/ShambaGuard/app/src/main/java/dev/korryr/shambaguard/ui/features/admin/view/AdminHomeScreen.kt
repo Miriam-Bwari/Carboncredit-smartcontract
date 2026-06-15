@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.sharedComposables.NotificationBell
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Teal40
 
@@ -37,6 +38,7 @@ fun AdminHomeScreen(
     onNavigateToMap: () -> Unit,
     onNavigateToPool: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onNotificationClick: () -> Unit,
 ) {
     val stats = uiState.stats
 
@@ -46,8 +48,11 @@ fun AdminHomeScreen(
                 title = "Admin Dashboard",
                 onBack = null,
                 trailingIcon = {
-                    IconButton(onClick = onNavigateToSettings) {
-                        Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = MaterialTheme.colorScheme.onSurface)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        NotificationBell(onClick = onNotificationClick)
+                        IconButton(onClick = onNavigateToSettings) {
+                            Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = MaterialTheme.colorScheme.onSurface)
+                        }
                     }
                 },
             )
