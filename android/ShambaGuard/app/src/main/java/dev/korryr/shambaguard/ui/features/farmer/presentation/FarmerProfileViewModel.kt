@@ -42,6 +42,12 @@ class FarmerProfileViewModel @Inject constructor(
                 _uiState.update { it.copy(selectedLanguage = lang) }
             }
         }
+
+        viewModelScope.launch {
+            settingsManager.biometricEnabledFlow.collect { enabled ->
+                _uiState.update { it.copy(biometricEnabled = enabled) }
+            }
+        }
     }
 
     private fun loadProfileData() {
@@ -83,7 +89,9 @@ class FarmerProfileViewModel @Inject constructor(
     }
 
     fun onBiometricToggled() {
-        _uiState.update { it.copy(biometricEnabled = !it.biometricEnabled) }
+        viewModelScope.launch {
+            settingsManager.setBiometricEnabled(!_uiState.value.biometricEnabled)
+        }
     }
 
     fun setTheme(mode: AppThemeMode) {

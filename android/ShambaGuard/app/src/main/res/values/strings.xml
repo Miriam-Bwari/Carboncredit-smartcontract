@@ -230,6 +230,11 @@
     <string name="drought_alerts">Drought Alerts</string>
     <string name="security">SECURITY</string>
     <string name="biometric_unlock">Biometric Unlock</string>
+    <string name="biometric_unlock_subtitle">Verify identity to open Shamba Guard</string>
+    <string name="app_locked">App Locked</string>
+    <string name="biometric_unlock_desc">Use your fingerprint or face to unlock Shamba Guard</string>
+    <string name="unlock">Unlock</string>
+    <string name="cancel">Cancel</string>
     <string name="change_pin">Change PIN</string>
     <string name="legal_and_support">LEGAL &amp; SUPPORT</string>
     <string name="policy_documents">Policy Documents</string>
