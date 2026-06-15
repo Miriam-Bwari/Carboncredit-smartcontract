@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
+import dev.korryr.shambaguard.sharedComposables.NotificationBell
 import dev.korryr.shambaguard.ui.features.agent.presentation.AgentDashboardUiState
 import dev.korryr.shambaguard.ui.features.agent.presentation.RecentRegistration
 import dev.korryr.shambaguard.ui.features.agent.presentation.RegistrationStatus
@@ -47,6 +48,7 @@ fun AgentDashboardScreen(
     onFilterToggled: () -> Unit,
     onFarmerClicked: (String) -> Unit,
     onSettingsClicked: () -> Unit,
+    onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -59,16 +61,19 @@ fun AgentDashboardScreen(
             ShambaTopBar(
                 onBack = null,
                 trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Settings",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .clickable(onClick = onSettingsClicked)
-                            .padding(6.dp),
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        NotificationBell(onClick = onNotificationClick)
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .clickable(onClick = onSettingsClicked)
+                                .padding(6.dp),
+                        )
+                    }
                 },
             )
 

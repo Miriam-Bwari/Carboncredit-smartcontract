@@ -13,8 +13,9 @@ import dev.korryr.shambaguard.data.local.entity.*
         PayoutEntity::class,
         FarmReportEntity::class,
         SyncQueueEntity::class,
+        NotificationEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class ShambaDatabase : RoomDatabase() {
@@ -24,4 +25,5 @@ abstract class ShambaDatabase : RoomDatabase() {
     abstract fun payoutDao(): PayoutDao
     abstract fun farmReportDao(): FarmReportDao
     abstract fun syncQueueDao(): SyncQueueDao
+    abstract fun notificationDao(): NotificationDao
 }
