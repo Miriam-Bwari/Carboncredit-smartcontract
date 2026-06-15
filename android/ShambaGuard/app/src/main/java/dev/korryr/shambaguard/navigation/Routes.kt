@@ -86,6 +86,13 @@ data object AgentOnboardingEvidenceKey
 
 // Farmer routes
 @Serializable
+data object BiometricPromptKey
+
+// Notification
+@Serializable
+data object NotificationListKey // Dashboard — HOME tab
+
+@Serializable
 data object FarmerHomeKey // Dashboard — HOME tab
 
 @Serializable

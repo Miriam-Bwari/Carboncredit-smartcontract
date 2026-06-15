@@ -12,10 +12,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.korryr.shambaguard.core.datastore.SessionManager
 import dev.korryr.shambaguard.navigation.ShambaGuardNavGraph
 import dev.korryr.shambaguard.navigation.UserRole
+import dev.korryr.shambaguard.ui.features.auth.view.BiometricLockScreen
 import dev.korryr.shambaguard.ui.theme.ShambaGuardTheme
 
 import dev.korryr.shambaguard.core.datastore.SettingsManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -33,6 +37,7 @@ class MainActivity : ComponentActivity() {
             val appThemeMode by settingsManager.appThemeFlow.collectAsStateWithLifecycle(initialValue = null)
             val appLanguage by settingsManager.appLanguageFlow.collectAsStateWithLifecycle(initialValue = null)
             val savedRole by sessionManager.userRoleFlow.collectAsStateWithLifecycle(initialValue = null)
+            val biometricEnabled by settingsManager.biometricEnabledFlow.collectAsStateWithLifecycle(initialValue = false)
 
             if (appThemeMode == null || appLanguage == null || savedRole == null) {
                 Box(modifier = Modifier.fillMaxSize())
@@ -62,7 +67,38 @@ class MainActivity : ComponentActivity() {
                         UserRole.Unauthenticated
                     }
 
-                    ShambaGuardNavGraph(role = finalRole)
+                    // Restart Activity on logout to completely clear all ViewModels and in-memory caches
+                    var previousRole by remember { mutableStateOf(finalRole) }
+                    LaunchedEffect(finalRole) {
+                        if (previousRole != UserRole.Unauthenticated && finalRole == UserRole.Unauthenticated) {
+                            val intent = android.content.Intent(this@MainActivity, MainActivity::class.java)
+                            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            startActivity(intent)
+                            finish()
+                        }
+                        previousRole = finalRole
+                    }
+
+                    var isUnlocked by remember { mutableStateOf(false) }
+                    val lifecycleOwner = LocalLifecycleOwner.current
+
+                    DisposableEffect(lifecycleOwner) {
+                        val observer = LifecycleEventObserver { _, event ->
+                            if (event == Lifecycle.Event.ON_STOP) {
+                                isUnlocked = false
+                            }
+                        }
+                        lifecycleOwner.lifecycle.addObserver(observer)
+                        onDispose {
+                            lifecycleOwner.lifecycle.removeObserver(observer)
+                        }
+                    }
+
+                    if (biometricEnabled && finalRole != UserRole.Unauthenticated && !isUnlocked) {
+                        BiometricLockScreen(onUnlockSucceeded = { isUnlocked = true })
+                    } else {
+                        ShambaGuardNavGraph(role = finalRole)
+                    }
                 }
             }
         }

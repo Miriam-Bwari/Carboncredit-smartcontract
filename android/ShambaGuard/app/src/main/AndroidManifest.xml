@@ -2,6 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Network access — required for all API calls (backend, Open-Meteo, Google Maps tiles) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Location permissions for GPS auto-centering on the farm boundary drawing screen -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Push Notifications permission (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".ShambaGuardApplication"
         android:allowBackup="true"
@@ -13,6 +23,11 @@
         android:supportsRtl="true"
         android:localeConfig="@xml/locales_config"
         android:theme="@style/Theme.ShambaGuard">
+        <activity
+            android:name=".ui.features.auth.view.BiometricPromptActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,18 +29,10 @@ import androidx.compose.ui.unit.dp
 fun ShambaTopBar(
     title: String = "Habari, Shamba Guard",
     onBack: (() -> Unit)? = null,
+    onNotificationClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     trailingIcon: @Composable () -> Unit = {
-        Icon(
-            imageVector = Icons.Filled.LocationOn,
-            contentDescription = "Location",
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .clickable {}
-                .padding(6.dp),
-        )
+        NotificationBell(onClick = onNotificationClick)
     },
 ) {
     Row(
@@ -52,7 +44,7 @@ fun ShambaTopBar(
         // Back button — 36dp clickable icon, no minimum touch-target enforcement
         if (onBack != null) {
             Icon(
-                imageVector = Icons.Filled.ArrowBack,
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier

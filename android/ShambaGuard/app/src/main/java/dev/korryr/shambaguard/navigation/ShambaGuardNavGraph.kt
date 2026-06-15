@@ -66,6 +66,8 @@ import dev.korryr.shambaguard.ui.features.farmer.view.DroughtInsightsScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.EarlyWarningScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerDashboardScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.FarmerProfileScreen
+import dev.korryr.shambaguard.ui.features.notifications.presentation.NotificationViewModel
+import dev.korryr.shambaguard.ui.features.notifications.view.NotificationListScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.MyFarmScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.PayoutHistoryScreen
 import dev.korryr.shambaguard.ui.features.farmer.view.PolicyScreen
@@ -369,6 +371,7 @@ fun ShambaGuardNavGraph(
                         onNavigateToMap = { backStack.add(AdminMapKey) },
                         onNavigateToPool = { backStack.add(AdminPoolKey) },
                         onNavigateToSettings = { backStack.add(SharedSettingsKey) },
+                        onNotificationClick = { backStack.add(NotificationListKey) },
                     )
                 }
                 entry<AdminMapKey> {
@@ -410,6 +413,7 @@ fun ShambaGuardNavGraph(
                             backStack.add(AgentFarmerDetailKey(farmerId = farmerId, farmId = ""))
                         },
                         onSettingsClicked = { backStack.add(SharedSettingsKey) },
+                        onNotificationClick = { backStack.add(NotificationListKey) },
                     )
                 }
                 entry<AgentFarmersKey> {
@@ -533,6 +537,7 @@ fun ShambaGuardNavGraph(
                         onViewPolicy = { backStack.add(FarmerPolicyKey) },
                         onViewCarbon = { backStack.add(FarmerCarbonKey) },
                         onRegisterFarm = { backStack.add(FarmBoundaryKey) },
+                        onNotificationClick = { backStack.add(NotificationListKey) },
                     )
                 }
                 entry<FarmerDroughtKey> {
@@ -596,6 +601,13 @@ fun ShambaGuardNavGraph(
                         title = "Change PIN feature coming soon",
                         buttonText = "Go Back",
                         onClick = { backStack.removeLastOrNull() },
+                    )
+                }
+                entry<NotificationListKey> {
+                    val vm: NotificationViewModel = hiltViewModel()
+                    NotificationListScreen(
+                        onBack = { backStack.removeLastOrNull() },
+                        viewModel = vm
                     )
                 }
                 entry<PolicyDocsKey> {
