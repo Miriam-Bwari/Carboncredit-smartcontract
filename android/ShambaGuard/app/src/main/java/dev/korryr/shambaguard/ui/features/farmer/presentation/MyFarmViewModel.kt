@@ -51,19 +51,12 @@ class MyFarmViewModel @Inject constructor(
                 viewModelScope.launch {
                     farmRepository.getFarm(farmId).collect { farmEntity ->
                         if (farmEntity != null && farmEntity.polygonJson.isNotBlank()) {
-                            val coordsList = mutableListOf<com.google.android.gms.maps.model.LatLng>()
                             try {
-                                val jsonArray = org.json.JSONArray(farmEntity.polygonJson)
-                                for (i in 0 until jsonArray.length()) {
-                                    val point = jsonArray.getJSONObject(i)
-                                    val lat = point.getDouble("lat")
-                                    val lng = point.getDouble("lng")
-                                    coordsList.add(com.google.android.gms.maps.model.LatLng(lat, lng))
-                                }
+                                val coordsList = dev.korryr.shambaguard.core.util.PolygonJsonHelper.parseToLatLng(farmEntity.polygonJson)
+                                _uiState.update { it.copy(polygonCoords = coordsList) }
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
-                            _uiState.update { it.copy(polygonCoords = coordsList) }
                         }
                     }
                 }

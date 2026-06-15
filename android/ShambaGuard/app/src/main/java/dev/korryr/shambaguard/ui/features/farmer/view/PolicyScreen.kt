@@ -207,18 +207,18 @@ private fun TierCard(
     // Dark card (Nguvu) vs light card (Msingi / Imara)
     val cardBg by animateColorAsState(
         targetValue = when {
-            tier.isPremiumDark -> Green10
-            isSelected -> White
-            else -> Green99
+            tier.isPremiumDark -> MaterialTheme.colorScheme.primary
+            isSelected -> MaterialTheme.colorScheme.surface
+            else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         },
         animationSpec = tween(200),
         label = "CardBg_${tier.name}",
     )
     val borderColor by animateColorAsState(
         targetValue = when {
-            tier.isPremiumDark -> Green10
-            isSelected -> Green40
-            else -> Green95
+            tier.isPremiumDark -> MaterialTheme.colorScheme.primary
+            isSelected -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.outlineVariant
         },
         animationSpec = tween(200),
         label = "BorderColor_${tier.name}",
@@ -284,12 +284,12 @@ private fun TierNameRow(
     modifier: Modifier = Modifier,
 ) {
     val nameColor = if (tier.isPremiumDark) {
-        White
+        MaterialTheme.colorScheme.onPrimary
     } else {
         MaterialTheme.colorScheme.onSurface
     }
     val subColor = if (tier.isPremiumDark) {
-        White.copy(alpha = 0.7f)
+        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
     } else {
         MaterialTheme.colorScheme.onSurfaceVariant
     }
@@ -321,7 +321,7 @@ private fun PremiumAmountText(
     tier: PolicyTier,
     modifier: Modifier = Modifier,
 ) {
-    val textColor = if (tier.isPremiumDark) White else MaterialTheme.colorScheme.onSurface
+    val textColor = if (tier.isPremiumDark) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
 
     Text(
         text = buildAnnotatedString {
@@ -337,7 +337,7 @@ private fun PremiumAmountText(
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
                     color = if (tier.isPremiumDark) {
-                        White.copy(0.7f)
+                        MaterialTheme.colorScheme.onPrimary.copy(0.7f)
                     } else {
                         MaterialTheme.colorScheme.onSurfaceVariant
                     },
@@ -355,9 +355,9 @@ private fun FeatureRow(
     isDarkCard: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val iconTint = if (isDarkCard) Green90 else Green40
+    val iconTint = if (isDarkCard) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f) else MaterialTheme.colorScheme.primary
     val textColor = if (isDarkCard) {
-        White.copy(alpha = 0.9f)
+        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
     } else {
         MaterialTheme.colorScheme.onSurface
     }
@@ -393,22 +393,22 @@ private fun TierSelectButton(
 ) {
     val bgColor by animateColorAsState(
         targetValue = when {
-            isSelected && !tier.isPremiumDark -> Green40
-            tier.isPremiumDark && isSelected -> White.copy(alpha = 0.15f)
-            tier.isPremiumDark -> White.copy(alpha = 0.08f)
+            isSelected && !tier.isPremiumDark -> MaterialTheme.colorScheme.primary
+            tier.isPremiumDark && isSelected -> MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)
+            tier.isPremiumDark -> MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f)
             else -> Color.Transparent
         },
         animationSpec = tween(200),
         label = "BtnBg_${tier.name}",
     )
     val textColor = when {
-        isSelected && !tier.isPremiumDark -> White
-        tier.isPremiumDark -> White
-        else -> Green40
+        isSelected && !tier.isPremiumDark -> MaterialTheme.colorScheme.onPrimary
+        tier.isPremiumDark -> MaterialTheme.colorScheme.onPrimary
+        else -> MaterialTheme.colorScheme.primary
     }
     val borderColor = when {
-        tier.isPremiumDark -> White.copy(alpha = 0.3f)
-        else -> Green40
+        tier.isPremiumDark -> MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f)
+        else -> MaterialTheme.colorScheme.primary
     }
 
     Row(
@@ -452,7 +452,7 @@ private fun RecommendedBadge(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(50))
-            .background(ShambaAmber)
+            .background(MaterialTheme.colorScheme.tertiary)
             .padding(horizontal = 14.dp, vertical = 5.dp),
         contentAlignment = Alignment.Center,
     ) {
@@ -460,14 +460,14 @@ private fun RecommendedBadge(modifier: Modifier = Modifier) {
             Icon(
                 imageVector = Icons.Filled.Star,
                 contentDescription = null,
-                tint = White,
+                tint = MaterialTheme.colorScheme.onTertiary,
                 modifier = Modifier.size(10.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = stringResource(R.string.policy_recommended_badge),
                 style = MaterialTheme.typography.labelSmall.copy(
-                    color = White,
+                    color = MaterialTheme.colorScheme.onTertiary,
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 0.8.sp,
                 ),
@@ -538,9 +538,9 @@ private fun MpesaButton(
 ) {
     val bgColor by animateColorAsState(
         targetValue = when {
-            isSuccess -> Color(0xFF2E9447) // Brighter success green
+            isSuccess -> Color(0xFF2E9447) // Keep specific success green, recognizable
             !isEnabled -> MaterialTheme.colorScheme.surfaceVariant
-            else -> Green40
+            else -> MaterialTheme.colorScheme.primary
         },
         animationSpec = tween(300),
         label = "MpesaBtnBg",
@@ -565,7 +565,7 @@ private fun MpesaButton(
         when {
             isLoading -> {
                 CircularProgressIndicator(
-                    color = White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(20.dp),
                     strokeWidth = 2.dp,
                 )
@@ -573,7 +573,7 @@ private fun MpesaButton(
                 Text(
                     text = stringResource(R.string.policy_payment_processing),
                     style = MaterialTheme.typography.labelLarge.copy(
-                        color = White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold,
                     ),
                 )
@@ -583,14 +583,14 @@ private fun MpesaButton(
                 Icon(
                     imageVector = Icons.Filled.CheckCircle,
                     contentDescription = null,
-                    tint = White,
+                    tint = Color.White,
                     modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
                     text = stringResource(R.string.policy_payment_success),
                     style = MaterialTheme.typography.labelLarge.copy(
-                        color = White,
+                        color = Color.White,
                         fontWeight = FontWeight.Bold,
                     ),
                 )
@@ -601,14 +601,14 @@ private fun MpesaButton(
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(White)
+                        .background(MaterialTheme.colorScheme.onPrimary)
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = stringResource(R.string.policy_mpesa_label),
                         style = MaterialTheme.typography.labelMedium.copy(
-                            color = Green40,
+                            color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.ExtraBold,
                         ),
                     )
@@ -618,7 +618,7 @@ private fun MpesaButton(
                     text = stringResource(R.string.policy_mpesa_cta),
                     style = MaterialTheme.typography.labelLarge.copy(
                         color = if (isEnabled) {
-                            White
+                            MaterialTheme.colorScheme.onPrimary
                         } else {
                             MaterialTheme.colorScheme.onSurfaceVariant
                         },
