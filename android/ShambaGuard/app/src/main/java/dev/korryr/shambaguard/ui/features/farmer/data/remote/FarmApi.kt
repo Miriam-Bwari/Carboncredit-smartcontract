@@ -17,10 +17,10 @@ interface FarmApi {
     @POST("api/farms/register")
     suspend fun registerFarm(@Body farm: FarmRegisterRequestDto)
 
-    @GET("api/v1/farms/{farm_id}")
+    @GET("api/farms/{farm_id}")
     suspend fun getFarm(@Path("farm_id") farmId: String): FarmDto
 
-    @GET("api/v1/farms/{farm_id}/report")
+    @GET("api/farms/{farm_id}/report")
     suspend fun getFarmReport(@Path("farm_id") farmId: String): FarmReportDto
 
     @POST("api/farms/{farm_id}/practices")
