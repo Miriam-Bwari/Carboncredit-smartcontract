@@ -8,10 +8,15 @@ import dev.korryr.shambaguard.ui.features.auth.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
+import com.google.firebase.messaging.FirebaseMessaging
 import dev.korryr.shambaguard.core.datastore.SessionManager
+import dev.korryr.shambaguard.ui.features.farmer.data.remote.FarmApi
+import dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FcmTokenRequestDto
 // ---------------------------------------------------------------------------
 // LoginViewModel.kt
 // Handles login for both Farmers and Agents using phone + password.
@@ -33,6 +38,7 @@ data class LoginUiState(
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val sessionManager: SessionManager,
+    private val farmApi: FarmApi,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -79,6 +85,25 @@ class LoginViewModel @Inject constructor(
                 role = state.role,
             ).fold(
                 onSuccess = { role ->
+                    // Fetch FCM token and sync to backend if Farmer
+                    if (role == UserRole.Farmer) {
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val token = task.result
+                                viewModelScope.launch {
+                                    try {
+                                        val userId = sessionManager.userIdFlow.firstOrNull()
+                                        if (userId != null) {
+                                            farmApi.updateFcmToken(FcmTokenRequestDto(farmer_id = userId, fcm_token = token))
+                                            Timber.d("Successfully synced FCM token on login.")
+                                        }
+                                    } catch (e: Exception) {
+                                        Timber.e(e, "Failed to sync FCM token on login.")
+                                    }
+                                }
+                            }
+                        }
+                    }
                     _uiState.update { it.copy(isLoading = false, successRole = role) }
                 },
                 onFailure = { e ->

@@ -51,4 +51,7 @@ interface FarmApi {
 
     @GET("api/payments/policy/{farmer_id}")
     suspend fun getPolicy(@Path("farmer_id") farmerId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PolicyDto
+
+    @POST("api/farmers/update-fcm-token")
+    suspend fun updateFcmToken(@Body request: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FcmTokenRequestDto)
 }
