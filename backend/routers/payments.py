@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database.connection import get_db
-from database.models import Farm, CarbonRecord, Payment
+from database.models import Farm, CarbonRecord, Payment, Farmer
 from core.security import get_current_user
 from schemas.responses import StkPushResponse, PaymentStatusResponse
 from services.mpesa import send_mpesa_payment
+from services.notifications import send_push_notification
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -56,6 +57,17 @@ def mpesa_callback(payload: dict, db: Session = Depends(get_db)):
         if payment:
             payment.status = "completed" if result_code == 0 else "failed"
             db.commit()
+
+            # Send push notification if payment succeeded
+            if payment.status == "completed":
+                farmer = db.query(Farmer).filter(Farmer.id == payment.farmer_id).first()
+                if farmer and farmer.fcm_token:
+                    send_push_notification(
+                        fcm_token=farmer.fcm_token,
+                        title="Payment Received! 💰",
+                        body=f"KES {payment.amount_kes} has been sent to your M-Pesa account.",
+                        data={"type": "payment_success", "amount": str(payment.amount_kes)}
+                    )
 
         return {"received": True, "checkout_id": checkout_id, "result_code": result_code}
     except Exception:
