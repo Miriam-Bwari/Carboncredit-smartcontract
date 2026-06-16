@@ -87,15 +87,26 @@ def get_farmer_policy(farmer_id: str, db: Session = Depends(get_db)):
         return {
             "farmer_id": farmer_id,
             "is_active": False,
-            "expiry_date": None
+            "expiry_date": None,
+            "payout_kes": 0
         }
 
     from datetime import datetime, timedelta
     expiry_date = payment.created_at + timedelta(days=365)
     is_active = expiry_date > datetime.utcnow()
 
+    payout_kes = 0
+    if is_active:
+        if payment.amount_kes >= 400:
+            payout_kes = 25000
+        elif payment.amount_kes >= 150:
+            payout_kes = 8000
+        else:
+            payout_kes = 2000
+
     return {
         "farmer_id": farmer_id,
         "is_active": is_active,
-        "expiry_date": expiry_date.strftime("%Y-%m-%d")
+        "expiry_date": expiry_date.strftime("%Y-%m-%d"),
+        "payout_kes": payout_kes
     }

@@ -79,6 +79,7 @@ data class PolicyDto(
     @SerializedName("farmer_id") val farmerId: String,
     @SerializedName("is_active") val isActive: Boolean,
     @SerializedName("expiry_date") val expiryDate: String?,
+    @SerializedName("payout_kes") val payoutKes: Int = 0,
 )
 
 data class AdviceDto(

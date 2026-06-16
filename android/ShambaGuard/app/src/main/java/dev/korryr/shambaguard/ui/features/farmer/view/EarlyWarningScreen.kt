@@ -36,7 +36,14 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polygon
+import com.google.maps.android.compose.GroundOverlay
+import com.google.maps.android.compose.GroundOverlayPosition
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.maps.android.compose.rememberCameraPositionState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.features.farmer.presentation.DroughtRisk
 import dev.korryr.shambaguard.ui.features.farmer.presentation.EarlyWarningUiState
@@ -183,13 +190,19 @@ private fun FarmStressMapCard(
         )
     }
 
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    val paddingPx = with(density) { 32.dp.roundToPx() }
+
+    var mapBounds by remember { mutableStateOf<LatLngBounds?>(null) }
+
     LaunchedEffect(polygonPoints) {
         if (polygonPoints.isNotEmpty()) {
             val builder = LatLngBounds.Builder()
             polygonPoints.forEach { builder.include(it) }
             val bounds = builder.build()
+            mapBounds = bounds
             cameraPositionState.animate(
-                update = CameraUpdateFactory.newLatLngBounds(bounds, 100),
+                update = CameraUpdateFactory.newLatLngBounds(bounds, paddingPx),
                 durationMs = 1000,
             )
         }
@@ -265,19 +278,21 @@ private fun FarmStressMapCard(
                 ),
             ) {
                 if (polygonPoints.isNotEmpty()) {
-                    val riskColor = when (currentRisk) {
-                        DroughtRisk.CRITICAL -> HeatRed.copy(alpha = 0.5f)
-                        DroughtRisk.HIGH -> HeatOrange.copy(alpha = 0.5f)
-                        DroughtRisk.MODERATE -> HeatYellow.copy(alpha = 0.5f)
-                        DroughtRisk.LOW -> HeatGreen.copy(alpha = 0.5f)
-                    }
                     Polygon(
                         points = polygonPoints,
-                        fillColor = riskColor,
+                        fillColor = Color.Transparent, // Let the heatmap shine through
                         // White stroke keeps the farm boundary crisp against any map tile
                         strokeColor = MaterialTheme.colorScheme.onPrimary,
                         strokeWidth = 3f,
                     )
+                    
+                    mapBounds?.let { b ->
+                        GroundOverlay(
+                            position = GroundOverlayPosition.create(b),
+                            image = BitmapDescriptorFactory.fromResource(dev.korryr.shambaguard.R.drawable.mock_ndvi_heatmap),
+                            transparency = 0.3f, // Allow satellite base layer to be visible
+                        )
+                    }
                 }
             }
         }
@@ -431,6 +446,14 @@ private fun AIRecommendationCard(uiState: EarlyWarningUiState) {
 // Coverage / policy card
 @Composable
 private fun CoverageCard(uiState: EarlyWarningUiState) {
+    val isActive = uiState.coverageActive
+    
+    val iconColor = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+    val iconBgColor = if (isActive) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer
+    val statusText = if (isActive) androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_coverage_active) else "NO ACTIVE POLICY"
+    val descriptionText = if (isActive) androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_policy_will_pay) else "You are currently unprotected against severe drought conditions."
+    val payoutAmount = if (isActive) uiState.payoutKes else 0
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -444,28 +467,29 @@ private fun CoverageCard(uiState: EarlyWarningUiState) {
             modifier = Modifier
                 .size(56.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer),
+                .background(iconBgColor),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = Icons.Filled.Security,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = iconColor,
                 modifier = Modifier.size(28.dp),
             )
         }
         Spacer(Modifier.height(12.dp))
         Text(
-            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_coverage_active),
+            text = statusText,
             style = MaterialTheme.typography.labelSmall.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp,
             ),
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_policy_will_pay),
+            text = descriptionText,
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
@@ -474,7 +498,7 @@ private fun CoverageCard(uiState: EarlyWarningUiState) {
         Text(
             text = androidx.compose.ui.res.stringResource(
                 dev.korryr.shambaguard.R.string.drought_kes_format,
-                "%,d".format(uiState.payoutKes),
+                "%,d".format(payoutAmount),
             ),
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.ExtraBold,
