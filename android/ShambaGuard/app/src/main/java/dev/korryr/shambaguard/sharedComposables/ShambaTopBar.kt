@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,10 +30,9 @@ import androidx.compose.ui.unit.dp
 fun ShambaTopBar(
     title: String = "Habari, Shamba Guard",
     onBack: (() -> Unit)? = null,
-    onNotificationClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     trailingIcon: @Composable () -> Unit = {
-        NotificationBell(onClick = onNotificationClick)
+        Spacer(Modifier.size(48.dp))
     },
 ) {
     Row(
@@ -70,8 +70,8 @@ fun ShambaTopBar(
 
         // Trailing icon slot — default to the location pin
         Box(
-            modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center,
+            modifier = Modifier.defaultMinSize(minWidth = 48.dp, minHeight = 48.dp),
+            contentAlignment = Alignment.CenterEnd,
         ) {
             trailingIcon()
         }

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.google.services)
 }
 
 // Read local secrets — file is gitignored, never committed
@@ -131,6 +132,11 @@ dependencies {
     // Location & Permissions
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
 }
 
 ktlint {

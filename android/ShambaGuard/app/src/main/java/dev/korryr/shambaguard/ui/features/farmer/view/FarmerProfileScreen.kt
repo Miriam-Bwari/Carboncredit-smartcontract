@@ -13,15 +13,18 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.biometric.BiometricManager
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerProfileUiState
 import dev.korryr.shambaguard.ui.theme.Green40
@@ -158,10 +161,18 @@ fun FarmerProfileScreen(
 
             // SECURITY section
             ProfileSection(title = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.security)) {
+                val context = LocalContext.current
+                val canAuthenticate = remember {
+                    val bm = BiometricManager.from(context)
+                    val result = bm.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                    result == BiometricManager.BIOMETRIC_SUCCESS
+                }
+
                 SwitchRow(
                     icon = Icons.Filled.Fingerprint,
                     label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.biometric_unlock),
-                    checked = uiState.biometricEnabled,
+                    checked = uiState.biometricEnabled && canAuthenticate,
+                    enabled = canAuthenticate,
                     onToggle = { onBiometricToggled() },
                 )
                 SettingsDivider()
@@ -387,6 +398,7 @@ private fun SwitchRow(
     icon: ImageVector,
     label: String,
     checked: Boolean,
+    enabled: Boolean = true,
     onToggle: (Boolean) -> Unit,
 ) {
     Row(
@@ -411,6 +423,7 @@ private fun SwitchRow(
         )
         Switch(
             checked = checked,
+            enabled = enabled,
             onCheckedChange = { onToggle(it) },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = MaterialTheme.colorScheme.surface,

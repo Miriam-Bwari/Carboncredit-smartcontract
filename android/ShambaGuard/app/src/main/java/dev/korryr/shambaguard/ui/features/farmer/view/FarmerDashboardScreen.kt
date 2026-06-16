@@ -291,49 +291,7 @@ private fun DashboardTopBar(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             NotificationBell(onClick = onNotificationClick)
-            Spacer(modifier = Modifier.width(8.dp))
-            // Satellite thumbnail placeholder — green grid representing aerial farm view
-            SatelliteThumbnail()
         }
-    }
-}
-
-// Satellite farm view — small rounded square with a stylised aerial look
-@Composable
-private fun SatelliteThumbnail(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(56.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(
-                Brush.linearGradient(
-                    listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary),
-                ),
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        // Inner grid lines suggest aerial field divisions
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(6.dp),
-            verticalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            repeat(3) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(White.copy(alpha = 0.25f)),
-                )
-            }
-        }
-        Icon(
-            imageVector = Icons.Filled.Terrain,
-            contentDescription = stringResource(R.string.dashboard_satellite_desc),
-            tint = White.copy(alpha = 0.85f),
-            modifier = Modifier.size(22.dp),
-        )
     }
 }
 

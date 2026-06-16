@@ -17,13 +17,13 @@ val onboardingPages = listOf(
         illustrationRes = R.drawable.satellite_data,
     ),
     OnboardingPage(
-        title = "Monitor your soil\nhealth in real\ntime",
-        description = "Track moisture levels and crop health with NDVI alerts before problems reach your field.",
-        illustrationRes = R.drawable.soil_mon,
+        title = "Get paid automatically when drought hits",
+        description = "Receive fast, automated M-Pesa payouts directly to your phone when conditions threaten your crops.",
+        illustrationRes = R.drawable.onboard_2,
     ),
     OnboardingPage(
-        title = "Connect with\ncertified agri-\nagents near you",
-        description = "Get expert advisory and insurance support from verified agents in your local area.",
-        illustrationRes = R.drawable.connect_agent,
+        title = "Earn income from protecting your land",
+        description = "Generate carbon credits through sustainable practices and receive direct cash payments.",
+        illustrationRes = R.drawable.onboard_3,
     ),
 )
