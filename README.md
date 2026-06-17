@@ -55,12 +55,14 @@ Below is a preview of the Shamba Guard application across different user roles:
 
 *(Note: Replace the placeholder image links below with actual screenshots once available)*
 
-### Farmer Dashboard & M-Pesa Payment
-Demonstrating the intuitive interface for farmers to track their carbon credits, view weather forecasts, and securely pay for their parametric policy via M-Pesa.
-```markdown
-![Farmer Dashboard Placeholder](docs/images/farmer_dashboard_screenshot.png)
-![M-Pesa Policy Screen Placeholder](docs/images/mpesa_policy_screenshot.png)
-```
+### Farmer Dashboard & Profile
+<p align="center">
+  <img src="android/ShambaGuard/screenshots/lock.png" width="250" alt="Biometric Lock Screen" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="android/ShambaGuard/screenshots/profile.png" width="250" alt="Farmer Profile Screen" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="android/ShambaGuard/screenshots/myfarm.jpeg" width="250" alt="My Farm Dashboard" />
+</p>
 
 ### Field Agent Offline Sync
 Showcasing the agent onboarding flow, polygon mapping, and the robust offline-first synchronization queue.
@@ -73,8 +75,6 @@ Highlighting the admin-exclusive overview of total active farmers, pool balances
 ```markdown
 ![Admin Dashboard Placeholder](docs/images/admin_dashboard_screenshot.png)
 ```
-
-
 
 ## Backend Local Setup
 

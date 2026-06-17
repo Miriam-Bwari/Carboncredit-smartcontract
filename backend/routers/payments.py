@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database.connection import get_db
-from database.models import Farm, CarbonRecord, Payment
+from database.models import Farm, CarbonRecord, Payment, Farmer
 from core.security import get_current_user
 from schemas.responses import StkPushResponse, PaymentStatusResponse
 from services.mpesa import send_mpesa_payment
+from services.notifications import send_push_notification
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -57,6 +58,17 @@ def mpesa_callback(payload: dict, db: Session = Depends(get_db)):
             payment.status = "completed" if result_code == 0 else "failed"
             db.commit()
 
+            # Send push notification if payment succeeded
+            if payment.status == "completed":
+                farmer = db.query(Farmer).filter(Farmer.id == payment.farmer_id).first()
+                if farmer and farmer.fcm_token:
+                    send_push_notification(
+                        fcm_token=farmer.fcm_token,
+                        title="Payment Received! 💰",
+                        body=f"KES {payment.amount_kes} has been sent to your M-Pesa account.",
+                        data={"type": "payment_success", "amount": str(payment.amount_kes)}
+                    )
+
         return {"received": True, "checkout_id": checkout_id, "result_code": result_code}
     except Exception:
         return {"received": False}
@@ -87,15 +99,26 @@ def get_farmer_policy(farmer_id: str, db: Session = Depends(get_db)):
         return {
             "farmer_id": farmer_id,
             "is_active": False,
-            "expiry_date": None
+            "expiry_date": None,
+            "payout_kes": 0
         }
 
     from datetime import datetime, timedelta
     expiry_date = payment.created_at + timedelta(days=365)
     is_active = expiry_date > datetime.utcnow()
 
+    payout_kes = 0
+    if is_active:
+        if payment.amount_kes >= 400:
+            payout_kes = 25000
+        elif payment.amount_kes >= 150:
+            payout_kes = 8000
+        else:
+            payout_kes = 2000
+
     return {
         "farmer_id": farmer_id,
         "is_active": is_active,
-        "expiry_date": expiry_date.strftime("%Y-%m-%d")
+        "expiry_date": expiry_date.strftime("%Y-%m-%d"),
+        "payout_kes": payout_kes
     }

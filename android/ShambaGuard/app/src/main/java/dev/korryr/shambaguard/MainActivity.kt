@@ -4,10 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.biometric.BiometricManager
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import dagger.hilt.android.AndroidEntryPoint
 import dev.korryr.shambaguard.core.datastore.SessionManager
 import dev.korryr.shambaguard.navigation.ShambaGuardNavGraph
@@ -94,7 +96,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    if (biometricEnabled && finalRole != UserRole.Unauthenticated && !isUnlocked) {
+                    val context = LocalContext.current
+                    val canAuthenticate = remember {
+                        val bm = BiometricManager.from(context)
+                        val result = bm.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                        result == BiometricManager.BIOMETRIC_SUCCESS
+                    }
+
+                    if (biometricEnabled && canAuthenticate && finalRole != UserRole.Unauthenticated && !isUnlocked) {
                         BiometricLockScreen(onUnlockSucceeded = { isUnlocked = true })
                     } else {
                         ShambaGuardNavGraph(role = finalRole)

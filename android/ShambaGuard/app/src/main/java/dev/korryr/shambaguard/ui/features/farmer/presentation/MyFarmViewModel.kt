@@ -61,6 +61,9 @@ class MyFarmViewModel @Inject constructor(
                     }
                 }
 
+                // Sync the full farm details from remote API to local DB so the polygon is available!
+                farmRepository.syncFarm(farmId)
+
                 val adviceResult = farmRepository.getAdvice(farmId).getOrNull()
                 if (adviceResult != null) {
                     _uiState.update {

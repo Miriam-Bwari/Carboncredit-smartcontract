@@ -147,6 +147,9 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
             val cameraPositionState = rememberCameraPositionState()
             var mapLoaded by remember { mutableStateOf(false) }
 
+            val density = androidx.compose.ui.platform.LocalDensity.current
+            val paddingPx = with(density) { 32.dp.roundToPx() }
+
             // Automatically frame the polygon when the coords are loaded
             LaunchedEffect(uiState.polygonCoords, mapLoaded) {
                 if (uiState.polygonCoords.isNotEmpty() && mapLoaded) {
@@ -154,8 +157,8 @@ private fun FarmMapCard(uiState: MyFarmUiState, onViewOnMap: () -> Unit) {
                     uiState.polygonCoords.forEach { boundsBuilder.include(it) }
                     try {
                         val bounds = boundsBuilder.build()
-                        // 50px padding around the bounding box
-                        cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(bounds, 50))
+                        // padding around the bounding box
+                        cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(bounds, paddingPx))
                     } catch (e: Exception) {
                         // ignore if building bounds fails (e.g. less than 2 points)
                     }

@@ -12,28 +12,36 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.biometric.BiometricManager
 import dev.korryr.shambaguard.sharedComposables.ShambaTopBar
 import dev.korryr.shambaguard.ui.features.farmer.presentation.FarmerProfileUiState
 import dev.korryr.shambaguard.ui.theme.Green40
 import dev.korryr.shambaguard.ui.theme.Green90
 import dev.korryr.shambaguard.ui.theme.Green95
+import android.os.Build
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun FarmerProfileScreen(
     uiState: FarmerProfileUiState,
     onLanguageSelected: (String) -> Unit,
-    onPushNotifications: () -> Unit,
-    onDroughtAlerts: () -> Unit,
+    onPushNotifications: (Boolean) -> Unit,
+    onDroughtAlerts: (Boolean) -> Unit,
     onBiometricToggled: () -> Unit,
     onChangePinClicked: () -> Unit,
     onPolicyDocsClicked: () -> Unit,
@@ -42,6 +50,19 @@ fun FarmerProfileScreen(
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+        null
+    }
+
+    // Force switches OFF if the permission is missing at the OS level (Android 13+)
+    LaunchedEffect(notificationPermissionState?.status) {
+        if (notificationPermissionState != null && !notificationPermissionState.status.isGranted) {
+            if (uiState.pushNotificationsOn) onPushNotifications(false)
+            if (uiState.droughtAlertsOn) onDroughtAlerts(false)
+        }
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -115,24 +136,44 @@ fun FarmerProfileScreen(
                     icon = Icons.Filled.Notifications,
                     label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.push_notifications),
                     checked = uiState.pushNotificationsOn,
-                    onToggle = onPushNotifications,
+                    onToggle = {
+                        if (it && notificationPermissionState != null && !notificationPermissionState.status.isGranted) {
+                            notificationPermissionState.launchPermissionRequest()
+                        } else {
+                            onPushNotifications(it)
+                        }
+                    },
                 )
                 SettingsDivider()
                 SwitchRow(
                     icon = Icons.Filled.WbSunny,
                     label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.drought_alerts),
                     checked = uiState.droughtAlertsOn,
-                    onToggle = onDroughtAlerts,
+                    onToggle = {
+                        if (it && notificationPermissionState != null && !notificationPermissionState.status.isGranted) {
+                            notificationPermissionState.launchPermissionRequest()
+                        } else {
+                            onDroughtAlerts(it)
+                        }
+                    },
                 )
             }
 
             // SECURITY section
             ProfileSection(title = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.security)) {
+                val context = LocalContext.current
+                val canAuthenticate = remember {
+                    val bm = BiometricManager.from(context)
+                    val result = bm.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                    result == BiometricManager.BIOMETRIC_SUCCESS
+                }
+
                 SwitchRow(
                     icon = Icons.Filled.Fingerprint,
                     label = androidx.compose.ui.res.stringResource(dev.korryr.shambaguard.R.string.biometric_unlock),
-                    checked = uiState.biometricEnabled,
-                    onToggle = onBiometricToggled,
+                    checked = uiState.biometricEnabled && canAuthenticate,
+                    enabled = canAuthenticate,
+                    onToggle = { onBiometricToggled() },
                 )
                 SettingsDivider()
                 ChevronRow(
@@ -357,7 +398,8 @@ private fun SwitchRow(
     icon: ImageVector,
     label: String,
     checked: Boolean,
-    onToggle: () -> Unit,
+    enabled: Boolean = true,
+    onToggle: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -381,7 +423,8 @@ private fun SwitchRow(
         )
         Switch(
             checked = checked,
-            onCheckedChange = { onToggle() },
+            enabled = enabled,
+            onCheckedChange = { onToggle(it) },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = MaterialTheme.colorScheme.surface,
                 checkedTrackColor = Green40,

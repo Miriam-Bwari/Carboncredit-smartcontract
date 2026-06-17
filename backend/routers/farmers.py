@@ -26,6 +26,11 @@ class FarmerLogin(BaseModel):
     password: str
 
 
+class FCMTokenUpdate(BaseModel):
+    farmer_id: str
+    fcm_token: str
+
+
 @router.post("/register", response_model=FarmerRegisterResponse)
 def register_farmer(data: FarmerRegister, db: Session = Depends(get_db)):
     existing = db.query(Farmer).filter(Farmer.phone_number == data.phone_number).first()
@@ -73,3 +78,14 @@ def get_farmer(farmer_id: str, db: Session = Depends(get_db), current_user: dict
         phone_number=farmer.phone_number,
         county=farmer.county or ""
     )
+
+
+@router.post("/update-fcm-token")
+def update_fcm_token(data: FCMTokenUpdate, db: Session = Depends(get_db)):
+    farmer = db.query(Farmer).filter(Farmer.id == data.farmer_id).first()
+    if not farmer:
+        raise HTTPException(status_code=404, detail="Farmer not found")
+    
+    farmer.fcm_token = data.fcm_token
+    db.commit()
+    return {"success": True, "message": "FCM token updated"}

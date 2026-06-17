@@ -48,6 +48,18 @@ class FarmerProfileViewModel @Inject constructor(
                 _uiState.update { it.copy(biometricEnabled = enabled) }
             }
         }
+
+        viewModelScope.launch {
+            settingsManager.pushNotificationsFlow.collect { enabled ->
+                _uiState.update { it.copy(pushNotificationsOn = enabled) }
+            }
+        }
+
+        viewModelScope.launch {
+            settingsManager.droughtAlertsFlow.collect { enabled ->
+                _uiState.update { it.copy(droughtAlertsOn = enabled) }
+            }
+        }
     }
 
     private fun loadProfileData() {
@@ -80,12 +92,16 @@ class FarmerProfileViewModel @Inject constructor(
         }
     }
 
-    fun onPushNotificationsToggled() {
-        _uiState.update { it.copy(pushNotificationsOn = !it.pushNotificationsOn) }
+    fun onPushNotificationsToggled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsManager.setPushNotificationsEnabled(enabled)
+        }
     }
 
-    fun onDroughtAlertsToggled() {
-        _uiState.update { it.copy(droughtAlertsOn = !it.droughtAlertsOn) }
+    fun onDroughtAlertsToggled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsManager.setDroughtAlertsEnabled(enabled)
+        }
     }
 
     fun onBiometricToggled() {

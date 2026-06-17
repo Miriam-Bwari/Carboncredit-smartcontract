@@ -17,10 +17,10 @@ interface FarmApi {
     @POST("api/farms/register")
     suspend fun registerFarm(@Body farm: FarmRegisterRequestDto)
 
-    @GET("api/v1/farms/{farm_id}")
+    @GET("api/farms/{farm_id}")
     suspend fun getFarm(@Path("farm_id") farmId: String): FarmDto
 
-    @GET("api/v1/farms/{farm_id}/report")
+    @GET("api/farms/{farm_id}/report")
     suspend fun getFarmReport(@Path("farm_id") farmId: String): FarmReportDto
 
     @POST("api/farms/{farm_id}/practices")
@@ -51,4 +51,7 @@ interface FarmApi {
 
     @GET("api/payments/policy/{farmer_id}")
     suspend fun getPolicy(@Path("farmer_id") farmerId: String): dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.PolicyDto
+
+    @POST("api/farmers/update-fcm-token")
+    suspend fun updateFcmToken(@Body request: dev.korryr.shambaguard.ui.features.farmer.data.remote.dto.FcmTokenRequestDto)
 }

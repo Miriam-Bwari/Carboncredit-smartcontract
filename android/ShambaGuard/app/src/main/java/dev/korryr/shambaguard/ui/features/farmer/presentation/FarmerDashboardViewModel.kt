@@ -52,6 +52,9 @@ class FarmerDashboardViewModel @Inject constructor(
                 }
 
                 val farmId = firstFarm.id
+                
+                // Sync full farm details (including polygon) to local Room DB immediately
+                farmRepository.syncFarm(farmId)
 
                 // 3. Get Carbon History
                 val carbonResult = farmRepository.getCarbonHistory(farmId).getOrNull()

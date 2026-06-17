@@ -57,6 +57,9 @@ class DroughtViewModel @Inject constructor(
                     }
                 }
 
+                // Sync the full farm details from remote API to local DB so the polygon is available!
+                farmRepository.syncFarm(farmId)
+
                 val weatherResult = farmRepository.getWeather(farmId).getOrNull()
                 if (weatherResult != null) {
                     val mm = weatherResult.rainfallMm.toInt()
@@ -105,7 +108,12 @@ class DroughtViewModel @Inject constructor(
 
                 val policyResult = farmRepository.getPolicy(farmerId).getOrNull()
                 if (policyResult != null) {
-                    _warningState.update { it.copy(coverageActive = policyResult.isActive) }
+                    _warningState.update { 
+                        it.copy(
+                            coverageActive = policyResult.isActive,
+                            payoutKes = policyResult.payoutKes
+                        ) 
+                    }
                     _coverageState.update {
                         it.copy(
                             isActive = policyResult.isActive,

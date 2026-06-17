@@ -4,12 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,16 +32,7 @@ fun ShambaTopBar(
     onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     trailingIcon: @Composable () -> Unit = {
-        Icon(
-            imageVector = Icons.Filled.LocationOn,
-            contentDescription = "Location",
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .clickable {}
-                .padding(6.dp),
-        )
+        Spacer(Modifier.size(48.dp))
     },
 ) {
     Row(
@@ -52,7 +44,7 @@ fun ShambaTopBar(
         // Back button — 36dp clickable icon, no minimum touch-target enforcement
         if (onBack != null) {
             Icon(
-                imageVector = Icons.Filled.ArrowBack,
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
@@ -78,8 +70,8 @@ fun ShambaTopBar(
 
         // Trailing icon slot — default to the location pin
         Box(
-            modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center,
+            modifier = Modifier.defaultMinSize(minWidth = 48.dp, minHeight = 48.dp),
+            contentAlignment = Alignment.CenterEnd,
         ) {
             trailingIcon()
         }
