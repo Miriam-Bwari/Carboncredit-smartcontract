@@ -60,6 +60,8 @@ Below is a preview of the Shamba Guard application across different user roles:
   <img src="android/ShambaGuard/screenshots/lock.png" width="250" alt="Biometric Lock Screen" />
   &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="android/ShambaGuard/screenshots/profile.png" width="250" alt="Farmer Profile Screen" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="android/ShambaGuard/screenshots/myfarm.jpeg" width="250" alt="My Farm Dashboard" />
 </p>
 
 ### Field Agent Offline Sync
